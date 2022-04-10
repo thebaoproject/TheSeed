@@ -1,0 +1,15 @@
+name: BlockArtOnline
+version: '${project.version}'
+main: me.spike.blockartonline.BlockArtOnline
+api-version: 1.18
+prefix: BlockArtOnline
+authors: [ SpikeBonjour ]
+description: top secrect
+commands:
+  gsi:
+    description: Đưa cho người chơi item đặc biệt của BAO.
+    usage: /<command> <item> <amount>
+  mpd:
+    description: Chỉnh sửa dữ liệu của người chơi.
+    usage: /<command> (setup|modify)
+
