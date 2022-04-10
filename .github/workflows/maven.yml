@@ -30,6 +30,6 @@ jobs:
     - name: Uploading artifacts
       uses: actions/upload-artifact@v3.0.0
       with:
-        name: github-actions-artifact
+        name: BlockArtOnline
         path: staging
       
