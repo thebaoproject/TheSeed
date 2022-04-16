@@ -1,44 +1,52 @@
+/*
+ * Copyright (c) 2022 SpikeBonjour
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining
+ * a copy of this software and associated documentation files (the
+ * "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish,
+ * distribute, sublicense, and/or sell copies of the Software, and to
+ * permit persons to whom the Software is furnished to do so, subject to
+ * the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+ * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+ * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+ * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 package me.spike.blockartonline.abc;
 
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Represents an item's ability.
+ */
 public class Ability {
-    public ItemAbilityUseAction usage;
-    public String name;
-    public List<String> description;
-    public int cost;
+    private ItemAbilityUseAction usage;
+    private String name;
+    private List<String> description;
+    private int cost;
 
-    public Ability setName(String name) {
-        this.name = name;
-        return this;
-    }
-
+    public List<String> getDescription() { return description; }
     public Ability setDescription(String description) {
         this.description = Arrays.stream(description.split("\n")).toList();
-    /*
-        List<String> newDescription = new ArrayList<String>();
-        int requiredLength = this.name.length() + 10;
-        for (String i : this.description) {
-            if (i.length() > requiredLength) {
-                newDescription.add(i.substring(0, requiredLength));
-                newDescription.add(i.substring(requiredLength + 1));
-            } else {
-                newDescription.add(i);
-            }
-        }
-        this.description = newDescription;
-    */
         return this;
     }
 
-    public Ability setUsage(ItemAbilityUseAction usage) {
-        this.usage = usage;
-        return this;
-    }
+    public String getName() { return name; }
+    public Ability setName(String name) { this.name = name; return this; }
 
-    public Ability setCost(int cost) {
-        this.cost = cost;
-        return this;
-    }
+    public ItemAbilityUseAction getUsage() { return usage;}
+    public Ability setUsage(ItemAbilityUseAction usage) { this.usage = usage; return this; }
+
+    public int getCost() { return cost; }
+    public Ability setCost(int cost) { this.cost = cost; return this; }
 }

@@ -21,26 +21,25 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package me.spike.blockartonline.tabCompleters;
+package me.spike.blockartonline;
 
-import me.spike.blockartonline.ItemUtils;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabCompleter;
-import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
+import org.bukkit.plugin.Plugin;
 
-import java.util.List;
+import java.util.logging.Level;
 
-public class giveItemTC implements TabCompleter {
+import static org.bukkit.Bukkit.*;
 
-    @Override
-    public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
-        if (sender instanceof Player) {
-            if (args.length == 1) {
-                return ItemUtils.getList();
-            }
+public class PlayerUtils {
+    public static void startHealthBar() {
+        Plugin p = getPluginManager().getPlugin("BlockArtOnline");
+        if (p == null) {
+            getLogger().log(Level.SEVERE, "Failed to register health bar.");
+            return;
         }
-        return null;
+        int taskID = getServer().getScheduler().scheduleSyncDelayedTask(p, () -> {
+        });
+        if (taskID == -1) {
+            getLogger().log(Level.SEVERE, "Scheduling health bar task failed.");
+        }
     }
 }
