@@ -5,6 +5,7 @@ api-version: 1.18
 prefix: BlockArtOnline
 authors: [ SpikeBonjour ]
 description: top secrect
+depend: [NBTAPI]
 commands:
   gsi:
     description: Đưa cho người chơi item đặc biệt của BAO.

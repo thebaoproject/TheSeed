@@ -1,7 +1,31 @@
+/*
+ * Copyright (c) 2022 SpikeBonjour
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining
+ * a copy of this software and associated documentation files (the
+ * "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish,
+ * distribute, sublicense, and/or sell copies of the Software, and to
+ * permit persons to whom the Software is furnished to do so, subject to
+ * the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+ * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+ * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+ * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 package me.spike.blockartonline.abc;
 
 import me.spike.blockartonline.Utils;
 import org.bukkit.ChatColor;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -18,41 +42,51 @@ public class CustomItem {
     private List<Ability> abilities;
     private Rarity rarity;
 
+    /**
+     * Gets the {@link ItemStack} that can be displayed to the player.
+     *
+     * @return the {@link ItemStack} to show the player
+     */
     public ItemStack getItem() {
-        ItemMeta meta = this.type.getItemMeta();
+        ItemStack item = getBaseItemType();
+        ItemMeta meta = item.getItemMeta();
         assert meta != null;
-        meta.setDisplayName(Utils.itemRarityColor(rarity) + this.name);
+        meta.setDisplayName(Utils.itemRarityColor(getRarity()) + getName());
         List<String> lore = new ArrayList<>();
-        if (this instanceof Weapon) {
-            lore.add(ChatColor.GRAY + "Sát thương: " + ChatColor.RED + "+" + ((Weapon) this).getDamage());
-            lore.add(ChatColor.GRAY + "Sức mạnh ra đòn: " + ChatColor.RED + "+" + ((Weapon) this).getStrength());
+        lore.add(" ");
+        for (Ability a : getAbilities()) {
+            lore.add(ChatColor.GOLD + "Kĩ năng đặc biệt: " + a.getName() + " " + ChatColor.YELLOW + ChatColor.BOLD + Utils.toActionString(a.getUsage()));
+            lore.addAll(a.getDescription());
         }
         lore.add(" ");
-        for (Ability a : this.abilities) {
-            lore.add(ChatColor.GOLD + "Kĩ năng đặc biệt: " + a.name + " " + ChatColor.YELLOW + ChatColor.BOLD + Utils.toActionString(a.usage));
-            lore.addAll(a.description);
-        }
-        lore.add(" ");
-        lore.add(toRarityString(this.rarity));
+        lore.add(toRarityString(getRarity()));
         meta.setLore(lore);
         meta.setUnbreakable(true);
         meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_UNBREAKABLE);
-        this.type.setItemMeta(meta);
-        return this.type;
+        item.setItemMeta(meta);
+        return item;
     }
 
-    public String getName() { return name; }
-    public void setName(String n) { name = n; }
+    /**
+     * Called when the item is right-clicked.
+     * Child class must override this method.
+     *
+     * @param e the {@link PlayerInteractEvent} received.
+     */
+    public void rightClickAction(PlayerInteractEvent e) {}
 
-    public String getID() { return itemID; }
-    public void setID(String id) { itemID = id; }
+    public final String getName() { return name; }
+    public final void setName(String n) { name = n; }
 
-    public List<Ability> getAbilities() { return abilities; }
-    public void setAbilities(List<Ability> a) { abilities = a; }
+    public final String getID() { return itemID; }
+    public final void setID(String id) { itemID = id; }
 
-    public Rarity getRarity() { return rarity; }
-    public void setRarity(Rarity r) { rarity = r; }
+    public final List<Ability> getAbilities() { return abilities; }
+    public final void setAbilities(List<Ability> a) { abilities = a; }
 
-    public ItemStack getBaseItemType() { return type; }
-    public void setBaseItemType(ItemStack i) { type = i; }
+    public final Rarity getRarity() { return rarity; }
+    public final void setRarity(Rarity r) { rarity = r; }
+
+    public final ItemStack getBaseItemType() { return type; }
+    public final void setBaseItemType(ItemStack i) { type = i; }
 }
