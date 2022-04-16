@@ -22,12 +22,6 @@ jobs:
         java-version: '16'
         distribution: 'temurin'
         cache: maven
-    - name: Build Spigot
-      run: |
-        mkdir build-spigot && cd build-spigot
-        curl -o BuildTools.jar https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar
-        java -jar BuildTools.jar --rev 1.12.2
-        cd .. && mkdir libs && cp spigot-1.12.2.jar libs/spigot-1.12.2.jar
     - name: Build with Maven
       run: |
          mvn -B package --file pom.xml
