@@ -1,16 +1,15 @@
 name: BlockArtOnline
 version: '${project.version}'
 main: me.spike.blockartonline.BlockArtOnline
-api-version: 1.18
+api-version: 1.19
 prefix: BlockArtOnline
 authors: [ SpikeBonjour ]
-description: top secrect
-depend: [NBTAPI]
+description: The plugin which aims to replicate the Sword Art Online experience.
 commands:
   gsi:
-    description: Đưa cho người chơi item đặc biệt của BAO.
+    description: Gives the player a special internal item.
     usage: /<command> <item> <amount>
   mpd:
-    description: Chỉnh sửa dữ liệu của người chơi.
+    description: Edit the current player's data.
     usage: /<command> (setup|modify)
 

@@ -21,10 +21,10 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package me.spike.blockartonline.customItems;
+package me.spike.blockartonline.items;
 
-import me.spike.blockartonline.ItemUtils;
-import me.spike.blockartonline.Utils;
+import me.spike.blockartonline.BlockArtOnline;
+import me.spike.blockartonline.utils.ItemUtils;
 import me.spike.blockartonline.abc.*;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -36,21 +36,11 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-import static org.bukkit.Bukkit.getLogger;
-
-public class AnnealBlade extends Weapon implements Listener {
+public class AnnealBlade extends Weapon {
 
     @Override
     public void rightClickAction(PlayerInteractEvent event) {
-        CustomItem item = ItemUtils.get(event.getPlayer().getInventory().getItemInMainHand());
-        if (item != null) {
-            if (!item.getID().equals(getID())) {
-                return;
-            }
-        }
         Player p = event.getPlayer();
         long playerZ = Math.round(p.getLocation().getDirection().getZ());
         List<Entity> nearbyEntities = p.getNearbyEntities(5, 5, 5);
@@ -77,12 +67,11 @@ public class AnnealBlade extends Weapon implements Listener {
         if (!e.getEntity().isInvulnerable()) { return; }
         Damageable ne = (Damageable) e.getEntity();
         ne.setHealth(ne.getHealth() + e.getFinalDamage() - calculateDamage());
-        getLogger().log(Level.INFO, "Inflicted " + calculateDamage() + " on " + e.getEntity().getType().name());
+        BlockArtOnline.getInstance().getSLF4JLogger().debug("Inflicted " + calculateDamage() + " on " + e.getEntity().getType().name());
     }
 
     public AnnealBlade() {
-        ItemStack item = ItemUtils.injectIdentifier(new ItemStack(Material.STONE_SWORD, 1), "anneal_blade");
-        super.setBaseItemType(item);
+        super(Material.STONE_SWORD);
         super.setID("anneal_blade");
         super.setName("Anneal Blade");
         super.setDamage(35);

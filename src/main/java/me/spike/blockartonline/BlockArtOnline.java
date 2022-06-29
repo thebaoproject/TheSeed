@@ -23,69 +23,159 @@
 
 package me.spike.blockartonline;
 
-import me.spike.blockartonline.commands.GiveItem;
+import me.spike.blockartonline.abc.DebugLogger;
+import me.spike.blockartonline.abc.InternalPlayer;
 import me.spike.blockartonline.commands.PlayerDataManipulation;
-import me.spike.blockartonline.tabCompleters.giveItemTC;
+import me.spike.blockartonline.completers.PlayerDataManipulationCompleter;
+import me.spike.blockartonline.events.CentralEventListener;
+import me.spike.blockartonline.completers.GiveItemCompleter;
+import me.spike.blockartonline.exceptions.InvalidPlayerData;
+import me.spike.blockartonline.utils.Locale;
+import me.spike.blockartonline.utils.Utils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.PluginCommand;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.slf4j.Logger;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.io.File;
+
+import static me.spike.blockartonline.utils.PlayerUtils.amogus;
+import static org.bukkit.Bukkit.getOnlinePlayers;
+import static org.bukkit.Bukkit.getPluginManager;
 
 public final class BlockArtOnline extends JavaPlugin implements CommandExecutor {
 
+    private static BlockArtOnline instance;
+    private Locale locale;
+
     @Override
     public void onEnable() {
-        Logger l = getLogger();
-        l.log(Level.INFO, "=----------- Block Art Online -----------=");
-        l.log(Level.INFO, ChatColor.AQUA + "by SpikeBonjour. This program is Free Software, licensed under MIT License.");
-        l.log(Level.INFO, ChatColor.ITALIC + "This, might be a game, but it isn't something you play.");
-        l.log(Level.INFO, ChatColor.BOLD + "                               - Kayaba Akihiko - ");
-        l.log(Level.INFO, "=----------------------------------------=");
-        l.log(Level.INFO, "Registering event listeners...");
-        registerEvents();
-        l.log(Level.INFO, "Registering commands...");
-        registerCommands();
-        l.log(Level.INFO, "Checking database...");
-        try {
-            boolean result = getDataFolder().mkdirs();
-            if (!result && !getDataFolder().exists()) {
-                l.log(Level.SEVERE, "Cannot create player data folder.");
-            }
-        } catch (SecurityException e) {
-            l.log(Level.SEVERE, "Cannot create player data folder: insufficient permission.");
-            e.printStackTrace();
+        Logger l = getSLF4JLogger();
+        DebugLogger.setEnabled();
+        DebugLogger.setPluginInstance(this);
+        l.info("=----------- Block Art Online -----------=");
+        l.info(ChatColor.AQUA + "by SpikeBonjour. This program is Free Software, licensed under MIT License.");
+        l.info(ChatColor.ITALIC + "This, might be a game, but it isn't something you play.");
+        l.info(ChatColor.BOLD + "                               - Kayaba Akihiko - ");
+        l.info("=----------------------------------------=");
+        l.info("Loading configuration options...");
+        getConfig().options().copyDefaults();
+        saveDefaultConfig();
+        l.info("Loading languages...");
+        String loc = getConfig().getString("locale");
+        if (loc == null) {
+            l.warn("You have not set the language option. Falling back to English.");
+            loc = "en";
         }
-        PlayerStorage.setup();
+        locale = new Locale(loc);
+        l.info(locale.get("plugin.start.reg_event"));
+        registerEvents();
+        l.info("plugin.start.reg_command");
+        registerCommands();
+        l.info("plugin.start.reg_task");
+        registerTasks();
+        instance = this;
     }
 
     public void registerEvents() {
         PluginManager pm = getServer().getPluginManager();
-        pm.registerEvents(new ItemEventHandler(), this);
+        pm.registerEvents(new CentralEventListener(), this);
     }
 
     public void registerCommands() {
-        Logger l = getLogger();
+        Logger l = getSLF4JLogger();
         try {
             PluginCommand gsi = getCommand("gsi");
             PluginCommand mpd = getCommand("mpd");
             assert gsi != null;
             assert mpd != null;
-            gsi.setExecutor(new GiveItem());
-            gsi.setTabCompleter(new giveItemTC());
+            // Register
+            gsi.setExecutor(new me.spike.blockartonline.commands.GiveItem());
             mpd.setExecutor(new PlayerDataManipulation());
+            // Tab Completer
+            gsi.setTabCompleter(new GiveItemCompleter());
+            mpd.setTabCompleter(new PlayerDataManipulationCompleter());
         } catch (Exception e) {
-            l.log(Level.SEVERE, "Failed to register command.");
+            l.error("Failed to register command.");
             e.printStackTrace();
+        }
+    }
+
+    public void registerTasks() {
+        // Health bar task
+        int healthBarTaskID = getServer().getScheduler().scheduleSyncRepeatingTask(this, () -> {
+            for (Player i : getOnlinePlayers()) {
+                InternalPlayer p = null;
+                boolean invalid = false;
+                try {
+                    if (!amogus(i)) {
+                        DebugLogger.debug("The player with name of " + i.getName() + "hasn't been set up yet. Automatically setting up...");
+                        InternalPlayer.initialize(i);
+                    }
+                    p = InternalPlayer.fromPlayer(i);
+                } catch (InvalidPlayerData e) {
+                    if (i.getHealth() != 0) {
+                        DebugLogger.debug("The player with name of " + i.getName() + "have invalid player data. Silently ignoring...");
+                    }
+                    invalid = true;
+                }
+                if (!invalid) {
+                    Utils.showHPBar(p);
+                    p.renderHealth();
+                    p.ensureNoHunger();
+                }
+            }
+        }, 1, 1);
+        if (healthBarTaskID == -1) {
+            getSLF4JLogger().error("Scheduling health bar task failed.");
+        }
+        // Regen task
+        int regenTaskID = getServer().getScheduler().scheduleSyncRepeatingTask(this, () -> {
+            for (Player i : getOnlinePlayers()) {
+                InternalPlayer p = null;
+                boolean invalid = false;
+                try {
+                    if (!amogus(i)) {
+                        DebugLogger.debug("The player with name of " + i.getName() + "hasn't been set up yet. Automatically setting up...");
+                        InternalPlayer.initialize(i);
+                    }
+                    p = InternalPlayer.fromPlayer(i);
+                } catch (InvalidPlayerData e) {
+                    if (i.getHealth() != 0) {
+                        DebugLogger.debug("The player with name of " + i.getName() + "have invalid player data. Silently ignoring...");
+                    }
+                    invalid = true;
+                }
+                if (!invalid) {
+                    p.applyRegen();
+                }
+            }
+        }, 1, 60);
+        if (regenTaskID == -1) {
+            getSLF4JLogger().error("Scheduling regen task failed.");
         }
     }
 
     @Override
     public void onDisable() {
-        getLogger().log(Level.INFO, "Plugin is shutting down...");
-        getLogger().log(Level.INFO, "Plugin shut down successfully");
+        getLogger().info("Plugin is shutting down...");
+        getLogger().info("Plugin shut down successfully");
+    }
+
+    public void theEnd() {
+        getPluginManager().disablePlugin(this);
+    }
+
+    public Locale getLocale() {
+        return locale;
+    }
+
+    public static BlockArtOnline getInstance() {
+        return instance;
     }
 }

@@ -23,8 +23,10 @@
 
 package me.spike.blockartonline.abc;
 
-import me.spike.blockartonline.Utils;
+import me.spike.blockartonline.utils.Utils;
+import net.kyori.adventure.text.Component;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -36,11 +38,15 @@ import java.util.List;
 import static me.spike.blockartonline.abc.Rarity.toRarityString;
 
 public class CustomItem {
-    private ItemStack type;
+    private final Material type;
     private String itemID;
     private String name;
     private List<Ability> abilities;
     private Rarity rarity;
+
+    public CustomItem(Material m) {
+        type = m;
+    }
 
     /**
      * Gets the {@link ItemStack} that can be displayed to the player.
@@ -48,19 +54,19 @@ public class CustomItem {
      * @return the {@link ItemStack} to show the player
      */
     public ItemStack getItem() {
-        ItemStack item = getBaseItemType();
+        ItemStack item = new ItemStack(getMaterial());
         ItemMeta meta = item.getItemMeta();
         assert meta != null;
-        meta.setDisplayName(Utils.itemRarityColor(getRarity()) + getName());
-        List<String> lore = new ArrayList<>();
-        lore.add(" ");
+        meta.displayName(Component.text(Utils.itemRarityColor(getRarity()) + getName()));
+        List<Component> lore = new ArrayList<>();
+        lore.add(Component.space());
         for (Ability a : getAbilities()) {
-            lore.add(ChatColor.GOLD + "Kĩ năng đặc biệt: " + a.getName() + " " + ChatColor.YELLOW + ChatColor.BOLD + Utils.toActionString(a.getUsage()));
-            lore.addAll(a.getDescription());
+            lore.add(Component.text(ChatColor.GOLD + "Kĩ năng đặc biệt: " + a.getName() + " " + ChatColor.YELLOW + ChatColor.BOLD + Utils.toActionString(a.getUsage())));
+            lore.addAll(Utils.convListString(a.getDescription()));
         }
-        lore.add(" ");
-        lore.add(toRarityString(getRarity()));
-        meta.setLore(lore);
+        lore.add(Component.space());
+        lore.add(Component.text(toRarityString(getRarity())));
+        meta.lore(lore);
         meta.setUnbreakable(true);
         meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_UNBREAKABLE);
         item.setItemMeta(meta);
@@ -73,20 +79,42 @@ public class CustomItem {
      *
      * @param e the {@link PlayerInteractEvent} received.
      */
-    public void rightClickAction(PlayerInteractEvent e) {}
+    public void rightClickAction(PlayerInteractEvent e) {
+    }
 
-    public final String getName() { return name; }
-    public final void setName(String n) { name = n; }
+    public final String getName() {
+        return name;
+    }
 
-    public final String getID() { return itemID; }
-    public final void setID(String id) { itemID = id; }
+    public final void setName(String n) {
+        name = n;
+    }
 
-    public final List<Ability> getAbilities() { return abilities; }
-    public final void setAbilities(List<Ability> a) { abilities = a; }
+    public final String getID() {
+        return itemID;
+    }
 
-    public final Rarity getRarity() { return rarity; }
-    public final void setRarity(Rarity r) { rarity = r; }
+    public final void setID(String id) {
+        itemID = id;
+    }
 
-    public final ItemStack getBaseItemType() { return type; }
-    public final void setBaseItemType(ItemStack i) { type = i; }
+    public final List<Ability> getAbilities() {
+        return abilities;
+    }
+
+    public final void setAbilities(List<Ability> a) {
+        abilities = a;
+    }
+
+    public final Rarity getRarity() {
+        return rarity;
+    }
+
+    public final void setRarity(Rarity r) {
+        rarity = r;
+    }
+
+    public final Material getMaterial() {
+        return type;
+    }
 }

@@ -21,10 +21,16 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package me.spike.blockartonline;
+package me.spike.blockartonline.events;
 
+import me.spike.blockartonline.BlockArtOnline;
 import me.spike.blockartonline.abc.CustomItem;
+import me.spike.blockartonline.abc.DebugLogger;
 import me.spike.blockartonline.abc.Weapon;
+import me.spike.blockartonline.exceptions.InvalidItemData;
+import me.spike.blockartonline.exceptions.UnknownItem;
+import me.spike.blockartonline.items.BareHand;
+import me.spike.blockartonline.utils.ItemUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -32,13 +38,10 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import static org.bukkit.Bukkit.getLogger;
-
-public class ItemEventHandler implements Listener {
+public class ItemEventHandler {
 
     /**
      * Checks if the caught event is from the player using an item of the
@@ -47,9 +50,10 @@ public class ItemEventHandler implements Listener {
      * @param e the event caught.
      * @return whether the player is using the plugin's item.
      */
-    public boolean isValid(PlayerInteractEvent e) {
-        getLogger().log(Level.INFO, "Checking validity...");
-        getLogger().log(Level.INFO, String.valueOf((
+    public static boolean isValid(@NotNull PlayerInteractEvent e) {
+        Logger l = BlockArtOnline.getInstance().getSLF4JLogger();
+        DebugLogger.debug("Checking validity...");
+        DebugLogger.debug(String.valueOf((
                 e.getAction().equals(Action.RIGHT_CLICK_AIR) ||
                         e.getAction().equals(Action.RIGHT_CLICK_BLOCK)
         ) && ItemUtils.amogus(e.getPlayer().getInventory().getItemInMainHand())));
@@ -59,30 +63,38 @@ public class ItemEventHandler implements Listener {
         ) && ItemUtils.amogus(e.getPlayer().getInventory().getItemInMainHand());
     }
 
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void onPlayerUse(PlayerInteractEvent e) {
-        Logger l = getLogger();
-        l.log(Level.INFO, "Received PlayerUseEvent.");
+    public static void onPlayerUse(PlayerInteractEvent e) {
+        Logger l = BlockArtOnline.getInstance().getSLF4JLogger();
+        DebugLogger.debug("Received PlayerUseEvent.");
         if (isValid(e)) {
-            l.log(Level.INFO, "Action is valid.");
+            DebugLogger.debug("Action is valid.");
             if (e.getItem() != null) {
-                CustomItem item = ItemUtils.get(e.getItem());
-                if (item != null) {
+                CustomItem item = null;
+                try {
+                    item = ItemUtils.get(e.getItem());
                     item.rightClickAction(e);
+                } catch (InvalidItemData ex) {
+                    DebugLogger.debug("Received InvalidItemData exception in item event listener. Silently ignoring.");
+                } catch (UnknownItem ex) {
+                    DebugLogger.debug("Received UnknownItem exception in item event listener. Silently ignoring.");
                 }
             }
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void onDamage(EntityDamageByEntityEvent e) {
+    public static void onDamage(@NotNull EntityDamageByEntityEvent e) {
         if (e.getDamager() instanceof Player) {
-            CustomItem item = ItemUtils.get(((Player) e.getDamager()).getInventory().getItemInMainHand());
+            CustomItem item = null;
+            try {
+                item = ItemUtils.get(((Player) e.getDamager()).getInventory().getItemInMainHand());
+            } catch (InvalidItemData ex) {
+                DebugLogger.debug("Received InvalidItemData exception. Silently ignoring.");
+            } catch (UnknownItem ex) {
+                DebugLogger.debug("Received UnknownItem exception. Silently ignoring.");
+            }
             if (item instanceof Weapon) {
                 ((Weapon) item).attackAction(e);
             }
         }
     }
-
-
 }

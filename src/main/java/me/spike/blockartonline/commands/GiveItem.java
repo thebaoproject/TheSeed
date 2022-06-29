@@ -23,7 +23,7 @@
 
 package me.spike.blockartonline.commands;
 
-import me.spike.blockartonline.ItemUtils;
+import me.spike.blockartonline.utils.ItemUtils;
 import me.spike.blockartonline.abc.CustomItem;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;

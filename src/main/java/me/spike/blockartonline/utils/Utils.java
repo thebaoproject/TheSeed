@@ -21,13 +21,17 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package me.spike.blockartonline;
+package me.spike.blockartonline.utils;
 
 import me.spike.blockartonline.abc.*;
+import net.kyori.adventure.text.Component;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.ChatColor;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Utils {
 
@@ -72,9 +76,36 @@ public class Utils {
     public static void showHPBar(@NotNull InternalPlayer p) {
         String message = ChatColor.translateAlternateColorCodes(
                 '&',
-                "&c" + p.getPlayer().getHealth() + "/" + p.getMaxHealth() + "❤    &a" +
+                "&c" + p.getHealth() + "/" + p.getMaxHealth() + "❤    &a" +
                         p.getBaseDefense() + "\uD83D\uDEE1    &b" + p.getMaxMana() + "/" + p.getMaxMana() + "✏"
         );
-        p.getPlayer().spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(message));
+        p.getPlayer().sendActionBar(Component.text(message));
+    }
+
+    /**
+     * Converts a list of {@code String} into a list of {@code Component}
+     *
+     * @param l the list to convert.
+     * @return the output list.
+     */
+    @NotNull
+    public static List<Component> convListString(@NotNull List<String> l) {
+        List<Component> o = new ArrayList<>();
+        for (String i : l) {
+            o.add(Component.text(i));
+        }
+        return o;
+    }
+
+    /**
+     * Turn color codes using {@code &} to the standard character
+     * {@code ChatColor.COLOR_CODE}
+     *
+     * @param input the input.
+     * @return the string that has the {@code &} replaced with the {@code ChatColor.COLOR_CODE}
+     */
+    @NotNull
+    public static String color(String input) {
+        return ChatColor.translateAlternateColorCodes('&', input);
     }
 }

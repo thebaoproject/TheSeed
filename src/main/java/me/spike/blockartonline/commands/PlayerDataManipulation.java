@@ -23,7 +23,8 @@
 
 package me.spike.blockartonline.commands;
 
-import me.spike.blockartonline.PlayerStorage;
+import me.spike.blockartonline.abc.InternalPlayer;
+import me.spike.blockartonline.exceptions.InvalidPlayerData;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -31,11 +32,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
+import java.util.Locale;
 
 public class PlayerDataManipulation implements CommandExecutor {
 
@@ -52,20 +49,44 @@ public class PlayerDataManipulation implements CommandExecutor {
             sender.sendMessage(ChatColor.RED + "Chọn gì đó đi chứ.");
             return true;
         }
-        if (args[0].equalsIgnoreCase("setup")) {
-            HashMap<String, Object> playerData = new HashMap<>();
-            // Gets current time and put it into a string.
-            Date date = Calendar.getInstance().getTime();
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-            String strDate = dateFormat.format(date);
-            playerData.put("baseHealth", 100);
-            playerData.put("registerDate", strDate);
-            playerData.put("baseMana", 100);
-            playerData.put("baseDefense", 100);
-            PlayerStorage.getDatabase().set(((Player) sender).getUniqueId().toString(), playerData);
-            PlayerStorage.save();
-        } else {
-            sender.sendMessage(ChatColor.RED + "Câu lệnh mà bạn đã nhập không tồn tại.");
+        switch (args[0].toLowerCase(Locale.ROOT)) {
+            case "init":
+                InternalPlayer.initialize((Player) sender);
+                sender.sendMessage(ChatColor.GREEN + "Your player data has been initialized!");
+                break;
+            case "check":
+                try {
+                    InternalPlayer ip = InternalPlayer.fromPlayer((Player) sender);
+                    String message = ChatColor.translateAlternateColorCodes(
+                            '&',
+                            "&c" + ip.getHealth() + "/" + ip.getMaxHealth() + "❤    &a" +
+                                    ip.getBaseDefense() + "\uD83D\uDEE1    &b" + ip.getMaxMana() + "/" + ip.getMaxMana() + "✏"
+                    );
+                    sender.sendMessage(message);
+                } catch (InvalidPlayerData e) {
+                    sender.sendMessage(ChatColor.RED + "The player data stored in the player is invalid. You can run /mpd init again to re-initialize.");
+                }
+                break;
+            case "modify":
+                try {
+                    InternalPlayer ip = InternalPlayer.fromPlayer((Player) sender);
+                    int number = Integer.parseInt(args[2]);
+                    switch (args[1].toLowerCase(Locale.ROOT)) {
+                        case "health" -> ip.setHealth(number);
+                        case "mana" -> ip.setMana(number);
+                        case "max_mana" -> ip.setMaxMana(number);
+                        case "max_health" -> ip.setMaxHealth(number);
+                        case "base_defense" -> ip.setBaseDefense(number);
+                        default -> sender.sendMessage(ChatColor.RED + "Unknown option: " + args[1]);
+                    }
+                } catch (InvalidPlayerData e) {
+                    sender.sendMessage(ChatColor.RED + "The player data stored in the player is invalid. You can run /mpd init again to re-initialize.");
+                } catch (NumberFormatException e) {
+                    sender.sendMessage(ChatColor.RED + "The amount that you have entered is invalid.");
+                }
+                break;
+            default:
+                sender.sendMessage(ChatColor.RED + "Câu lệnh mà bạn đã nhập không tồn tại!");
         }
         return true;
     }

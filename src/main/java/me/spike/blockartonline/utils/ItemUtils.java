@@ -21,19 +21,24 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package me.spike.blockartonline;
+package me.spike.blockartonline.utils;
 
-import de.tr7zw.nbtapi.NBTCompound;
-import de.tr7zw.nbtapi.NBTItem;
+import me.spike.blockartonline.BlockArtOnline;
 import me.spike.blockartonline.abc.CustomItem;
-import me.spike.blockartonline.customItems.AnnealBlade;
-import org.bukkit.entity.Player;
+import me.spike.blockartonline.exceptions.InvalidItemData;
+import me.spike.blockartonline.exceptions.UnknownItem;
+import me.spike.blockartonline.items.AnnealBlade;
+import me.spike.blockartonline.items.BareHand;
+import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 public class ItemUtils {
@@ -57,14 +62,27 @@ public class ItemUtils {
      *
      * @param item the item to be converted.
      * @return the converted item.
+     *
+     * @throws InvalidItemData if the item doesn't belong to the plugin (no {@link PersistentDataContainer}.)
+     * @throws UnknownItem when the ID stored in the item is invalid.
      */
-    @Nullable
-    public static CustomItem get(@NotNull ItemStack item) {
-        NBTItem nbt = new NBTItem(item);
+    @NotNull
+    public static CustomItem get(@NotNull ItemStack item) throws InvalidItemData, UnknownItem {
+        Plugin pl = BlockArtOnline.getInstance();
+        if (item.getItemMeta() == null) {
+            // Bare hand
+            return new BareHand();
+        }
+        PersistentDataContainer container = item.getItemMeta().getPersistentDataContainer();
         if (amogus(item)) {
-            return get(nbt.getCompound("BlockArtOnlineData").getString("id"));
+            CustomItem c = get(container.get(new NamespacedKey(pl, "id"), PersistentDataType.STRING));
+            if (c == null) {
+                throw new UnknownItem();
+            } else {
+                return c;
+            }
         } else {
-            return null;
+            throw new InvalidItemData();
         }
     }
 
@@ -84,35 +102,6 @@ public class ItemUtils {
      *
      * @param item the item to inject.
      * @param itemID the ID of the item that needs to be injected.
-     * @param owner the original owner of the item.
-     * @param creationDate the exact time when the item was created.
-     * @return the injected item.
-     */
-    @NotNull
-    public static ItemStack injectIdentifier(
-            @NotNull ItemStack item,
-            @NotNull String itemID,
-            @Nullable Player owner,
-            @Nullable Date creationDate
-    ) {
-        NBTItem nbt = new NBTItem(item);
-        NBTCompound itemNBT = nbt.addCompound("BlockArtOnlineData");
-        itemNBT.setString("id", itemID);
-        if (owner != null) {
-            itemNBT.setString("ownerID", owner.getUniqueId().toString());
-        }
-        if (creationDate != null) {
-            itemNBT.setString("creationDate", creationDate.toString());
-        }
-        return nbt.getItem();
-    }
-
-    /**
-     * Injects the identifier tag into an item's NBT in order to distinguish it
-     * from other vanilla items.
-     *
-     * @param item the item to inject.
-     * @param itemID the ID of the item that needs to be injected.
      * @return the injected item.
      */
     @NotNull
@@ -120,37 +109,12 @@ public class ItemUtils {
             @NotNull ItemStack item,
             @NotNull String itemID
     ) {
-        return injectIdentifier(item, itemID, null, null);
-    }
-
-    /**
-     * Injects the owner tag of an existing item.
-     *
-     * @param item the item to inject.
-     * @param p the {@link Player} object of the owner.
-     * @return the injected item.
-     */
-    @NotNull
-    public static ItemStack injectOwner(@NotNull ItemStack item, @NotNull Player p) {
-        NBTItem nbt = new NBTItem(item);
-        NBTCompound itemNBT = nbt.getOrCreateCompound("BlockArtOnlineData");
-        itemNBT.setString("ownerID", p.getUniqueId().toString());
-        return nbt.getItem();
-    }
-
-    /**
-     * Injects the creation date of an existing item.
-     *
-     * @param item the item to inject
-     * @param creationDate the creation date.
-     * @return the injected item.
-     */
-    @NotNull
-    public static ItemStack injectCreationDate(@NotNull ItemStack item, @NotNull Date creationDate) {
-        NBTItem nbt = new NBTItem(item);
-        NBTCompound itemNBT = nbt.getOrCreateCompound("BlockArtOnlineData");
-        itemNBT.setString("creationDate", creationDate.toString());
-        return nbt.getItem();
+        Plugin pl = BlockArtOnline.getInstance();
+        ItemMeta meta = item.getItemMeta();
+        PersistentDataContainer container = meta.getPersistentDataContainer();
+        container.set(new NamespacedKey(pl, "id"), PersistentDataType.STRING, itemID);
+        item.setItemMeta(meta);
+        return item;
     }
 
     /**
@@ -159,7 +123,11 @@ public class ItemUtils {
      * @return whether the item is from the plugin or not.
      */
     public static boolean amogus(@NotNull ItemStack item) {
-        NBTItem nbt = new NBTItem(item);
-        return nbt.hasNBTData() && nbt.getCompound("BlockArtOnlineData").hasKey("id");
+        Plugin pl = BlockArtOnline.getInstance();
+        if (item.getItemMeta() == null) {
+            return false;
+        }
+        PersistentDataContainer container = item.getItemMeta().getPersistentDataContainer();
+        return container.get(new NamespacedKey(pl, "id"), PersistentDataType.STRING) != null;
     }
 }

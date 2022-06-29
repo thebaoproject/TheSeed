@@ -23,8 +23,10 @@
 
 package me.spike.blockartonline.abc;
 
-import me.spike.blockartonline.Utils;
+import me.spike.blockartonline.utils.Utils;
+import net.kyori.adventure.text.Component;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -39,26 +41,30 @@ public class Weapon extends CustomItem {
     private int damage;
     private int strength;
 
+    public Weapon(Material i) {
+        super(i);
+    }
+
     public float calculateDamage() {
         return (float) damage * (100 + strength)/100;
     }
 
     public ItemStack getItem() {
-        ItemStack item = getBaseItemType();
+        ItemStack item = new ItemStack(getMaterial());
         ItemMeta meta = item.getItemMeta();
         assert meta != null;
-        meta.setDisplayName(Utils.itemRarityColor(getRarity()) + getName());
-        List<String> lore = new ArrayList<>();
-        lore.add(ChatColor.GRAY + "Sát thương: " + ChatColor.RED + "+" + getDamage());
-        lore.add(ChatColor.GRAY + "Sức mạnh ra đòn: " + ChatColor.RED + "+" + getStrength());
-        lore.add(" ");
+        meta.displayName(Component.text(Utils.itemRarityColor(getRarity()) + getName()));
+        List<Component> lore = new ArrayList<>();
+        lore.add(Component.text(ChatColor.GRAY + "Sát thương: " + ChatColor.RED + "+" + getDamage()));
+        lore.add(Component.text(ChatColor.GRAY + "Sức mạnh ra đòn: " + ChatColor.RED + "+" + getStrength()));
+        lore.add(Component.space());
         for (Ability a : getAbilities()) {
-            lore.add(ChatColor.GOLD + "Kĩ năng đặc biệt: " + a.getName() + " " + ChatColor.YELLOW + ChatColor.BOLD + Utils.toActionString(a.getUsage()));
-            lore.addAll(a.getDescription());
+            lore.add(Component.text(ChatColor.GOLD + "Kĩ năng đặc biệt: " + a.getName() + " " + ChatColor.YELLOW + ChatColor.BOLD + Utils.toActionString(a.getUsage())));
+            lore.addAll(Utils.convListString(a.getDescription()));
         }
-        lore.add(" ");
-        lore.add(toRarityString(getRarity()));
-        meta.setLore(lore);
+        lore.add(Component.space());
+        lore.add(Component.text(toRarityString(getRarity())));
+        meta.lore(lore);
         meta.setUnbreakable(true);
         meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_UNBREAKABLE);
         item.setItemMeta(meta);

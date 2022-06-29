@@ -3,7 +3,7 @@ package me.spike.blockartonline;
 import me.spike.blockartonline.abc.Ability;
 import me.spike.blockartonline.abc.CustomItem;
 import me.spike.blockartonline.abc.ItemAbilityUseAction;
-import me.spike.blockartonline.customItems.AnnealBlade;
+import me.spike.blockartonline.items.AnnealBlade;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;

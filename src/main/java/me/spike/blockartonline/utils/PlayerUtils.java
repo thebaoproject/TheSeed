@@ -21,25 +21,25 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package me.spike.blockartonline;
+package me.spike.blockartonline.utils;
 
+import me.spike.blockartonline.BlockArtOnline;
+import org.bukkit.NamespacedKey;
+import org.bukkit.entity.Player;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.Plugin;
-
-import java.util.logging.Level;
-
-import static org.bukkit.Bukkit.*;
+import org.jetbrains.annotations.NotNull;
 
 public class PlayerUtils {
-    public static void startHealthBar() {
-        Plugin p = getPluginManager().getPlugin("BlockArtOnline");
-        if (p == null) {
-            getLogger().log(Level.SEVERE, "Failed to register health bar.");
-            return;
-        }
-        int taskID = getServer().getScheduler().scheduleSyncDelayedTask(p, () -> {
-        });
-        if (taskID == -1) {
-            getLogger().log(Level.SEVERE, "Scheduling health bar task failed.");
-        }
+    /**
+     * Checks if the player belongs to the plugin.
+     *
+     * @return whether the player is set up or not.
+     */
+    public static boolean amogus(@NotNull Player player) {
+        Plugin pl = BlockArtOnline.getInstance();
+        PersistentDataContainer container = player.getPersistentDataContainer();
+        return container.get(new NamespacedKey(pl, "health"), PersistentDataType.INTEGER) != null;
     }
 }
