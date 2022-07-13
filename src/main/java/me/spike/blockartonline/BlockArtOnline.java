@@ -23,21 +23,19 @@
 
 package me.spike.blockartonline;
 
+import me.spike.blockartonline.abc.CustomPlayer;
 import me.spike.blockartonline.abc.DebugLogger;
-import me.spike.blockartonline.abc.InternalPlayer;
 import me.spike.blockartonline.commands.PlayerDataManipulation;
+import me.spike.blockartonline.completers.GiveItemCompleter;
 import me.spike.blockartonline.completers.PlayerDataManipulationCompleter;
 import me.spike.blockartonline.events.CentralEventListener;
-import me.spike.blockartonline.completers.GiveItemCompleter;
 import me.spike.blockartonline.exceptions.InvalidPlayerData;
 import me.spike.blockartonline.utils.Locale;
 import me.spike.blockartonline.utils.Utils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.PluginCommand;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.slf4j.Logger;
@@ -53,6 +51,14 @@ public final class BlockArtOnline extends JavaPlugin implements CommandExecutor 
     private static BlockArtOnline instance;
     private Locale locale;
 
+    public BlockArtOnline() {
+        instance = this;
+    }
+
+    public static BlockArtOnline getInstance() {
+        return instance;
+    }
+
     @Override
     public void onEnable() {
         Logger l = getSLF4JLogger();
@@ -67,6 +73,7 @@ public final class BlockArtOnline extends JavaPlugin implements CommandExecutor 
         getConfig().options().copyDefaults();
         saveDefaultConfig();
         l.info("Loading languages...");
+        ensureLocales();
         String loc = getConfig().getString("locale");
         if (loc == null) {
             l.warn("You have not set the language option. Falling back to English.");
@@ -79,7 +86,6 @@ public final class BlockArtOnline extends JavaPlugin implements CommandExecutor 
         registerCommands();
         l.info("plugin.start.reg_task");
         registerTasks();
-        instance = this;
     }
 
     public void registerEvents() {
@@ -106,21 +112,27 @@ public final class BlockArtOnline extends JavaPlugin implements CommandExecutor 
         }
     }
 
+    public void ensureLocales() {
+        File localeFolder = new File(getDataFolder(), "locales");
+        boolean a = localeFolder.mkdir();
+        saveResource("locales/en.yml", true);
+    }
+
     public void registerTasks() {
         // Health bar task
         int healthBarTaskID = getServer().getScheduler().scheduleSyncRepeatingTask(this, () -> {
             for (Player i : getOnlinePlayers()) {
-                InternalPlayer p = null;
+                CustomPlayer p = null;
                 boolean invalid = false;
                 try {
                     if (!amogus(i)) {
                         DebugLogger.debug("The player with name of " + i.getName() + "hasn't been set up yet. Automatically setting up...");
-                        InternalPlayer.initialize(i);
+                        CustomPlayer.initialize(i);
                     }
-                    p = InternalPlayer.fromPlayer(i);
+                    p = CustomPlayer.fromPlayer(i);
                 } catch (InvalidPlayerData e) {
                     if (i.getHealth() != 0) {
-                        DebugLogger.debug("The player with name of " + i.getName() + "have invalid player data. Silently ignoring...");
+                        DebugLogger.debug("The player with name of " + i.getName() + "have invalid player data (healthbar). Silently ignoring...");
                     }
                     invalid = true;
                 }
@@ -137,17 +149,17 @@ public final class BlockArtOnline extends JavaPlugin implements CommandExecutor 
         // Regen task
         int regenTaskID = getServer().getScheduler().scheduleSyncRepeatingTask(this, () -> {
             for (Player i : getOnlinePlayers()) {
-                InternalPlayer p = null;
+                CustomPlayer p = null;
                 boolean invalid = false;
                 try {
                     if (!amogus(i)) {
                         DebugLogger.debug("The player with name of " + i.getName() + "hasn't been set up yet. Automatically setting up...");
-                        InternalPlayer.initialize(i);
+                        CustomPlayer.initialize(i);
                     }
-                    p = InternalPlayer.fromPlayer(i);
+                    p = CustomPlayer.fromPlayer(i);
                 } catch (InvalidPlayerData e) {
                     if (i.getHealth() != 0) {
-                        DebugLogger.debug("The player with name of " + i.getName() + "have invalid player data. Silently ignoring...");
+                        DebugLogger.debug("The player with name of " + i.getName() + "have invalid player data (regen). Silently ignoring...");
                     }
                     invalid = true;
                 }
@@ -173,9 +185,5 @@ public final class BlockArtOnline extends JavaPlugin implements CommandExecutor 
 
     public Locale getLocale() {
         return locale;
-    }
-
-    public static BlockArtOnline getInstance() {
-        return instance;
     }
 }

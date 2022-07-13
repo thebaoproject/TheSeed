@@ -23,23 +23,17 @@
 
 package me.spike.blockartonline.events;
 
-import me.spike.blockartonline.BlockArtOnline;
 import me.spike.blockartonline.abc.CustomItem;
 import me.spike.blockartonline.abc.DebugLogger;
 import me.spike.blockartonline.abc.Weapon;
 import me.spike.blockartonline.exceptions.InvalidItemData;
 import me.spike.blockartonline.exceptions.UnknownItem;
-import me.spike.blockartonline.items.BareHand;
 import me.spike.blockartonline.utils.ItemUtils;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
 
 public class ItemEventHandler {
 
@@ -51,25 +45,20 @@ public class ItemEventHandler {
      * @return whether the player is using the plugin's item.
      */
     public static boolean isValid(@NotNull PlayerInteractEvent e) {
-        Logger l = BlockArtOnline.getInstance().getSLF4JLogger();
         DebugLogger.debug("Checking validity...");
-        DebugLogger.debug(String.valueOf((
-                e.getAction().equals(Action.RIGHT_CLICK_AIR) ||
-                        e.getAction().equals(Action.RIGHT_CLICK_BLOCK)
-        ) && ItemUtils.amogus(e.getPlayer().getInventory().getItemInMainHand())));
-        return (
-            e.getAction().equals(Action.RIGHT_CLICK_AIR) ||
-            e.getAction().equals(Action.RIGHT_CLICK_BLOCK)
-        ) && ItemUtils.amogus(e.getPlayer().getInventory().getItemInMainHand());
+        DebugLogger.debug(String.valueOf(ItemUtils.amogus(e.getPlayer().getInventory().getItemInMainHand())));
+        boolean valid = (e.getAction().equals(Action.RIGHT_CLICK_AIR) || e.getAction().equals(Action.RIGHT_CLICK_BLOCK))
+                && ItemUtils.amogus(e.getPlayer().getInventory().getItemInMainHand());
+        DebugLogger.debug(String.valueOf(valid));
+        return valid;
     }
 
     public static void onPlayerUse(PlayerInteractEvent e) {
-        Logger l = BlockArtOnline.getInstance().getSLF4JLogger();
         DebugLogger.debug("Received PlayerUseEvent.");
         if (isValid(e)) {
             DebugLogger.debug("Action is valid.");
             if (e.getItem() != null) {
-                CustomItem item = null;
+                CustomItem item;
                 try {
                     item = ItemUtils.get(e.getItem());
                     item.rightClickAction(e);

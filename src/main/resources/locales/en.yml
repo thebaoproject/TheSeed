@@ -1,4 +1,4 @@
-plugin
+plugin:
   startup:
     reg_event: Registering event listener...
   error:

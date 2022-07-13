@@ -23,14 +23,18 @@
 
 package me.spike.blockartonline.abc;
 
+import me.spike.blockartonline.BlockArtOnline;
 import me.spike.blockartonline.utils.Utils;
 import net.kyori.adventure.text.Component;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,12 +67,18 @@ public class CustomItem {
         for (Ability a : getAbilities()) {
             lore.add(Component.text(ChatColor.GOLD + "Kĩ năng đặc biệt: " + a.getName() + " " + ChatColor.YELLOW + ChatColor.BOLD + Utils.toActionString(a.getUsage())));
             lore.addAll(Utils.convListString(a.getDescription()));
+            lore.add(Component.text(ChatColor.DARK_GRAY + "Mana: " + ChatColor.DARK_AQUA + a.getCost()));
+            lore.add(Component.text(ChatColor.DARK_GRAY + "Cooldown: " + ChatColor.GREEN + a.getCooldown()));
+
         }
         lore.add(Component.space());
         lore.add(Component.text(toRarityString(getRarity())));
         meta.lore(lore);
         meta.setUnbreakable(true);
         meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_UNBREAKABLE);
+        BlockArtOnline pl = BlockArtOnline.getInstance();
+        PersistentDataContainer container = meta.getPersistentDataContainer();
+        container.set(new NamespacedKey(pl, "id"), PersistentDataType.STRING, getID());
         item.setItemMeta(meta);
         return item;
     }
@@ -82,39 +92,39 @@ public class CustomItem {
     public void rightClickAction(PlayerInteractEvent e) {
     }
 
-    public final String getName() {
+    public String getName() {
         return name;
     }
 
-    public final void setName(String n) {
+    public void setName(String n) {
         name = n;
     }
 
-    public final String getID() {
+    public String getID() {
         return itemID;
     }
 
-    public final void setID(String id) {
+    public void setID(String id) {
         itemID = id;
     }
 
-    public final List<Ability> getAbilities() {
+    public List<Ability> getAbilities() {
         return abilities;
     }
 
-    public final void setAbilities(List<Ability> a) {
+    public void setAbilities(List<Ability> a) {
         abilities = a;
     }
 
-    public final Rarity getRarity() {
+    public Rarity getRarity() {
         return rarity;
     }
 
-    public final void setRarity(Rarity r) {
+    public void setRarity(Rarity r) {
         rarity = r;
     }
 
-    public final Material getMaterial() {
+    public Material getMaterial() {
         return type;
     }
 }

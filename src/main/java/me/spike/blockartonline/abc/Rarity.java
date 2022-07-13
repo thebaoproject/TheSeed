@@ -23,7 +23,7 @@
 
 package me.spike.blockartonline.abc;
 
-import org.bukkit.ChatColor;
+import me.spike.blockartonline.utils.Utils;
 
 public enum Rarity {
     COMMON,
@@ -45,16 +45,16 @@ public enum Rarity {
      */
     public static String toRarityString(Rarity rarity) {
         return switch (rarity) {
-            case COMMON -> ChatColor.translateAlternateColorCodes('&', "&l&fTHƯỜNG");
-            case UNCOMMON -> ChatColor.translateAlternateColorCodes('&', "&l&aHIẾM");
-            case RARE -> ChatColor.translateAlternateColorCodes('&', "&l&9RẤT HIẾM");
-            case LEGENDARY -> ChatColor.translateAlternateColorCodes('&', "&l&6THẦN THOẠI");
-            case COMMON_SWORD -> ChatColor.translateAlternateColorCodes('&', "&l&fKIẾM THƯỜNG");
-            case UNCOMMON_SWORD -> ChatColor.translateAlternateColorCodes('&', "&l&aKIẾM HIẾM");
-            case RARE_SWORD -> ChatColor.translateAlternateColorCodes('&', "&l&9KIẾM RẤT HIẾM");
-            case LEGENDARY_SWORD -> ChatColor.translateAlternateColorCodes('&', "&l&6KIẾM THẦN THOẠI");
-            case SPECIAL -> ChatColor.translateAlternateColorCodes('&', "&l&dĐẶC BIỆT");
-            case HAX -> ChatColor.translateAlternateColorCodes('&', "&l&cĐỒ HACKER");
+            case COMMON -> Utils.color("&f&lTHƯỜNG");
+            case UNCOMMON -> Utils.color("&a&lHIẾM");
+            case RARE -> Utils.color("&9&lRẤT HIẾM");
+            case LEGENDARY -> Utils.color("&6&lTHẦN THOẠI");
+            case COMMON_SWORD -> Utils.color("&f&lKIẾM THƯỜNG");
+            case UNCOMMON_SWORD -> Utils.color("&a&lKIẾM HIẾM");
+            case RARE_SWORD -> Utils.color("&9&lKIẾM RẤT HIẾM");
+            case LEGENDARY_SWORD -> Utils.color("&6&lKIẾM THẦN THOẠI");
+            case SPECIAL -> Utils.color("&d&lĐẶC BIỆT");
+            case HAX -> Utils.color("&c&lĐỒ HACKER");
         };
     }
 }

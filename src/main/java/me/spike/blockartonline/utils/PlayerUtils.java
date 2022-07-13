@@ -24,7 +24,13 @@
 package me.spike.blockartonline.utils;
 
 import me.spike.blockartonline.BlockArtOnline;
+import me.spike.blockartonline.abc.CustomPlayer;
+import me.spike.blockartonline.abc.DebugLogger;
+import me.spike.blockartonline.exceptions.InvalidPlayerData;
+import net.kyori.adventure.text.Component;
+import org.bukkit.ChatColor;
 import org.bukkit.NamespacedKey;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
@@ -41,5 +47,24 @@ public class PlayerUtils {
         Plugin pl = BlockArtOnline.getInstance();
         PersistentDataContainer container = player.getPersistentDataContainer();
         return container.get(new NamespacedKey(pl, "health"), PersistentDataType.INTEGER) != null;
+    }
+
+    public static boolean reduceManaOf(Player p, int amount) {
+        CustomPlayer cp;
+        try {
+            cp = CustomPlayer.fromPlayer(p);
+            int newMana = cp.getMana() - amount;
+            if (newMana > 0) {
+                cp.setMana(newMana);
+                return true;
+            } else {
+                p.sendMessage(Component.text(ChatColor.RED + "Bạn không có đủ Mana!"));
+                p.playSound(p, Sound.ENTITY_ENDERMAN_TELEPORT, 100, 1);
+                return false;
+            }
+        } catch (InvalidPlayerData e) {
+            DebugLogger.debug("Received InvalidPlayerData when trying to reduce player mana afer using an ability. Ignoring...");
+        }
+        return false;
     }
 }

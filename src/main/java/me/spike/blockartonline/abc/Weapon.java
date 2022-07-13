@@ -23,14 +23,19 @@
 
 package me.spike.blockartonline.abc;
 
+import me.spike.blockartonline.BlockArtOnline;
 import me.spike.blockartonline.utils.Utils;
 import net.kyori.adventure.text.Component;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.plugin.Plugin;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +51,7 @@ public class Weapon extends CustomItem {
     }
 
     public float calculateDamage() {
-        return (float) damage * (100 + strength)/100;
+        return (float) damage * (100 + strength) / 100;
     }
 
     public ItemStack getItem() {
@@ -61,12 +66,17 @@ public class Weapon extends CustomItem {
         for (Ability a : getAbilities()) {
             lore.add(Component.text(ChatColor.GOLD + "Kĩ năng đặc biệt: " + a.getName() + " " + ChatColor.YELLOW + ChatColor.BOLD + Utils.toActionString(a.getUsage())));
             lore.addAll(Utils.convListString(a.getDescription()));
+            lore.add(Component.text(ChatColor.DARK_GRAY + "Tốn Mana: " + ChatColor.DARK_AQUA + a.getCost()));
+            lore.add(Component.text(ChatColor.DARK_GRAY + "Cooldown: " + ChatColor.GREEN + a.getCooldown() + "s"));
         }
         lore.add(Component.space());
         lore.add(Component.text(toRarityString(getRarity())));
         meta.lore(lore);
         meta.setUnbreakable(true);
         meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_UNBREAKABLE);
+        Plugin pl = BlockArtOnline.getInstance();
+        PersistentDataContainer container = meta.getPersistentDataContainer();
+        container.set(new NamespacedKey(pl, "id"), PersistentDataType.STRING, getID());
         item.setItemMeta(meta);
         return item;
     }
@@ -77,13 +87,24 @@ public class Weapon extends CustomItem {
      *
      * @param e the {@link EntityDamageByEntityEvent} received.
      */
-    public void attackAction(EntityDamageByEntityEvent e) {}
+    public void attackAction(EntityDamageByEntityEvent e) {
+    }
 
-    public final int getStrength() { return strength; }
-    public final void setStrength(int s) { strength = s; }
+    public final int getStrength() {
+        return strength;
+    }
 
-    public final int getDamage() { return damage; }
-    public final void setDamage(int d) { damage = d; }
+    public final void setStrength(int s) {
+        strength = s;
+    }
+
+    public final int getDamage() {
+        return damage;
+    }
+
+    public final void setDamage(int d) {
+        damage = d;
+    }
 
 }
 

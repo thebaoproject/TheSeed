@@ -3,7 +3,9 @@
 <h6 align="right">Kayaba Akihiko</h6>
 
 ## Introduction
+
 Block Art Online is a plugin used to mimic the Sword Art Online feel on your Minecraft server.
 
 ## no doc, deez nuts.
+
 figure it out urself

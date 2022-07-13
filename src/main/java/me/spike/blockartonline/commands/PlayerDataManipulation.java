@@ -23,7 +23,7 @@
 
 package me.spike.blockartonline.commands;
 
-import me.spike.blockartonline.abc.InternalPlayer;
+import me.spike.blockartonline.abc.CustomPlayer;
 import me.spike.blockartonline.exceptions.InvalidPlayerData;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -38,7 +38,9 @@ public class PlayerDataManipulation implements CommandExecutor {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, String label, String[] args) {
-        if (!(label.equalsIgnoreCase("mpd"))) { return true; }
+        if (!(label.equalsIgnoreCase("mpd"))) {
+            return true;
+        }
 
         if (!(sender instanceof Player)) {
             sender.sendMessage(ChatColor.RED + "Console không thể thực hiện được câu lệnh này.");
@@ -51,12 +53,12 @@ public class PlayerDataManipulation implements CommandExecutor {
         }
         switch (args[0].toLowerCase(Locale.ROOT)) {
             case "init":
-                InternalPlayer.initialize((Player) sender);
+                CustomPlayer.initialize((Player) sender);
                 sender.sendMessage(ChatColor.GREEN + "Your player data has been initialized!");
                 break;
             case "check":
                 try {
-                    InternalPlayer ip = InternalPlayer.fromPlayer((Player) sender);
+                    CustomPlayer ip = CustomPlayer.fromPlayer((Player) sender);
                     String message = ChatColor.translateAlternateColorCodes(
                             '&',
                             "&c" + ip.getHealth() + "/" + ip.getMaxHealth() + "❤    &a" +
@@ -69,7 +71,7 @@ public class PlayerDataManipulation implements CommandExecutor {
                 break;
             case "modify":
                 try {
-                    InternalPlayer ip = InternalPlayer.fromPlayer((Player) sender);
+                    CustomPlayer ip = CustomPlayer.fromPlayer((Player) sender);
                     int number = Integer.parseInt(args[2]);
                     switch (args[1].toLowerCase(Locale.ROOT)) {
                         case "health" -> ip.setHealth(number);
