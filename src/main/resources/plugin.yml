@@ -1,5 +1,5 @@
 name: BlockArtOnline
-version: '${project.version}'
+version: '${version}'
 main: me.spike.blockartonline.BlockArtOnline
 api-version: 1.19
 prefix: BlockArtOnline

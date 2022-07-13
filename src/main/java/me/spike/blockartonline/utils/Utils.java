@@ -23,10 +23,10 @@
 
 package me.spike.blockartonline.utils;
 
-import me.spike.blockartonline.abc.*;
+import me.spike.blockartonline.abc.CustomPlayer;
+import me.spike.blockartonline.abc.ItemAbilityUseAction;
+import me.spike.blockartonline.abc.Rarity;
 import net.kyori.adventure.text.Component;
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.ChatColor;
 import org.jetbrains.annotations.NotNull;
 
@@ -73,13 +73,13 @@ public class Utils {
      *
      * @param p the player to show the bar to.
      */
-    public static void showHPBar(@NotNull InternalPlayer p) {
+    public static void showHPBar(@NotNull CustomPlayer p) {
         String message = ChatColor.translateAlternateColorCodes(
                 '&',
-                "&c" + p.getHealth() + "/" + p.getMaxHealth() + "❤    &a" +
-                        p.getBaseDefense() + "\uD83D\uDEE1    &b" + p.getMaxMana() + "/" + p.getMaxMana() + "✏"
+                "&c" + p.getHealth() + "/" + p.getMaxHealth() + "❤ HP    &a" +
+                        p.getBaseDefense() + "❈ Phòng thủ    &b" + p.getMana() + "/" + p.getMaxMana() + "✏ Mana"
         );
-        p.getPlayer().sendActionBar(Component.text(message));
+        p.getBase().sendActionBar(Component.text(message));
     }
 
     /**

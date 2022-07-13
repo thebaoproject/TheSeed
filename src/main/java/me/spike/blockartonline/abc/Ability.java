@@ -34,19 +34,50 @@ public class Ability {
     private String name;
     private List<String> description;
     private int cost;
+    private int cooldown;
 
-    public List<String> getDescription() { return description; }
+    public List<String> getDescription() {
+        return description;
+    }
+
     public Ability setDescription(String description) {
         this.description = Arrays.stream(description.split("\n")).toList();
         return this;
     }
 
-    public String getName() { return name; }
-    public Ability setName(String name) { this.name = name; return this; }
+    public String getName() {
+        return name;
+    }
 
-    public ItemAbilityUseAction getUsage() { return usage;}
-    public Ability setUsage(ItemAbilityUseAction usage) { this.usage = usage; return this; }
+    public Ability setName(String name) {
+        this.name = name;
+        return this;
+    }
 
-    public int getCost() { return cost; }
-    public Ability setCost(int cost) { this.cost = cost; return this; }
+    public ItemAbilityUseAction getUsage() {
+        return usage;
+    }
+
+    public Ability setUsage(ItemAbilityUseAction usage) {
+        this.usage = usage;
+        return this;
+    }
+
+    public int getCost() {
+        return cost;
+    }
+
+    public Ability setCost(int cost) {
+        this.cost = cost;
+        return this;
+    }
+
+    public int getCooldown() {
+        return cooldown;
+    }
+
+    public Ability setCooldown(int c) {
+        this.cooldown = c;
+        return this;
+    }
 }

@@ -23,8 +23,9 @@
 
 package me.spike.blockartonline.commands;
 
-import me.spike.blockartonline.utils.ItemUtils;
 import me.spike.blockartonline.abc.CustomItem;
+import me.spike.blockartonline.exceptions.UnknownItem;
+import me.spike.blockartonline.utils.ItemUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -43,21 +44,25 @@ public class GiveItem implements CommandExecutor {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
-        if (!("gsi".equalsIgnoreCase(label))) { return true; }
+        if (!("gsi".equalsIgnoreCase(label))) {
+            return true;
+        }
         if (args.length == 0) {
             sender.sendMessage(ChatColor.RED + "Bạn phải nêu một lựa chọn!");
             return true;
         }
 
-        CustomItem item = ItemUtils.get(args[0]);
-        if (item == null) {
+        CustomItem item;
+        try {
+            item = ItemUtils.get(args[0]);
+        } catch (UnknownItem e) {
             sender.sendMessage("Vật phẩm bạn lựa chọn không tồn tại.");
             return true;
         }
         ItemStack itemToGive = item.getItem();
         boolean specifyAmount = false;
         try {
-            itemToGive.setAmount(parseInt(args[args.length-1]));
+            itemToGive.setAmount(parseInt(args[args.length - 1]));
             specifyAmount = true;
         } catch (NumberFormatException nfe) {
             itemToGive.setAmount(1);
