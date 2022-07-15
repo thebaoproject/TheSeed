@@ -46,6 +46,7 @@ public class IllfangBoss extends CustomBoss {
         DebugLogger.debug("Got death event");
         e.setDeathSound(Sound.ENTITY_ENDER_DRAGON_DEATH);
         e.getEntity().getWorld().dropItem(e.getEntity().getLocation(), new ItemStack(Material.DIRT));
+        getBossBar().removeAll();
     }
 
 }

@@ -76,6 +76,7 @@ public class CustomEntity {
         temp.setHealth(temp.getMaxHealth());
         temp.setLastHealth(temp.getHealth());
         temp.setName(Utils.beautifyName(p.getType().toString()));
+        DebugLogger.debug("Name to set for entity initialization: " + temp.getName());
         temp.setLevel(1);
         temp.setID(p.getType().toString().toLowerCase(Locale.ROOT));
         temp.getBase().setCustomNameVisible(true);

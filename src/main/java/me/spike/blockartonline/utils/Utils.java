@@ -33,6 +33,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class Utils {
 
@@ -122,7 +123,7 @@ public class Utils {
         List<String> nameSep = List.of(name.split(" "));
         List<String> result = new ArrayList<>();
         for (String n : nameSep) {
-            result.add(n.substring(0, 1).toUpperCase() + n.substring(1));
+            result.add(n.substring(0, 1).toUpperCase(Locale.ROOT) + n.substring(1).toLowerCase(Locale.ROOT));
         }
         return Strings.join(result, ' ');
     }
