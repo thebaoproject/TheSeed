@@ -7,7 +7,6 @@
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
  *
@@ -20,31 +19,19 @@
  * SOFTWARE.
  */
 
-package me.spike.blockartonline.items;
+package me.spike.blockartonline.monsters;
 
-import me.spike.blockartonline.abc.CustomEntity;
-import me.spike.blockartonline.abc.Weapon;
-import me.spike.blockartonline.exceptions.InvalidEntityData;
-import org.bukkit.Material;
-import org.bukkit.entity.Damageable;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import me.spike.blockartonline.abc.CustomMonster;
+import org.bukkit.entity.EntityType;
 
-/**
- * Yes. A bare hand.
- */
-public class BareHand extends Weapon {
-    public BareHand() {
-        super(Material.AIR);
-        super.setDamage(1);
-    }
-
-    @Override
-    public void attackAction(EntityDamageByEntityEvent e) {
-        int damage = (int) e.getFinalDamage();
-        try {
-            CustomEntity entity = CustomEntity.fromEntity((Damageable) e.getEntity());
-            entity.setHealth(entity.getHealth() - damage);
-        } catch (InvalidEntityData ignored) {
-        }
+public class DemonicServant extends CustomMonster {
+    public DemonicServant() {
+        super(EntityType.WITHER_SKELETON);
+        setLevel(10);
+        setID("demonic_servant");
+        setName("Demonic Servant");
+        setMaxHealth(100);
+        setHealth(100);
+        setLastHealth(100);
     }
 }

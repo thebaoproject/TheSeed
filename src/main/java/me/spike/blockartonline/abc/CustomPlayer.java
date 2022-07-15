@@ -23,15 +23,20 @@
 
 package me.spike.blockartonline.abc;
 
-import me.spike.blockartonline.BlockArtOnline;
-import me.spike.blockartonline.exceptions.InvalidPlayerData;
+import me.spike.blockartonline.exceptions.InvalidEntityData;
+import me.spike.blockartonline.utils.EntityUtils;
 import net.kyori.adventure.text.Component;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Sound;
+import org.bukkit.Statistic;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
-import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Objects;
 
 /**
  * Represents a {@link Player} with added data. Modifying any property of this
@@ -68,25 +73,24 @@ public class CustomPlayer extends CustomEntity {
      *
      * @param p the player to get.
      * @return the InternalPlayer object.
-     * @throws InvalidPlayerData when the data stored in the player {@link PersistentDataContainer}
+     * @throws InvalidEntityData when the data stored in the player {@link PersistentDataContainer}
      *                           of the player contains invalid values (null or negative)
      */
     @NotNull
-    public static CustomPlayer fromPlayer(@NotNull Player p) throws InvalidPlayerData {
-        Plugin pl = BlockArtOnline.getInstance();
-        PersistentDataContainer container = p.getPersistentDataContainer();
-        Integer maxHealth = container.get(new NamespacedKey(pl, "maxHealth"), PersistentDataType.INTEGER);
-        Integer maxMana = container.get(new NamespacedKey(pl, "maxMana"), PersistentDataType.INTEGER);
-        Integer baseDefense = container.get(new NamespacedKey(pl, "baseDefense"), PersistentDataType.INTEGER);
-        Integer health = container.get(new NamespacedKey(pl, "health"), PersistentDataType.INTEGER);
-        Integer lastHealth = container.get(new NamespacedKey(pl, "lastHealth"), PersistentDataType.INTEGER);
-        Integer mana = container.get(new NamespacedKey(pl, "mana"), PersistentDataType.INTEGER);
+    public static CustomPlayer fromPlayer(@NotNull Player p) throws InvalidEntityData {
+        Integer maxHealth = EntityUtils.readFrom(p, "maxHealth", PersistentDataType.INTEGER);
+        Integer maxMana = EntityUtils.readFrom(p, "maxMana", PersistentDataType.INTEGER);
+        Integer baseDefense = EntityUtils.readFrom(p, "baseDefense", PersistentDataType.INTEGER);
+        Integer health = EntityUtils.readFrom(p, "health", PersistentDataType.INTEGER);
+        Integer lastHealth = EntityUtils.readFrom(p, "lastHealth", PersistentDataType.INTEGER);
+        Integer mana = EntityUtils.readFrom(p, "mana", PersistentDataType.INTEGER);
 
         if (maxHealth == null || maxMana == null || baseDefense == null || health == null || mana == null || maxHealth < 0 || maxMana < 0 || baseDefense < 0 || health < 0 || mana < 0) {
             DebugLogger.debug(maxHealth + " " + maxMana + " " + baseDefense + " " + health + " " + mana + " " + lastHealth);
-            throw new InvalidPlayerData();
+            throw new InvalidEntityData();
         }
         CustomPlayer output = new CustomPlayer(p);
+        output.setBase(p);
         output.setMaxHealth(maxHealth);
         output.setBaseDefense(baseDefense);
         output.setMaxMana(maxMana);
@@ -97,6 +101,7 @@ public class CustomPlayer extends CustomEntity {
             output.setLastHealth(lastHealth);
         }
         output.setMana(mana);
+        Objects.requireNonNull(p.getAttribute(Attribute.GENERIC_MAX_HEALTH)).setBaseValue(40);
         return output;
     }
 
@@ -110,9 +115,7 @@ public class CustomPlayer extends CustomEntity {
 
     public void setMaxMana(int m) {
         maxMana = m;
-        Plugin pl = BlockArtOnline.getInstance();
-        PersistentDataContainer container = base.getPersistentDataContainer();
-        container.set(new NamespacedKey(pl, "maxMana"), PersistentDataType.INTEGER, m);
+        EntityUtils.writeTo(getBase(), "maxMana", m);
     }
 
     public int getBaseDefense() {
@@ -121,9 +124,7 @@ public class CustomPlayer extends CustomEntity {
 
     public void setBaseDefense(int d) {
         baseDefense = d;
-        Plugin pl = BlockArtOnline.getInstance();
-        PersistentDataContainer container = base.getPersistentDataContainer();
-        container.set(new NamespacedKey(pl, "baseDefense"), PersistentDataType.INTEGER, d);
+        EntityUtils.writeTo(getBase(), "baseDefense", d);
     }
 
     /**
@@ -137,8 +138,9 @@ public class CustomPlayer extends CustomEntity {
             setHealth(getMaxHealth());
         }
         // f**k java floating point arithmetic, took a long time to figure out
-        double newHealth = ((double) getHealth() / getMaxHealth()) * 20;
+        double newHealth = ((double) getHealth() / getMaxHealth()) * 40;
         if (newHealth <= 0) {
+            DebugLogger.debug("Player is designated to die. Setting health to max health..." + getHealth());
             setHealth(getMaxHealth());
             Location spawnPoint = base.getBedSpawnLocation();
             if (spawnPoint == null) {
@@ -182,8 +184,6 @@ public class CustomPlayer extends CustomEntity {
 
     public void setMana(int m) {
         mana = m;
-        Plugin pl = BlockArtOnline.getInstance();
-        PersistentDataContainer container = base.getPersistentDataContainer();
-        container.set(new NamespacedKey(pl, "mana"), PersistentDataType.INTEGER, m);
+        EntityUtils.writeTo(getBase(), "mana", m);
     }
 }

@@ -26,7 +26,6 @@ package me.spike.blockartonline.events;
 import me.spike.blockartonline.abc.CustomItem;
 import me.spike.blockartonline.abc.DebugLogger;
 import me.spike.blockartonline.abc.Weapon;
-import me.spike.blockartonline.exceptions.InvalidItemData;
 import me.spike.blockartonline.exceptions.UnknownItem;
 import me.spike.blockartonline.utils.ItemUtils;
 import org.bukkit.entity.Player;
@@ -45,25 +44,17 @@ public class ItemEventHandler {
      * @return whether the player is using the plugin's item.
      */
     public static boolean isValid(@NotNull PlayerInteractEvent e) {
-        DebugLogger.debug("Checking validity...");
-        DebugLogger.debug(String.valueOf(ItemUtils.amogus(e.getPlayer().getInventory().getItemInMainHand())));
-        boolean valid = (e.getAction().equals(Action.RIGHT_CLICK_AIR) || e.getAction().equals(Action.RIGHT_CLICK_BLOCK))
+        return (e.getAction().equals(Action.RIGHT_CLICK_AIR) || e.getAction().equals(Action.RIGHT_CLICK_BLOCK))
                 && ItemUtils.amogus(e.getPlayer().getInventory().getItemInMainHand());
-        DebugLogger.debug(String.valueOf(valid));
-        return valid;
     }
 
     public static void onPlayerUse(PlayerInteractEvent e) {
-        DebugLogger.debug("Received PlayerUseEvent.");
         if (isValid(e)) {
-            DebugLogger.debug("Action is valid.");
             if (e.getItem() != null) {
                 CustomItem item;
                 try {
                     item = ItemUtils.get(e.getItem());
                     item.rightClickAction(e);
-                } catch (InvalidItemData ex) {
-                    DebugLogger.debug("Received InvalidItemData exception in item event listener. Silently ignoring.");
                 } catch (UnknownItem ex) {
                     DebugLogger.debug("Received UnknownItem exception in item event listener. Silently ignoring.");
                 }
@@ -76,13 +67,13 @@ public class ItemEventHandler {
             CustomItem item = null;
             try {
                 item = ItemUtils.get(((Player) e.getDamager()).getInventory().getItemInMainHand());
-            } catch (InvalidItemData ex) {
-                DebugLogger.debug("Received InvalidItemData exception. Silently ignoring.");
             } catch (UnknownItem ex) {
                 DebugLogger.debug("Received UnknownItem exception. Silently ignoring.");
             }
             if (item instanceof Weapon) {
                 ((Weapon) item).attackAction(e);
+            } else {
+                DebugLogger.debug("EntityDamagedByEntity damage: " + e.getFinalDamage());
             }
         }
     }

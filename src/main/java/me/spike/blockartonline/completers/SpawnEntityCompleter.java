@@ -7,7 +7,6 @@
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
  *
@@ -20,11 +19,20 @@
  * SOFTWARE.
  */
 
-package me.spike.blockartonline.exceptions;
+package me.spike.blockartonline.completers;
 
-/**
- * Thrown when player's internal data is invalid (usually null or negative)
- */
-public class InvalidPlayerData extends Exception {
+import me.spike.blockartonline.utils.EntityUtils;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
+
+public class SpawnEntityCompleter implements TabCompleter {
+    @Override
+    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+        return EntityUtils.getEntityList();
+    }
 }

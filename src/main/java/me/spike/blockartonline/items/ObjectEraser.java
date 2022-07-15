@@ -7,7 +7,6 @@
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
  *
@@ -22,29 +21,40 @@
 
 package me.spike.blockartonline.items;
 
-import me.spike.blockartonline.abc.CustomEntity;
-import me.spike.blockartonline.abc.Weapon;
+import me.spike.blockartonline.abc.*;
 import me.spike.blockartonline.exceptions.InvalidEntityData;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Damageable;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
-/**
- * Yes. A bare hand.
- */
-public class BareHand extends Weapon {
-    public BareHand() {
-        super(Material.AIR);
-        super.setDamage(1);
+import java.util.List;
+
+public class ObjectEraser extends Weapon {
+
+    public ObjectEraser() {
+        super(Material.GOLDEN_SWORD);
+        super.setID("object_eraser");
+        super.setName("Object Eraser");
+        super.setDamage(999999999);
+        super.setStrength(999999999);
+        super.setAbilities(List.of(
+                new Ability().setName("One-hit-kill").setDescription("" +
+                        ChatColor.translateAlternateColorCodes(
+                                '&', "&7Giết chết sinh vật chỉ với one hit."
+                        )
+                ).setUsage(ItemAbilityUseAction.NONE).setCost(30).setCooldown(3)
+        ));
+        super.setRarity(Rarity.HAX);
     }
 
-    @Override
     public void attackAction(EntityDamageByEntityEvent e) {
-        int damage = (int) e.getFinalDamage();
-        try {
-            CustomEntity entity = CustomEntity.fromEntity((Damageable) e.getEntity());
-            entity.setHealth(entity.getHealth() - damage);
-        } catch (InvalidEntityData ignored) {
+        if (e.getEntity() instanceof Damageable victim) {
+            try {
+                CustomEntity entity = CustomEntity.fromEntity(victim);
+                entity.setHealth(0);
+            } catch (InvalidEntityData ignored) {
+            }
         }
     }
 }

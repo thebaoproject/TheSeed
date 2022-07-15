@@ -27,6 +27,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.jetbrains.annotations.NotNull;
@@ -51,5 +52,10 @@ public class CentralEventListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public static void onEntityRegen(@NotNull EntityRegainHealthEvent event) {
         PlayerEventHandler.onEntityRegen(event);
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public static void onDeath(EntityDeathEvent e) {
+        EntityEventHandler.onDeath(e);
     }
 }

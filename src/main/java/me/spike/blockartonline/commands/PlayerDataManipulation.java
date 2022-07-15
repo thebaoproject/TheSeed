@@ -23,12 +23,14 @@
 
 package me.spike.blockartonline.commands;
 
+import me.spike.blockartonline.abc.CustomEntity;
 import me.spike.blockartonline.abc.CustomPlayer;
-import me.spike.blockartonline.exceptions.InvalidPlayerData;
+import me.spike.blockartonline.exceptions.InvalidEntityData;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -65,7 +67,7 @@ public class PlayerDataManipulation implements CommandExecutor {
                                     ip.getBaseDefense() + "\uD83D\uDEE1    &b" + ip.getMaxMana() + "/" + ip.getMaxMana() + "✏"
                     );
                     sender.sendMessage(message);
-                } catch (InvalidPlayerData e) {
+                } catch (InvalidEntityData e) {
                     sender.sendMessage(ChatColor.RED + "The player data stored in the player is invalid. You can run /mpd init again to re-initialize.");
                 }
                 break;
@@ -81,10 +83,15 @@ public class PlayerDataManipulation implements CommandExecutor {
                         case "base_defense" -> ip.setBaseDefense(number);
                         default -> sender.sendMessage(ChatColor.RED + "Unknown option: " + args[1]);
                     }
-                } catch (InvalidPlayerData e) {
+                } catch (InvalidEntityData e) {
                     sender.sendMessage(ChatColor.RED + "The player data stored in the player is invalid. You can run /mpd init again to re-initialize.");
                 } catch (NumberFormatException e) {
                     sender.sendMessage(ChatColor.RED + "The amount that you have entered is invalid.");
+                }
+                break;
+            case "reboot":
+                for (Damageable entity : ((Player) sender).getWorld().getLivingEntities()) {
+                    CustomEntity.initialize(entity);
                 }
                 break;
             default:

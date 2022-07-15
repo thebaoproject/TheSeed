@@ -7,7 +7,6 @@
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
  *
@@ -20,31 +19,43 @@
  * SOFTWARE.
  */
 
-package me.spike.blockartonline.completers;
+package me.spike.blockartonline.commands;
 
+import me.spike.blockartonline.abc.CustomMonster;
+import me.spike.blockartonline.exceptions.UnknownEntity;
+import me.spike.blockartonline.utils.EntityUtils;
+import net.kyori.adventure.text.Component;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
-
-public class PlayerDataManipulationCompleter implements TabCompleter {
+public class SpawnEntity implements CommandExecutor {
     @Override
-    public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
-        if (sender instanceof Player) {
-            if (args.length == 1) {
-                return List.of("init", "check", "modify", "reboot");
-            } else if (args[0].equalsIgnoreCase("modify")) {
-                if (args.length == 2) {
-                    return List.of("health", "mana", "base_defense", "max_health", "max_mana");
-                } else if (args.length == 3) {
-                    return List.of("100", "50", "10", "0");
-                }
-            }
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+        if (!("spe".equalsIgnoreCase(label))) {
+            return true;
         }
-        return null;
-    }
+        if (!(sender instanceof Player p)) {
+            sender.sendMessage(ChatColor.RED + "No console!");
+            return true;
+        }
+        if (args.length == 0) {
+            p.sendMessage(ChatColor.RED + "Bạn phải nêu một lựa chọn!");
+            return true;
+        }
 
+        CustomMonster entity;
+        try {
+            entity = (CustomMonster) EntityUtils.get(args[0]);
+            entity.spawnAt(p.getLocation());
+            sender.sendMessage(Component.text(ChatColor.GREEN + "Whoosh!"));
+        } catch (UnknownEntity e) {
+            sender.sendMessage("Entity bạn lựa chọn không tồn tại.");
+            return true;
+        }
+        return true;
+    }
 }

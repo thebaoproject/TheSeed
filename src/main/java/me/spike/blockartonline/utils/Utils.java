@@ -27,6 +27,7 @@ import me.spike.blockartonline.abc.CustomPlayer;
 import me.spike.blockartonline.abc.ItemAbilityUseAction;
 import me.spike.blockartonline.abc.Rarity;
 import net.kyori.adventure.text.Component;
+import org.apache.logging.log4j.util.Strings;
 import org.bukkit.ChatColor;
 import org.jetbrains.annotations.NotNull;
 
@@ -45,8 +46,9 @@ public class Utils {
     public static String toActionString(@NotNull ItemAbilityUseAction action) {
         return switch (action) {
             case RIGHT_CLICK -> "CHUỘT PHẢI";
-            case SNEAK -> "GIỮ SHIFT";
+            case SNEAK -> "SHIFT";
             case DOUBLE_JUMP -> "NHẢY HAI LẦN";
+            case NONE -> "";
         };
     }
 
@@ -107,5 +109,21 @@ public class Utils {
     @NotNull
     public static String color(String input) {
         return ChatColor.translateAlternateColorCodes('&', input);
+    }
+
+    /**
+     * Beautifies the name given (RICK_ASTLEY to Rick Astley).
+     *
+     * @param name the ugly name.
+     * @return the beautified name.
+     */
+    @NotNull
+    public static String beautifyName(@NotNull String name) {
+        List<String> nameSep = List.of(name.split(" "));
+        List<String> result = new ArrayList<>();
+        for (String n : nameSep) {
+            result.add(n.substring(0, 1).toUpperCase() + n.substring(1));
+        }
+        return Strings.join(result, ' ');
     }
 }

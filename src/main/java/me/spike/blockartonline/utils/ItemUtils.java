@@ -25,20 +25,21 @@ package me.spike.blockartonline.utils;
 
 import me.spike.blockartonline.BlockArtOnline;
 import me.spike.blockartonline.abc.CustomItem;
-import me.spike.blockartonline.abc.DebugLogger;
-import me.spike.blockartonline.exceptions.InvalidItemData;
 import me.spike.blockartonline.exceptions.UnknownItem;
 import me.spike.blockartonline.items.AnnealBlade;
 import me.spike.blockartonline.items.BareHand;
+import me.spike.blockartonline.items.ObjectEraser;
+import me.spike.blockartonline.items.VanillaItem;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.Plugin;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Unmodifiable;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -55,6 +56,8 @@ public class ItemUtils {
         return switch (itemID) {
             case "anneal_blade":
                 yield new AnnealBlade();
+            case "object_eraser":
+                yield new ObjectEraser();
             default:
                 throw new UnknownItem();
         };
@@ -65,11 +68,10 @@ public class ItemUtils {
      *
      * @param item the item to be converted.
      * @return the converted item.
-     * @throws InvalidItemData if the item doesn't belong to the plugin (no {@link PersistentDataContainer}.)
-     * @throws UnknownItem     when the ID stored in the item is invalid.
+     * @throws UnknownItem when the ID stored in the item is invalid.
      */
     @NotNull
-    public static CustomItem get(@NotNull ItemStack item) throws InvalidItemData, UnknownItem {
+    public static CustomItem get(@NotNull ItemStack item) throws UnknownItem {
         Plugin pl = BlockArtOnline.getInstance();
         if (item.getItemMeta() == null) {
             // Bare hand
@@ -83,7 +85,7 @@ public class ItemUtils {
                 throw new UnknownItem();
             }
         } else {
-            throw new InvalidItemData();
+            return new VanillaItem();
         }
     }
 
@@ -92,30 +94,10 @@ public class ItemUtils {
      *
      * @return the item name list.
      */
+    @Contract(pure = true)
     @NotNull
-    public static List<String> getList() {
-        return Arrays.asList("anneal_blade");
-    }
-
-    /**
-     * Injects the identifier tag into an item's NBT in order to distinguish it
-     * from other vanilla items.
-     *
-     * @param item   the item to inject.
-     * @param itemID the ID of the item that needs to be injected.
-     * @return the injected item.
-     */
-    @NotNull
-    public static ItemStack injectIdentifier(
-            @NotNull ItemStack item,
-            @NotNull String itemID
-    ) {
-        Plugin pl = BlockArtOnline.getInstance();
-        ItemMeta meta = item.getItemMeta();
-        PersistentDataContainer container = meta.getPersistentDataContainer();
-        container.set(new NamespacedKey(pl, "id"), PersistentDataType.STRING, itemID);
-        item.setItemMeta(meta);
-        return item;
+    public static @Unmodifiable List<String> getItemList() {
+        return List.of("anneal_blade", "object_eraser");
     }
 
     /**
@@ -129,7 +111,6 @@ public class ItemUtils {
             return false;
         }
         PersistentDataContainer container = item.getItemMeta().getPersistentDataContainer();
-        DebugLogger.debug(container.get(new NamespacedKey(pl, "id"), PersistentDataType.STRING));
         return container.get(new NamespacedKey(pl, "id"), PersistentDataType.STRING) != null;
     }
 

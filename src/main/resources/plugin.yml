@@ -11,5 +11,9 @@ commands:
     usage: /<command> <item> <amount>
   mpd:
     description: Edit the current player's data.
-    usage: /<command> (setup|modify)
+    usage: /<command> (init|check|modify (mana|health|base_defense|max_mana|max_health) <amount>)
+  spe:
+    description: Spawn a custom entity at your location.
+    usage: /<command> <entity>
+
 

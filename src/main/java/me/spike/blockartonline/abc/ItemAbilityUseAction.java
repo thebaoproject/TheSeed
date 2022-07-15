@@ -35,5 +35,6 @@ public enum ItemAbilityUseAction {
     /**
      * Jump two times when holding the item.
      */
-    DOUBLE_JUMP
+    DOUBLE_JUMP,
+    NONE
 }

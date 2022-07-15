@@ -38,7 +38,7 @@ public class GiveItemCompleter implements TabCompleter {
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         if (sender instanceof Player) {
             if (args.length == 1) {
-                return ItemUtils.getList();
+                return ItemUtils.getItemList();
             }
         }
         return null;

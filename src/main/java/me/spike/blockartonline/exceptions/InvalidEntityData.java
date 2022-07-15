@@ -20,31 +20,11 @@
  * SOFTWARE.
  */
 
-package me.spike.blockartonline.items;
-
-import me.spike.blockartonline.abc.CustomEntity;
-import me.spike.blockartonline.abc.Weapon;
-import me.spike.blockartonline.exceptions.InvalidEntityData;
-import org.bukkit.Material;
-import org.bukkit.entity.Damageable;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
+package me.spike.blockartonline.exceptions;
 
 /**
- * Yes. A bare hand.
+ * Thrown when player's internal data is invalid (usually null or negative)
  */
-public class BareHand extends Weapon {
-    public BareHand() {
-        super(Material.AIR);
-        super.setDamage(1);
-    }
+public class InvalidEntityData extends Exception {
 
-    @Override
-    public void attackAction(EntityDamageByEntityEvent e) {
-        int damage = (int) e.getFinalDamage();
-        try {
-            CustomEntity entity = CustomEntity.fromEntity((Damageable) e.getEntity());
-            entity.setHealth(entity.getHealth() - damage);
-        } catch (InvalidEntityData ignored) {
-        }
-    }
 }

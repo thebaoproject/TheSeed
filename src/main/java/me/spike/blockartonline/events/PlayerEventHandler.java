@@ -25,7 +25,7 @@ package me.spike.blockartonline.events;
 import me.spike.blockartonline.BlockArtOnline;
 import me.spike.blockartonline.abc.CustomPlayer;
 import me.spike.blockartonline.abc.DebugLogger;
-import me.spike.blockartonline.exceptions.InvalidPlayerData;
+import me.spike.blockartonline.exceptions.InvalidEntityData;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
@@ -57,7 +57,7 @@ public class PlayerEventHandler {
             }
             DebugLogger.debug("Setting " + p.getBase().getName() + "'s health to " + (p.getHealth() - (int) event.getFinalDamage()));
             event.setCancelled(true);
-        } catch (InvalidPlayerData e) {
+        } catch (InvalidEntityData e) {
             if (((Player) event.getEntity()).getHealth() != 0) {
                 BlockArtOnline.getInstance().getSLF4JLogger().error("Received InvalidPlayerData in the player event listener. THIS SHOULDN'T BE POSSIBLE. Silently ignoring...");
             }
