@@ -25,7 +25,7 @@ import me.spike.blockartonline.abc.CustomMonster;
 import me.spike.blockartonline.exceptions.UnknownEntity;
 import me.spike.blockartonline.utils.EntityUtils;
 import net.kyori.adventure.text.Component;
-import org.bukkit.ChatColor;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -39,11 +39,11 @@ public class SpawnEntity implements CommandExecutor {
             return true;
         }
         if (!(sender instanceof Player p)) {
-            sender.sendMessage(ChatColor.RED + "No console!");
+            sender.sendMessage(Component.text("This command can't be involved by console or command block!").color(NamedTextColor.RED));
             return true;
         }
         if (args.length == 0) {
-            p.sendMessage(ChatColor.RED + "Bạn phải nêu một lựa chọn!");
+            p.sendMessage(Component.text("You need to provide an option!").color(NamedTextColor.RED));
             return true;
         }
 
@@ -51,9 +51,9 @@ public class SpawnEntity implements CommandExecutor {
         try {
             entity = (CustomMonster) EntityUtils.get(args[0]);
             entity.spawnAt(p.getLocation());
-            sender.sendMessage(Component.text(ChatColor.GREEN + "Whoosh!"));
+            sender.sendMessage(Component.text("Whoosh!").color(NamedTextColor.GREEN));
         } catch (UnknownEntity e) {
-            sender.sendMessage("Entity bạn lựa chọn không tồn tại.");
+            sender.sendMessage(Component.text("Unknown entity!").color(NamedTextColor.RED));
             return true;
         }
         return true;

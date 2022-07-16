@@ -26,7 +26,8 @@ package me.spike.blockartonline.commands;
 import me.spike.blockartonline.abc.CustomEntity;
 import me.spike.blockartonline.abc.CustomPlayer;
 import me.spike.blockartonline.exceptions.InvalidEntityData;
-import org.bukkit.ChatColor;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -45,30 +46,33 @@ public class PlayerDataManipulation implements CommandExecutor {
         }
 
         if (!(sender instanceof Player)) {
-            sender.sendMessage(ChatColor.RED + "Console không thể thực hiện được câu lệnh này.");
+            sender.sendMessage(Component.text("This command can't be involved by console or command block!").color(NamedTextColor.RED));
             return true;
         }
 
         if (args.length == 0) {
-            sender.sendMessage(ChatColor.RED + "Chọn gì đó đi chứ.");
+            sender.sendMessage(Component.text("You need to provide an option!").color(NamedTextColor.RED));
             return true;
         }
         switch (args[0].toLowerCase(Locale.ROOT)) {
             case "init":
                 CustomPlayer.initialize((Player) sender);
-                sender.sendMessage(ChatColor.GREEN + "Your player data has been initialized!");
+                sender.sendMessage(Component.text("Your player data has been initialized").color(NamedTextColor.GREEN));
                 break;
             case "check":
                 try {
                     CustomPlayer ip = CustomPlayer.fromPlayer((Player) sender);
-                    String message = ChatColor.translateAlternateColorCodes(
-                            '&',
-                            "&c" + ip.getHealth() + "/" + ip.getMaxHealth() + "❤    &a" +
-                                    ip.getBaseDefense() + "\uD83D\uDEE1    &b" + ip.getMaxMana() + "/" + ip.getMaxMana() + "✏"
-                    );
+                    Component message =
+                            Component.text(ip.getHealth() + "/" + ip.getMaxHealth() + "❤").color(NamedTextColor.RED)
+                                    .append(Component.text("   "))
+                                    .append(Component.text(ip.getBaseDefense() + "\uD83D\uDEE1").color(NamedTextColor.GREEN))
+                                    .append(Component.text("   "))
+                                    .append(Component.text(ip.getMana() + "/" + ip.getMaxMana() + "✏").color(NamedTextColor.AQUA));
                     sender.sendMessage(message);
                 } catch (InvalidEntityData e) {
-                    sender.sendMessage(ChatColor.RED + "The player data stored in the player is invalid. You can run /mpd init again to re-initialize.");
+                    sender.sendMessage(
+                            Component.text("The player data stored in the player is invalid. You can run /mpd init again to re-initialize.").color(NamedTextColor.RED)
+                    );
                 }
                 break;
             case "modify":
@@ -81,12 +85,20 @@ public class PlayerDataManipulation implements CommandExecutor {
                         case "max_mana" -> ip.setMaxMana(number);
                         case "max_health" -> ip.setMaxHealth(number);
                         case "base_defense" -> ip.setBaseDefense(number);
-                        default -> sender.sendMessage(ChatColor.RED + "Unknown option: " + args[1]);
+                        default -> sender.sendMessage(
+                                Component.text("Unknown option:").color(NamedTextColor.RED)
+                                        .append(Component.space())
+                                        .append(Component.text(args[1]).color(NamedTextColor.YELLOW))
+                        );
                     }
                 } catch (InvalidEntityData e) {
-                    sender.sendMessage(ChatColor.RED + "The player data stored in the player is invalid. You can run /mpd init again to re-initialize.");
+                    sender.sendMessage(
+                            Component.text("The player data stored in the player is invalid. You can run /mpd init again to re-initialize.").color(NamedTextColor.RED)
+                    );
                 } catch (NumberFormatException e) {
-                    sender.sendMessage(ChatColor.RED + "The amount that you have entered is invalid.");
+                    sender.sendMessage(
+                            Component.text("The amount that you have entered is invalid.").color(NamedTextColor.RED)
+                    );
                 }
                 break;
             case "reboot":
@@ -95,7 +107,13 @@ public class PlayerDataManipulation implements CommandExecutor {
                 }
                 break;
             default:
-                sender.sendMessage(ChatColor.RED + "Câu lệnh mà bạn đã nhập không tồn tại!");
+                sender.sendMessage(
+                        Component.text("Command").color(NamedTextColor.RED)
+                                .append(Component.space())
+                                .append(Component.text(args[0]).color(NamedTextColor.YELLOW))
+                                .append(Component.space())
+                                .append(Component.text("not found!").color(NamedTextColor.RED))
+                );
         }
         return true;
     }

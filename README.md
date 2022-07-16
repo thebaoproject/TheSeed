@@ -6,6 +6,7 @@
 
 Block Art Online is a plugin used to mimic the Sword Art Online feel on your Minecraft server.
 
-## no doc, deez nuts.
+## Server requirements
 
-figure it out urself
+Type: PaperMC or it's forks <br>
+Version: 1.19 or higher

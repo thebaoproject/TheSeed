@@ -26,7 +26,8 @@ package me.spike.blockartonline.commands;
 import me.spike.blockartonline.abc.CustomItem;
 import me.spike.blockartonline.exceptions.UnknownItem;
 import me.spike.blockartonline.utils.ItemUtils;
-import org.bukkit.ChatColor;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -34,7 +35,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-import static java.lang.Integer.parseInt;
 import static org.bukkit.Bukkit.getServer;
 
 /**
@@ -48,7 +48,9 @@ public class GiveItem implements CommandExecutor {
             return true;
         }
         if (args.length == 0) {
-            sender.sendMessage(ChatColor.RED + "Bạn phải nêu một lựa chọn!");
+            sender.sendMessage(
+                    Component.text("You need to provide an item name!").color(NamedTextColor.RED)
+            );
             return true;
         }
 
@@ -56,36 +58,35 @@ public class GiveItem implements CommandExecutor {
         try {
             item = ItemUtils.get(args[0]);
         } catch (UnknownItem e) {
-            sender.sendMessage("Vật phẩm bạn lựa chọn không tồn tại.");
+            sender.sendMessage(
+                    Component.text("Unknown item!").color(NamedTextColor.RED)
+            );
             return true;
         }
+
         ItemStack itemToGive = item.getItem();
-        boolean specifyAmount = false;
-        try {
-            itemToGive.setAmount(parseInt(args[args.length - 1]));
-            specifyAmount = true;
-        } catch (NumberFormatException nfe) {
-            itemToGive.setAmount(1);
-        }
         Player playerToGive;
+
         if (args.length == 1) {
             playerToGive = (Player) sender;
-        } else if ((args.length == 2 && !specifyAmount) || args.length == 3) {
+        } else {
             playerToGive = getServer().getPlayer(args[0]);
             if (playerToGive == null) {
-                sender.sendMessage(ChatColor.RED + "Người chơi " + args[0] + " không tồn tại.");
+                sender.sendMessage(
+                        Component.text("Player:").color(NamedTextColor.RED)
+                                .append(Component.space())
+                                .append(Component.text(args[0]).color(NamedTextColor.YELLOW))
+                                .append(Component.space())
+                                .append(Component.text("not found!").color(NamedTextColor.RED))
+                );
                 return true;
             }
-        } else if (args.length == 2) {
-            playerToGive = (Player) sender;
-        } else {
-            sender.sendMessage(ChatColor.RED + "Người chơi bạn nói đến không tồn tại.");
-            return true;
         }
+
         if (sender.hasPermission("bao.giveItem")) {
             playerToGive.getInventory().addItem(itemToGive);
         } else {
-            sender.sendMessage(ChatColor.RED + "Bạn không có quyền!");
+            sender.sendMessage(Component.text("You don't have permission to do that!").color(NamedTextColor.RED));
         }
         return true;
     }

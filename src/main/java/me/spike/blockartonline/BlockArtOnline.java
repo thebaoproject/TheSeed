@@ -26,6 +26,7 @@ package me.spike.blockartonline;
 import me.spike.blockartonline.abc.CustomEntity;
 import me.spike.blockartonline.abc.CustomPlayer;
 import me.spike.blockartonline.abc.DebugLogger;
+import me.spike.blockartonline.commands.GiveItem;
 import me.spike.blockartonline.commands.PlayerDataManipulation;
 import me.spike.blockartonline.commands.SpawnEntity;
 import me.spike.blockartonline.completers.GiveItemCompleter;
@@ -35,6 +36,7 @@ import me.spike.blockartonline.events.CentralEventListener;
 import me.spike.blockartonline.exceptions.InvalidEntityData;
 import me.spike.blockartonline.utils.EntityUtils;
 import me.spike.blockartonline.utils.Utils;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.command.CommandExecutor;
@@ -45,44 +47,33 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.slf4j.Logger;
 
-import java.io.File;
-
 import static me.spike.blockartonline.utils.EntityUtils.amogus;
-import static org.bukkit.Bukkit.*;
+import static org.bukkit.Bukkit.getOnlinePlayers;
+import static org.bukkit.Bukkit.getWorlds;
 
 public final class BlockArtOnline extends JavaPlugin implements CommandExecutor {
-
-    private static BlockArtOnline instance;
-
-    public BlockArtOnline() {
-        instance = this;
-    }
-
-    public static BlockArtOnline getInstance() {
-        return instance;
-    }
-
     @Override
     public void onEnable() {
         long startTime = System.currentTimeMillis();
-        Logger l = getSLF4JLogger();
+        Logger logger = getSLF4JLogger();
         DebugLogger.setEnabled();
         DebugLogger.setPluginInstance(this);
-        l.info("=----------- Block Art Online -----------=");
-        l.info(ChatColor.AQUA + "by SpikeBonjour. This program is Free Software, licensed under MIT License.");
-        l.info(ChatColor.ITALIC + "This, might be a game, but it isn't something you play.");
-        l.info(ChatColor.BOLD + "                               - Kayaba Akihiko - ");
-        l.info("=----------------------------------------=");
-        l.info("Loading configuration options...");
+        logger.info("=----------- Block Art Online -----------=");
+        logger.info(ChatColor.AQUA + "Owned by SpikeBonjour, maintained by developers in Block Art Online project.");
+        logger.info(ChatColor.AQUA + "This program is Free Software, licensed under MIT License.");
+        logger.info(ChatColor.ITALIC + "This, might be a game, but it isn't something you play.");
+        logger.info(ChatColor.BOLD + "                               - Kayaba Akihiko - ");
+        logger.info("=----------------------------------------=");
+        logger.info("Loading configuration options...");
         getConfig().options().copyDefaults();
         saveDefaultConfig();
-        l.info("Registering event listeners...");
+        logger.info("Registering event listeners...");
         registerEvents();
-        l.info("Registering commands...");
+        logger.info("Registering commands...");
         registerCommands();
-        l.info("Starting tasks...");
+        logger.info("Starting tasks...");
         registerTasks();
-        l.info("Plugin initialization complete." + "(" + (System.currentTimeMillis() - startTime) + "ms)");
+        logger.info("Plugin initialization complete." + "(" + (System.currentTimeMillis() - startTime) + "ms)");
     }
 
     public void registerEvents() {
@@ -100,7 +91,7 @@ public final class BlockArtOnline extends JavaPlugin implements CommandExecutor 
             assert mpd != null;
             assert spe != null;
             // Register
-            gsi.setExecutor(new me.spike.blockartonline.commands.GiveItem());
+            gsi.setExecutor(new GiveItem());
             mpd.setExecutor(new PlayerDataManipulation());
             spe.setExecutor(new SpawnEntity());
             // Tab Completer
@@ -111,12 +102,6 @@ public final class BlockArtOnline extends JavaPlugin implements CommandExecutor 
             l.error("Failed to register command.");
             e.printStackTrace();
         }
-    }
-
-    public void ensureLocales() {
-        File localeFolder = new File(getDataFolder(), "locales");
-        boolean a = localeFolder.mkdir();
-        saveResource("locales/en.yml", true);
     }
 
     public void registerTasks() {
@@ -196,10 +181,15 @@ public final class BlockArtOnline extends JavaPlugin implements CommandExecutor 
     @Override
     public void onDisable() {
         getLogger().info("Plugin is shutting down...");
+        // Shutdown login goes here
         getLogger().info("Plugin shut down successfully");
     }
 
-    public void theEnd() {
-        getPluginManager().disablePlugin(this);
+    public static BlockArtOnline getInstance() {
+        return getPlugin(BlockArtOnline.class);
+    }
+
+    public static void fuckedUp() {
+        Bukkit.getPluginManager().disablePlugin(getInstance());
     }
 }
