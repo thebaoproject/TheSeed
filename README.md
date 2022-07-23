@@ -1,4 +1,4 @@
-<h1 align="center">The Seed</h1>
+<h1 align="center">🌱 The Seed</h1>
 
 <p align="center">
     <br>
@@ -14,7 +14,7 @@
 <br>
 
 
-## 🌱 Mô tả
+## 📑 Mô tả
 
 Đây là một dự án có những thành phần cơ bản để làm một MMORPG cơ bản, như Sword Art Online.
 Dự án có những item và quái vật cơ bản trong tiểu thuyết gốc. Để tạo một MMORPG từ dự án này,
@@ -65,5 +65,4 @@ Tất cả các thành viên trong dự án này đều đóng góp một phần
 |??|!!|
 |`:middle_finger:`|`:monkey: :dash:`|
 
-<h6 align="center">Made with ❤ by the Block Art Online contributors.</h6>
-<!-- 69 lines of code :)) -->
+<br><br><p align="center">Made with ❤ by the Block Art Online contributors.</p>
