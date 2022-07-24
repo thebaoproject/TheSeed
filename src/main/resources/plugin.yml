@@ -1,6 +1,6 @@
 name: BlockArtOnline
 version: '${version}'
-main: me.spike.blockartonline.BlockArtOnline
+main: BlockArtOnline
 api-version: 1.19
 prefix: BlockArtOnline
 authors: [ SpikeBonjour ]
