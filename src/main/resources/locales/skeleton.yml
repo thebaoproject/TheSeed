@@ -1,0 +1,46 @@
+# Skeleton file.
+# Fill in the localized string in locales.
+
+plugin:
+  localeCheck: ""
+  item:
+    useAction:
+      rightClick: ""
+      shift: ""
+      doubleJump: ""
+    description:
+      specialAbility: ""
+      manaCost: ""
+      cooldown: ""
+      damage: ""
+      strength: ""
+    rarity:
+      common: ""
+      uncommon: ""
+      rare: ""
+      legendary: ""
+      commonWeapon: ""
+      uncommonWeapon: ""
+      rareWeapon: ""
+      legendaryWeapon: ""
+      special: ""
+      hax: ""
+    abilityUse: ""
+  player:
+    healthCard:
+      health: ""
+      mana: ""
+      baseDefense: ""
+  error:
+    noMana: ""
+    noArgs: ""
+    invalidArg: ""
+  itemDetails:
+    AnnealBlade:
+      ability: ""
+      description: ""
+    ObjectEraser:
+      ability: ""
+      description: ""
+
+

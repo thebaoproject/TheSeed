@@ -25,9 +25,10 @@
 package ga.baoproject.theseed.abc;
 
 import ga.baoproject.theseed.TheSeed;
+import ga.baoproject.theseed.i18n.Locale;
+import ga.baoproject.theseed.i18n.Localized;
 import ga.baoproject.theseed.utils.Utils;
 import net.kyori.adventure.text.Component;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -38,6 +39,7 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class CustomItem {
@@ -56,22 +58,21 @@ public class CustomItem {
      *
      * @return the {@link ItemStack} to show the player
      */
-    public ItemStack getItem() {
+    public ItemStack getItem(Locale l) {
         ItemStack item = new ItemStack(getMaterial());
         ItemMeta meta = item.getItemMeta();
         assert meta != null;
-        meta.displayName(Component.text(Utils.itemRarityColor(getRarity()) + getName()));
+        meta.displayName(Component.text(getRarity().toColor() + getName()));
         List<Component> lore = new ArrayList<>();
         lore.add(Component.space());
         for (Ability a : getAbilities()) {
-            lore.add(Component.text(ChatColor.GOLD + "Kĩ năng đặc biệt: " + a.getName() + " " + ChatColor.YELLOW + ChatColor.BOLD + Utils.toActionString(a.getUsage())));
-            lore.addAll(Utils.convListString(a.getDescription()));
-            lore.add(Component.text(ChatColor.DARK_GRAY + "Mana: " + ChatColor.DARK_AQUA + a.getCost()));
-            lore.add(Component.text(ChatColor.DARK_GRAY + "Cooldown: " + ChatColor.GREEN + a.getCooldown()));
-
+            lore.add(Component.text(Utils.color("&6" + new Localized("Kĩ năng đặc biệt", "plugin.item.description.specialAbility").render(l) + ": " + a.getName() + " &e&l" + a.getUsage().toLocalizedString().render(l))));
+            lore.addAll(Utils.convListStringColor(Arrays.stream(a.getDescription().render(l).split("\n")).toList()));
+            lore.add(Component.text(Utils.color("&8" + new Localized("Mana", "plugin.item.description.manaCost").render(l) + ": &3" + a.getCost())));
+            lore.add(Component.text(Utils.color("&8" + new Localized("Cooldown", "plugin.item.description.cooldown").render(l) + ": &a" + a.getCooldown())));
         }
         lore.add(Component.space());
-        lore.add(Component.text(Rarity.toRarityString(getRarity())));
+        lore.add(Component.text(getRarity().renderLocalizedString(l)));
         meta.lore(lore);
         meta.setUnbreakable(true);
         meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_UNBREAKABLE);

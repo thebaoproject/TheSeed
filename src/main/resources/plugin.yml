@@ -1,8 +1,8 @@
-name: BlockArtOnline
+name: TheSeed
 version: '${version}'
-main: BlockArtOnline
+main: ga.baoproject.theseed.TheSeed
 api-version: 1.19
-prefix: BlockArtOnline
+prefix: TheSeed
 authors: [ SpikeBonjour ]
 description: The plugin which aims to replicate the Sword Art Online experience.
 commands:

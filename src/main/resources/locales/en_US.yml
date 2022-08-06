@@ -1,0 +1,45 @@
+plugin:
+  localeCheck: "OK"
+  item:
+    useAction:
+      rightClick: "RIGHT CLICK"
+      shift: "SHIFT"
+      doubleJump: "DOUBLE JUMP"
+    description:
+      specialAbility: "Special Ability"
+      manaCost: "Mana Cost"
+      cooldown: "Cooldown"
+      damage: "Damage"
+      strength: "Strength"
+    rarity:
+      common: "COMMON"
+      uncommon: "UNCOMMON"
+      rare: "RARE"
+      legendary: "LEGENDARY"
+      commonWeapon: "COMMON WEAPON"
+      uncommonWeapon: "UNCOMMON WEAPON"
+      rareWeapon: "RARE WEAPON"
+      legendaryWeapon: "LEGENDARY WEAPON"
+      special: "SPECIAL"
+      hax: "GM ITEM"
+    abilityUse: "Whoosh!"
+  player:
+    healthCard:
+      health: "♥ HP"
+      mana: "Mana"
+      baseDefense: "Defense"
+  error:
+    noMana: "You don't have enough mana left!"
+    noArgs: "You must give some arguments."
+    invalidArg: "You gave invalid arguments!"
+  itemDetails:
+    AnnealBlade:
+      ability: "Rage Spike"
+      description: |
+        &7Leaps forward &a5&7 blocks, dealing
+        &7&c35 &7damage to any entities standing
+        &7on its way.
+    ObjectEraser:
+      ability: "Delete"
+      description: |
+        &7Kills any entity struck by this sword.

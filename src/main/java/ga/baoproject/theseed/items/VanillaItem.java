@@ -25,7 +25,7 @@
 package ga.baoproject.theseed.items;
 
 import ga.baoproject.theseed.abc.CustomEntity;
-import ga.baoproject.theseed.abc.Weapon;
+import ga.baoproject.theseed.abc.CustomWeapon;
 import ga.baoproject.theseed.exceptions.InvalidEntityData;
 import org.bukkit.Material;
 import org.bukkit.entity.Damageable;
@@ -34,7 +34,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 /**
  * Represents any other items.
  */
-public class VanillaItem extends Weapon {
+public class VanillaItem extends CustomWeapon {
 
     public VanillaItem() {
         // the best building material

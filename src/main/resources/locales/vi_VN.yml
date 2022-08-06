@@ -1,0 +1,46 @@
+plugin:
+  localeCheck: "OK"
+  item:
+    useAction:
+      rightClick: "CHUỘT PHẢI"
+      shift: "SHIFT"
+      doubleJump: "NHẢY HAI LẦN"
+    description:
+      specialAbility: "Khả năng đặc biệt"
+      manaCost: "Tiêu Mana"
+      cooldown: "Cooldown"
+      damage: "Sát thương"
+      strength: "Lực đánh"
+    rarity:
+      common: "THƯỜNG"
+      uncommon: "HIẾM"
+      rare: "RẤT HIẾM"
+      legendary: "HUYỀN THOẠI"
+      commonWeapon: "VŨ KHÍ THƯỜNG"
+      uncommonWeapon: "VŨ KHÍ HIẾM"
+      rareWeapon: "VŨ KHÍ RẤT HIẾM"
+      legendaryWeapon: "VŨ KHÍ HUYỀN THOẠI"
+      special: "ĐẶC BIỆT"
+      hax: "ĐỒ HACKER"
+    abilityUse: "Vù!"
+  player:
+    healthCard:
+      health: "HP"
+      mana: "Mana"
+      baseDefense: "Phòng thủ"
+  error:
+    noMana: "Bạn không có đủ Mana!"
+    noArgs: "Bạn phải đưa ra các tham số!"
+    invalidArg: "Tham số mà bạn đưa ra không hợp lệ!"
+  itemDetails:
+    AnnealBlade:
+      ability: "Rage Spike"
+      description: |
+        &7Tiến thẳng tới trước &a5&7 block, gây ra
+        &7&c35 &7sát thương cho bất kì sinh vật nào 
+        &7trên đường đi.
+    ObjectEraser:
+      ability: "Phá hủy"
+      description: |
+        &7Giết chết bất ki sinh vật nào chỉ với one hit.
+

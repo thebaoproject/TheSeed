@@ -27,8 +27,10 @@ package ga.baoproject.theseed.items;
 import ga.baoproject.theseed.TheSeed;
 import ga.baoproject.theseed.abc.*;
 import ga.baoproject.theseed.exceptions.InvalidEntityData;
+import ga.baoproject.theseed.i18n.Localized;
 import ga.baoproject.theseed.utils.ItemUtils;
 import ga.baoproject.theseed.utils.PlayerUtils;
+import ga.baoproject.theseed.utils.Utils;
 import net.kyori.adventure.text.Component;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -42,7 +44,7 @@ import org.bukkit.util.Vector;
 
 import java.util.List;
 
-public class AnnealBlade extends Weapon {
+public class AnnealBlade extends CustomWeapon {
 
     public AnnealBlade() {
         super(Material.STONE_SWORD);
@@ -51,15 +53,15 @@ public class AnnealBlade extends Weapon {
         super.setDamage(35);
         super.setStrength(2);
         super.setAbilities(List.of(
-                new Ability().setName("Phi đao").setDescription("" +
-                        ChatColor.translateAlternateColorCodes(
-                                '&', "&7Tiến thẳng tới trước &a5&7 block.\n"
-                                        + "&7Gây ra &c" + getDamage() + "&7 sát thương cho bất kì\n"
-                                        + "&7sinh vật nào trên đường đi."
-                        )
-                ).setUsage(ItemAbilityUseAction.RIGHT_CLICK).setCost(30).setCooldown(3)
+                new Ability().setName(new Localized("Rage Spike", "plugin.itemDetails.AnnealBlade.ability"))
+                        .setDescription(new Localized("""
+                                &7Tiến thẳng tới trước &a5&7 block, gây ra
+                                &7&c35 &7sát thương cho bất kì sinh vật nào\s
+                                &7trên đường đi.
+                                """, "plugin.itemDetails.AnnealBlade.description"
+                        )).setUsage(ItemAbilityUseAction.RIGHT_CLICK).setCost(30).setCooldown(3)
         ));
-        super.setRarity(Rarity.UNCOMMON_SWORD);
+        super.setRarity(Rarity.UNCOMMON_WEAPON);
     }
 
     @Override
@@ -80,7 +82,7 @@ public class AnnealBlade extends Weapon {
         a.setDamage(35);
         Vector dashMotion = new Vector(direction.getX(), 0, direction.getZ());
         p.setVelocity(dashMotion.multiply(2));
-        p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6Bạn đã sử dụng khả năng đặc biệt của &dAnneal Blade&6!"));
+        p.sendMessage(Utils.color("&6Bạn đã sử dụng khả năng đặc biệt của &dAnneal Blade&6!"));
         ItemUtils.setCooldownTimestamp(p.getInventory().getItemInMainHand(), System.currentTimeMillis());
     }
 

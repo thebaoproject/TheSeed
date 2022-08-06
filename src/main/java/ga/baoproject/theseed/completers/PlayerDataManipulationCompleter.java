@@ -40,9 +40,13 @@ public class PlayerDataManipulationCompleter implements TabCompleter {
                 return List.of("init", "check", "modify", "reboot");
             } else if (args[0].equalsIgnoreCase("modify")) {
                 if (args.length == 2) {
-                    return List.of("health", "mana", "base_defense", "max_health", "max_mana");
+                    return List.of("health", "mana", "base_defense", "max_health", "max_mana", "locale");
                 } else if (args.length == 3) {
-                    return List.of("100", "50", "10", "0");
+                    if (args[2].equalsIgnoreCase("locale")) {
+                        return List.of("100", "50", "10", "0");
+                    } else {
+                        return List.of("vi", "en", "vim");
+                    }
                 }
             }
         }

@@ -1,7 +1,0 @@
-plugin:
-  startup:
-    reg_event: Registering event listener...
-  error:
-    invalid_player_listener: Received InvalidPlayerData in the player event listener. THIS SHOULDN'T BE POSSIBLE. Silently ignoring...
-
-

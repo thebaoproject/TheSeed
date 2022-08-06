@@ -27,6 +27,7 @@ package ga.baoproject.theseed.utils;
 import ga.baoproject.theseed.abc.CustomPlayer;
 import ga.baoproject.theseed.abc.DebugLogger;
 import ga.baoproject.theseed.exceptions.InvalidEntityData;
+import ga.baoproject.theseed.i18n.Localized;
 import net.kyori.adventure.text.Component;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
@@ -42,12 +43,12 @@ public class PlayerUtils {
                 cp.setMana(newMana);
                 return true;
             } else {
-                p.sendMessage(Component.text(ChatColor.RED + "Bạn không có đủ Mana!"));
+                p.sendMessage(Component.text(ChatColor.RED + new Localized("Bạn không có đủ mana!", "plugin.error.noMana").render(cp.getLocale())));
                 p.playSound(p, Sound.ENTITY_ENDERMAN_TELEPORT, 100, 1);
                 return false;
             }
         } catch (InvalidEntityData e) {
-            DebugLogger.debug("Received InvalidPlayerData when trying to reduce player mana afer using an ability. Ignoring...");
+            DebugLogger.debug("Received InvalidPlayerData when trying to reduce player mana after using an ability. Ignoring...");
         }
         return false;
     }
