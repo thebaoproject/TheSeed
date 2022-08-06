@@ -40,6 +40,7 @@ import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.Plugin;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class CustomWeapon extends CustomItem {
@@ -60,14 +61,14 @@ public class CustomWeapon extends CustomItem {
         assert meta != null;
         meta.displayName(Component.text(getRarity().toColor() + getName()));
         List<Component> lore = new ArrayList<>();
-        lore.add(Component.text(Utils.color("&7" + new Localized("Sát thương", "plugin.item.description.damage").render(l)) + ": &c" + "+" + getDamage()));
-        lore.add(Component.text(Utils.color("&7" + new Localized("Sức mạnh ra đòn", "plugin.item.description.damage").render(l)) + ": &c" + "+" + getStrength()));
+        lore.add(Component.text(Utils.color("&7" + new Localized("Sát thương", "plugin.item.description.damage").render(l) + ": &c" + "+" + getDamage())));
+        lore.add(Component.text(Utils.color("&7" + new Localized("Sức mạnh ra đòn", "plugin.item.description.strength").render(l) + ": &c" + "+" + getStrength())));
         lore.add(Component.space());
         for (Ability a : getAbilities()) {
-            lore.add(Component.text(Utils.color("&6" + new Localized("Kĩ năng đặc biệt", "plugin.item.description.specialAbility").render(l)) + ": " + a.getName() + " &e&l" + a.getUsage().toLocalizedString().render(l)));
-            lore.addAll(Utils.convListString(a.getDescription()));
-            lore.add(Component.text(Utils.color("&8" + new Localized("Mana", "plugin.item.description.mana").render(l)) + ": &3" + a.getCost()));
-            lore.add(Component.text(Utils.color("&8" + new Localized("Cooldown", "plugin.item.description.cooldown").render(l)) + ": &a" + a.getCooldown()));
+            lore.add(Component.text(Utils.color("&6" + new Localized("Kĩ năng đặc biệt", "plugin.item.description.specialAbility").render(l) + ": " + a.getName().render(l) + " &e&l" + a.getUsage().toLocalizedString().render(l))));
+            lore.addAll(Utils.convListStringColor(Arrays.stream(a.getDescription().render(l).split("\n")).toList()));
+            lore.add(Component.text(Utils.color("&8" + new Localized("Mana", "plugin.item.description.manaCost").render(l) + ": &3" + a.getCost())));
+            lore.add(Component.text(Utils.color("&8" + new Localized("Cooldown", "plugin.item.description.cooldown").render(l) + ": &a" + a.getCooldown())));
         }
         lore.add(Component.space());
         lore.add(Component.text(getRarity().renderLocalizedString(l)));

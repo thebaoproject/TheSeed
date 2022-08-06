@@ -94,4 +94,19 @@ public class Utils {
         }
         return Strings.join(result, ' ');
     }
+
+    /**
+     * Converts a list of {@code String} into a list of {@code Component} with color.
+     *
+     * @param l the list to convert.
+     * @return the output list with color.
+     */
+    @NotNull
+    public static List<Component> convListStringColor(@NotNull List<String> l) {
+        List<Component> o = new ArrayList<>();
+        for (String i : l) {
+            o.add(Component.text(color(i)));
+        }
+        return o;
+    }
 }

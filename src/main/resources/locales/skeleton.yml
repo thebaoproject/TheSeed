@@ -2,6 +2,7 @@
 # Fill in the localized string in locales.
 
 plugin:
+  localeCheck: ""
   item:
     useAction:
       rightClick: ""
@@ -18,12 +19,13 @@ plugin:
       uncommon: ""
       rare: ""
       legendary: ""
-      commonSword: ""
-      uncommonSword: ""
-      rareSword: ""
-      legendarySword: ""
+      commonWeapon: ""
+      uncommonWeapon: ""
+      rareWeapon: ""
+      legendaryWeapon: ""
       special: ""
       hax: ""
+    abilityUse: ""
   player:
     healthCard:
       health: ""
@@ -32,5 +34,13 @@ plugin:
   error:
     noMana: ""
     noArgs: ""
+    invalidArg: ""
+  itemDetails:
+    AnnealBlade:
+      ability: ""
+      description: ""
+    ObjectEraser:
+      ability: ""
+      description: ""
 
 

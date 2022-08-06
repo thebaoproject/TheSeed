@@ -26,7 +26,7 @@ package ga.baoproject.theseed.items;
 
 import ga.baoproject.theseed.abc.*;
 import ga.baoproject.theseed.exceptions.InvalidEntityData;
-import org.bukkit.ChatColor;
+import ga.baoproject.theseed.i18n.Localized;
 import org.bukkit.Material;
 import org.bukkit.entity.Damageable;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -42,11 +42,12 @@ public class ObjectEraser extends CustomWeapon {
         super.setDamage(999999999);
         super.setStrength(999999999);
         super.setAbilities(List.of(
-                new Ability().setName("One-hit-kill").setDescription(
-                        ChatColor.translateAlternateColorCodes(
-                                '&', "&7Giết chết sinh vật chỉ với one hit."
-                        )
-                ).setUsage(ItemAbilityUseAction.NONE).setCost(30).setCooldown(3)
+                new Ability()
+                        .setName(new Localized("Phá hủy", "plugin.itemDetails.ObjectEraser.ability"))
+                        .setDescription(new Localized(
+                                "&7Giết chết bất ki sinh vật nào chỉ với one hit.",
+                                "plugin.itemDetails.ObjectEraser.description"
+                        )).setUsage(ItemAbilityUseAction.NONE).setCost(0).setCooldown(0)
         ));
         super.setRarity(Rarity.HAX);
     }

@@ -73,7 +73,8 @@ public class PlayerDataManipulation implements CommandExecutor {
                             "&c" +
                                     ip.getHealth() + "/" + ip.getMaxHealth() + "❤ " + new Localized("HP", "plugin.player.healthCard.health").render(ip.getLocale()) + "    &a" +
                                     ip.getBaseDefense() + "❈ " + new Localized("Phòng thủ", "plugin.player.healthCard.baseDefense").render(ip.getLocale()) + "    &b" +
-                                    ip.getMana() + "/" + ip.getMaxMana() + "✏ " + new Localized("Mana", "plugin.player.healthCard.mana").render(ip.getLocale())
+                                    ip.getMana() + "/" + ip.getMaxMana() + "✏ " + new Localized("Mana", "plugin.player.healthCard.mana").render(ip.getLocale()) + "    &d" +
+                                    ip.getLocale().toString()
                     );
                     sender.sendMessage(message);
                 } catch (InvalidEntityData e) {

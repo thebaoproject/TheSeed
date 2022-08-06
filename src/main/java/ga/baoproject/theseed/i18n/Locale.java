@@ -52,7 +52,7 @@ public enum Locale {
     @NotNull
     public static Locale fromString(String localeCode) {
         return switch (localeCode.toUpperCase(java.util.Locale.ROOT)) {
-            case "EN_US" -> EN_US;
+            case "EN_US", "EN" -> EN_US;
             case "VIM_VN" -> VIM_VN;
             default -> VI_VN;
         };

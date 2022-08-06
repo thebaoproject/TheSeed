@@ -24,9 +24,7 @@
 
 package ga.baoproject.theseed;
 
-import ga.baoproject.theseed.abc.CustomEntity;
-import ga.baoproject.theseed.abc.CustomPlayer;
-import ga.baoproject.theseed.abc.DebugLogger;
+import ga.baoproject.theseed.abc.*;
 import ga.baoproject.theseed.commands.GiveItem;
 import ga.baoproject.theseed.commands.PlayerDataManipulation;
 import ga.baoproject.theseed.commands.SpawnEntity;
@@ -35,17 +33,26 @@ import ga.baoproject.theseed.completers.PlayerDataManipulationCompleter;
 import ga.baoproject.theseed.completers.SpawnEntityCompleter;
 import ga.baoproject.theseed.events.CentralEventListener;
 import ga.baoproject.theseed.exceptions.InvalidEntityData;
+import ga.baoproject.theseed.exceptions.UnknownItem;
+import ga.baoproject.theseed.i18n.Locale;
+import ga.baoproject.theseed.i18n.Localized;
 import ga.baoproject.theseed.utils.EntityUtils;
+import ga.baoproject.theseed.utils.ItemUtils;
 import ga.baoproject.theseed.utils.LocalizationUtils;
 import ga.baoproject.theseed.utils.Utils;
+import net.kyori.adventure.text.Component;
 import org.bukkit.World;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.slf4j.Logger;
+
+import java.util.List;
 
 import static org.bukkit.Bukkit.*;
 
@@ -67,21 +74,20 @@ public final class TheSeed extends JavaPlugin implements CommandExecutor {
         Logger l = getSLF4JLogger();
         DebugLogger.setEnabled();
         DebugLogger.setPluginInstance(this);
-        l.info("""
-                ---------------------------- The Seed ---------------------------
-                   Copyright (c) 2022 the Block Art Online Project contributors.
-
-                 "The little seed I planted found purchase in distant networks,
-                  where it sprouts its own leaves and branches."
-                                            - Kayaba Akihiko // Sword Art Online
-
-                -----------------------------------------------------------------
-                """);
+        l.info(" ---------------------------- The Seed --------------------------- ");
+        l.info("    Copyright (c) 2022 the Block Art Online Project contributors.  ");
+        l.info("                                                                   ");
+        l.info("     \"The little seed I planted found purchase in distant networks, ");
+        l.info("   where it sprouts its own leaves and branches.\"                   ");
+        l.info("                             - Kayaba Akihiko // Sword Art Online  ");
+        l.info("                                                                   ");
+        l.info(" ----------------------------------------------------------------- ");
         l.info("Loading configuration options...");
         getConfig().options().copyDefaults();
         saveDefaultConfig();
         l.info("Loading locales...");
         LocalizationUtils.ensureLocales(this);
+        l.info("Testing locale... " + new Localized("CHECK FAILED", "plugin.localeCheck").render(Locale.EN_US));
         l.info("Registering event listeners...");
         registerEvents();
         l.info("Registering commands...");
@@ -190,6 +196,33 @@ public final class TheSeed extends JavaPlugin implements CommandExecutor {
         }, 1, 1);
         if (mobHealthBarTaskID == -1) {
             getSLF4JLogger().error("Scheduling mob health bar task failed.");
+        }
+        int itemLoreRefreshTaskID = getServer().getScheduler().scheduleSyncRepeatingTask(this, () -> {
+            for (Player i : getOnlinePlayers()) {
+                CustomPlayer p;
+                try {
+                    p = CustomPlayer.fromPlayer(i);
+                    ItemStack[] inventory = i.getInventory().getContents();
+                    for (int slot = 0; slot < inventory.length; slot++) {
+                        ItemStack item = inventory[slot];
+                        if (item == null) {
+                            continue;
+                        }
+                        if (ItemUtils.amogus(item)) {
+                            CustomItem ci = ItemUtils.get(item);
+                            i.getInventory().setItem(slot, ci.getItem(p.getLocale()));
+                        } else {
+                            ItemMeta meta = item.getItemMeta();
+                            meta.lore(List.of(Component.text(Rarity.COMMON.renderLocalizedString(p.getLocale()))));
+                            item.setItemMeta(meta);
+                        }
+                    }
+                } catch (InvalidEntityData | UnknownItem ignored) {
+                }
+            }
+        }, 1, 10);
+        if (itemLoreRefreshTaskID == -1) {
+            getSLF4JLogger().error("Scheduling item lore updating task failed.");
         }
     }
 

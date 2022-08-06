@@ -71,6 +71,10 @@ public class Localized {
         return (String) l.get(this.id);
     }
 
+    public String getID() {
+        return id;
+    }
+
     @Override
     public String toString() {
         return fallback;

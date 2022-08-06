@@ -1,4 +1,5 @@
 plugin:
+  localeCheck: "OK"
   item:
     useAction:
       rightClick: "CHUỘT PHẢI"
@@ -15,12 +16,13 @@ plugin:
       uncommon: "HIẾM"
       rare: "RẤT HIẾM"
       legendary: "HUYỀN THOẠI"
-      commonSword: "VŨ KHÍ THƯỜNG"
-      uncommonSword: "VŨ KHÍ HIẾM"
-      rareSword: "VŨ KHÍ RẤT HIẾM"
-      legendarySword: "VŨ KHÍ HUYỀN THOẠI"
+      commonWeapon: "VŨ KHÍ THƯỜNG"
+      uncommonWeapon: "VŨ KHÍ HIẾM"
+      rareWeapon: "VŨ KHÍ RẤT HIẾM"
+      legendaryWeapon: "VŨ KHÍ HUYỀN THOẠI"
       special: "ĐẶC BIỆT"
       hax: "ĐỒ HACKER"
+    abilityUse: "Vù!"
   player:
     healthCard:
       health: "HP"
@@ -28,6 +30,17 @@ plugin:
       baseDefense: "Phòng thủ"
   error:
     noMana: "Bạn không có đủ Mana!"
-    noArgs: "Bạn đưa ra các tham số!"
-
+    noArgs: "Bạn phải đưa ra các tham số!"
+    invalidArg: "Tham số mà bạn đưa ra không hợp lệ!"
+  itemDetails:
+    AnnealBlade:
+      ability: "Rage Spike"
+      description: |
+        &7Tiến thẳng tới trước &a5&7 block, gây ra
+        &7&c35 &7sát thương cho bất kì sinh vật nào 
+        &7trên đường đi.
+    ObjectEraser:
+      ability: "Phá hủy"
+      description: |
+        &7Giết chết bất ki sinh vật nào chỉ với one hit.
 

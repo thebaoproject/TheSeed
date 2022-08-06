@@ -39,6 +39,7 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class CustomItem {
@@ -65,10 +66,10 @@ public class CustomItem {
         List<Component> lore = new ArrayList<>();
         lore.add(Component.space());
         for (Ability a : getAbilities()) {
-            lore.add(Component.text(Utils.color("&6" + new Localized("Kĩ năng đặc biệt", "plugin.item.description.specialAbility").render(l)) + ": " + a.getName() + " &e&l" + a.getUsage().toLocalizedString().render(l)));
-            lore.addAll(Utils.convListString(a.getDescription()));
-            lore.add(Component.text(Utils.color("&8" + new Localized("Mana", "plugin.item.description.mana").render(l)) + ": &3" + a.getCost()));
-            lore.add(Component.text(Utils.color("&8" + new Localized("Cooldown", "plugin.item.description.cooldown").render(l)) + ": &a" + a.getCooldown()));
+            lore.add(Component.text(Utils.color("&6" + new Localized("Kĩ năng đặc biệt", "plugin.item.description.specialAbility").render(l) + ": " + a.getName() + " &e&l" + a.getUsage().toLocalizedString().render(l))));
+            lore.addAll(Utils.convListStringColor(Arrays.stream(a.getDescription().render(l).split("\n")).toList()));
+            lore.add(Component.text(Utils.color("&8" + new Localized("Mana", "plugin.item.description.manaCost").render(l) + ": &3" + a.getCost())));
+            lore.add(Component.text(Utils.color("&8" + new Localized("Cooldown", "plugin.item.description.cooldown").render(l) + ": &a" + a.getCooldown())));
         }
         lore.add(Component.space());
         lore.add(Component.text(getRarity().renderLocalizedString(l)));

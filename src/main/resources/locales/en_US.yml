@@ -1,4 +1,5 @@
 plugin:
+  localeCheck: "OK"
   item:
     useAction:
       rightClick: "RIGHT CLICK"
@@ -21,6 +22,7 @@ plugin:
       legendaryWeapon: "LEGENDARY WEAPON"
       special: "SPECIAL"
       hax: "GM ITEM"
+    abilityUse: "Whoosh!"
   player:
     healthCard:
       health: "♥ HP"
@@ -29,3 +31,15 @@ plugin:
   error:
     noMana: "You don't have enough mana left!"
     noArgs: "You must give some arguments."
+    invalidArg: "You gave invalid arguments!"
+  itemDetails:
+    AnnealBlade:
+      ability: "Rage Spike"
+      description: |
+        &7Leaps forward &a5&7 blocks, dealing
+        &7&c35 &7damage to any entities standing
+        &7on its way.
+    ObjectEraser:
+      ability: "Delete"
+      description: |
+        &7Kills any entity struck by this sword.

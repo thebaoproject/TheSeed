@@ -24,33 +24,32 @@
 
 package ga.baoproject.theseed.abc;
 
-import java.util.Arrays;
-import java.util.List;
+import ga.baoproject.theseed.i18n.Localized;
 
 /**
  * Represents an item's ability.
  */
 public class Ability {
     private ItemAbilityUseAction usage;
-    private String name;
-    private List<String> description;
+    private Localized name;
+    private Localized description;
     private int cost;
     private int cooldown;
 
-    public List<String> getDescription() {
-        return description;
+    public Localized getDescription() {
+        return this.description;
     }
 
-    public Ability setDescription(String description) {
-        this.description = Arrays.stream(description.split("\n")).toList();
+    public Ability setDescription(Localized description) {
+        this.description = description;
         return this;
     }
 
-    public String getName() {
+    public Localized getName() {
         return name;
     }
 
-    public Ability setName(String name) {
+    public Ability setName(Localized name) {
         this.name = name;
         return this;
     }
