@@ -36,8 +36,8 @@ import ga.baoproject.theseed.completers.SpawnEntityCompleter;
 import ga.baoproject.theseed.events.CentralEventListener;
 import ga.baoproject.theseed.exceptions.InvalidEntityData;
 import ga.baoproject.theseed.utils.EntityUtils;
+import ga.baoproject.theseed.utils.LocalizationUtils;
 import ga.baoproject.theseed.utils.Utils;
-import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.PluginCommand;
@@ -46,8 +46,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.slf4j.Logger;
-
-import java.io.File;
 
 import static org.bukkit.Bukkit.*;
 
@@ -69,14 +67,21 @@ public final class TheSeed extends JavaPlugin implements CommandExecutor {
         Logger l = getSLF4JLogger();
         DebugLogger.setEnabled();
         DebugLogger.setPluginInstance(this);
-        l.info("=----------- Block Art Online -----------=");
-        l.info(ChatColor.AQUA + "by SpikeBonjour. This program is Free Software, licensed under MIT License.");
-        l.info(ChatColor.ITALIC + "This, might be a game, but it isn't something you play.");
-        l.info(ChatColor.BOLD + "                               - Kayaba Akihiko - ");
-        l.info("=----------------------------------------=");
+        l.info("""
+                ---------------------------- The Seed ---------------------------
+                   Copyright (c) 2022 the Block Art Online Project contributors.
+
+                 "The little seed I planted found purchase in distant networks,
+                  where it sprouts its own leaves and branches."
+                                            - Kayaba Akihiko // Sword Art Online
+
+                -----------------------------------------------------------------
+                """);
         l.info("Loading configuration options...");
         getConfig().options().copyDefaults();
         saveDefaultConfig();
+        l.info("Loading locales...");
+        LocalizationUtils.ensureLocales(this);
         l.info("Registering event listeners...");
         registerEvents();
         l.info("Registering commands...");
@@ -114,19 +119,13 @@ public final class TheSeed extends JavaPlugin implements CommandExecutor {
         }
     }
 
-    public void ensureLocales() {
-        File localeFolder = new File(getDataFolder(), "locales");
-        boolean a = localeFolder.mkdir();
-        saveResource("locales/en.yml", true);
-    }
-
     public void registerTasks() {
         // Health bar task
         int playerHealthBarTaskID = getServer().getScheduler().scheduleSyncRepeatingTask(this, () -> {
             for (Player i : getOnlinePlayers()) {
                 CustomPlayer p;
                 try {
-                    if (!EntityUtils.amogus(i)) {
+                    if (EntityUtils.impostor(i)) {
                         DebugLogger.debug("The player with name of " + i.getName() + "hasn't been set up yet. Automatically setting up...");
                         CustomPlayer.initialize(i);
                     }
@@ -149,7 +148,7 @@ public final class TheSeed extends JavaPlugin implements CommandExecutor {
             for (Player i : getOnlinePlayers()) {
                 CustomPlayer p;
                 try {
-                    if (!EntityUtils.amogus(i)) {
+                    if (EntityUtils.impostor(i)) {
                         DebugLogger.debug("The player with name of " + i.getName() + "hasn't been set up yet. Automatically setting up...");
                         CustomPlayer.initialize(i);
                     }
@@ -172,7 +171,7 @@ public final class TheSeed extends JavaPlugin implements CommandExecutor {
                     CustomEntity e;
                     if (!(i instanceof Player)) {
                         try {
-                            if (!EntityUtils.amogus(i)) {
+                            if (EntityUtils.impostor(i)) {
                                 DebugLogger.debug("Entity with type of " + i.getName() + " hasn't been set up yet. Automatically setting up...");
                                 CustomEntity.initialize(i);
                             }

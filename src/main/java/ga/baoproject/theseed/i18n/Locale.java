@@ -22,44 +22,68 @@
  *
  */
 
-package ga.baoproject.theseed.abc;
+package ga.baoproject.theseed.i18n;
 
-import ga.baoproject.theseed.i18n.Localized;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Describes the way a skill can be activated.
+ * Represents a language supported by the plugin.
  */
-public enum ItemAbilityUseAction {
-    /**
-     * Right click when holding the item.
+public enum Locale {
+    /*
+     * Vietnamese - Vietnam
      */
-    RIGHT_CLICK,
+    VI_VN,
     /**
-     * Hold shift when holding.
+     * English - United States
      */
-    SNEAK,
+    EN_US,
     /**
-     * Jump two times when holding the item.
+     * Vietnamese IMproved - Vietnam
      */
-    DOUBLE_JUMP,
-    /**
-     * The base property of the item. It always works.
-     */
-    NONE;
+    VIM_VN;
 
     /**
-     * Gets the localized action string for an item.
+     * Convert locale code to Locale object.
      *
-     * @return the action name.
+     * @param localeCode the locale code in string.
+     * @return the corresponding Locale object.
      */
     @NotNull
-    public Localized toLocalizedString() {
+    public static Locale fromString(String localeCode) {
+        return switch (localeCode.toUpperCase(java.util.Locale.ROOT)) {
+            case "EN_US" -> EN_US;
+            case "VIM_VN" -> VIM_VN;
+            default -> VI_VN;
+        };
+    }
+
+    /**
+     * Gets the English name of the language.
+     *
+     * @return the language's English name.
+     */
+    @Override
+    @NotNull
+    public String toString() {
         return switch (this) {
-            case RIGHT_CLICK -> new Localized("CHUỘT PHẢI", "plugin.item.useAction.rightClick");
-            case SNEAK -> new Localized("SHIFT", "plugin.item.useAction.shift");
-            case DOUBLE_JUMP -> new Localized("NHẢY HAI LẦN", "plugin.item.useAction.doubleJump");
-            case NONE -> new Localized("");
+            case VI_VN -> "Vietnamese - Vietnam";
+            case EN_US -> "English - United States";
+            case VIM_VN -> "Vietnamese Improved - Vietnam";
+        };
+    }
+
+    /**
+     * Gets the code name of the language.
+     *
+     * @return the language code name.
+     */
+    @NotNull
+    public String toCode() {
+        return switch (this) {
+            case VI_VN -> "vi_VN";
+            case EN_US -> "en_US";
+            case VIM_VN -> "vim_VN";
         };
     }
 }

@@ -25,7 +25,7 @@
 package ga.baoproject.theseed.items;
 
 import ga.baoproject.theseed.abc.CustomEntity;
-import ga.baoproject.theseed.abc.Weapon;
+import ga.baoproject.theseed.abc.CustomWeapon;
 import ga.baoproject.theseed.exceptions.InvalidEntityData;
 import org.bukkit.Material;
 import org.bukkit.entity.Damageable;
@@ -34,7 +34,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 /**
  * Yes. A bare hand.
  */
-public class BareHand extends Weapon {
+public class BareHand extends CustomWeapon {
     public BareHand() {
         super(Material.AIR);
         super.setDamage(1);

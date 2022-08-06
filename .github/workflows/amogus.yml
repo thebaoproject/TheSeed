@@ -29,6 +29,6 @@ jobs:
       - name: Uploading artifacts
         uses: actions/upload-artifact@v3.0.0
         with:
-          name: BlockArtOnline
+          name: TheSeed
           path: staging
       

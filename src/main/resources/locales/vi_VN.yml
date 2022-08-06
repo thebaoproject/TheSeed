@@ -1,0 +1,33 @@
+plugin:
+  item:
+    useAction:
+      rightClick: "CHUỘT PHẢI"
+      shift: "SHIFT"
+      doubleJump: "NHẢY HAI LẦN"
+    description:
+      specialAbility: "Khả năng đặc biệt"
+      manaCost: "Tiêu Mana"
+      cooldown: "Cooldown"
+      damage: "Sát thương"
+      strength: "Lực đánh"
+    rarity:
+      common: "THƯỜNG"
+      uncommon: "HIẾM"
+      rare: "RẤT HIẾM"
+      legendary: "HUYỀN THOẠI"
+      commonSword: "VŨ KHÍ THƯỜNG"
+      uncommonSword: "VŨ KHÍ HIẾM"
+      rareSword: "VŨ KHÍ RẤT HIẾM"
+      legendarySword: "VŨ KHÍ HUYỀN THOẠI"
+      special: "ĐẶC BIỆT"
+      hax: "ĐỒ HACKER"
+  player:
+    healthCard:
+      health: "HP"
+      mana: "Mana"
+      baseDefense: "Phòng thủ"
+  error:
+    noMana: "Bạn không có đủ Mana!"
+    noArgs: "Bạn đưa ra các tham số!"
+
+

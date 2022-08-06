@@ -25,8 +25,7 @@
 package ga.baoproject.theseed.utils;
 
 import ga.baoproject.theseed.abc.CustomPlayer;
-import ga.baoproject.theseed.abc.ItemAbilityUseAction;
-import ga.baoproject.theseed.abc.Rarity;
+import ga.baoproject.theseed.i18n.Localized;
 import net.kyori.adventure.text.Component;
 import org.apache.logging.log4j.util.Strings;
 import org.bukkit.ChatColor;
@@ -37,41 +36,6 @@ import java.util.List;
 import java.util.Locale;
 
 public class Utils {
-
-    /**
-     * Gets the localized action string for an item.
-     *
-     * @param action the action to get its name.
-     * @return the action name.
-     */
-    @NotNull
-    public static String toActionString(@NotNull ItemAbilityUseAction action) {
-        return switch (action) {
-            case RIGHT_CLICK -> "CHUỘT PHẢI";
-            case SNEAK -> "SHIFT";
-            case DOUBLE_JUMP -> "NHẢY HAI LẦN";
-            case NONE -> "";
-        };
-    }
-
-    /**
-     * Gets the color of the rarity.
-     *
-     * @param r the rarity to get.
-     * @return the rarity color
-     */
-    @NotNull
-    public static ChatColor itemRarityColor(@NotNull Rarity r) {
-        return switch (r) {
-            case COMMON, COMMON_SWORD -> ChatColor.WHITE;
-            case UNCOMMON, UNCOMMON_SWORD -> ChatColor.GREEN;
-            case RARE, RARE_SWORD -> ChatColor.BLUE;
-            case LEGENDARY, LEGENDARY_SWORD -> ChatColor.GOLD;
-            case SPECIAL -> ChatColor.DARK_PURPLE;
-            case HAX -> ChatColor.RED;
-        };
-    }
-
     /**
      * Show the HP bar on the action bar of the player specified.
      *
@@ -80,8 +44,10 @@ public class Utils {
     public static void showHPBar(@NotNull CustomPlayer p) {
         String message = ChatColor.translateAlternateColorCodes(
                 '&',
-                "&c" + p.getHealth() + "/" + p.getMaxHealth() + "❤ HP    &a" +
-                        p.getBaseDefense() + "❈ Phòng thủ    &b" + p.getMana() + "/" + p.getMaxMana() + "✏ Mana"
+                "&c" +
+                        p.getHealth() + "/" + p.getMaxHealth() + "❤ " + new Localized("HP", "plugin.player.healthCard.health").render(p.getLocale()) + "    &a" +
+                        p.getBaseDefense() + "❈ " + new Localized("Phòng thủ", "plugin.player.healthCard.baseDefense").render(p.getLocale()) + "    &b" +
+                        p.getMana() + "/" + p.getMaxMana() + "✏ " + new Localized("Mana", "plugin.player.healthCard.mana").render(p.getLocale())
         );
         p.getBase().sendActionBar(Component.text(message));
     }

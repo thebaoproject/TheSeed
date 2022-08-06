@@ -64,19 +64,20 @@ public class EntityUtils {
     }
 
     /**
-     * Checks if the player belongs to the plugin.
+     * Checks if the player is sus (have the player data set up).
      *
-     * @return whether the player is set up or not.
+     * @return whether the player is sus or not.
      */
-    public static boolean amogus(@NotNull Damageable e) {
-        if (e.isCustomNameVisible() && e.getName().contains("❤ HP")) {
+    public static boolean impostor(@NotNull Damageable e) {
+        // Well shit, but there is no other way to do this.
+        if (e.isCustomNameVisible() && e.getName().contains("❤")) {
             // Entities which haven't had its NBT set up yet (only when it has been spawned could its name be modified).
-            return true;
+            return false;
         } else if (e.getType() == EntityType.PLAYER) {
             Integer data = readFrom(e, "health", PersistentDataType.INTEGER);
-            return data != null;
+            return data == null;
         }
-        return false;
+        return true;
     }
 
     @Contract(pure = true)

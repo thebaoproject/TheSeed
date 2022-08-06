@@ -25,6 +25,7 @@
 package ga.baoproject.theseed.abc;
 
 import ga.baoproject.theseed.exceptions.InvalidEntityData;
+import ga.baoproject.theseed.i18n.Locale;
 import ga.baoproject.theseed.utils.EntityUtils;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
@@ -49,6 +50,7 @@ public class CustomPlayer extends CustomEntity {
     private int maxMana;
     private int baseDefense;
     private int mana;
+    private Locale locale;
 
     public CustomPlayer(Player p) {
         super(p);
@@ -59,14 +61,17 @@ public class CustomPlayer extends CustomEntity {
      * Setups a player's information.
      *
      * @param p the player to set up.
+     * @return the player which has just been set up.
      */
-    public static void initialize(Player p) {
+    public static CustomPlayer initialize(Player p) {
         CustomPlayer temp = new CustomPlayer(p);
         temp.setMaxHealth(100);
         temp.setBaseDefense(100);
         temp.setMaxMana(100);
         temp.setHealth(100);
         temp.setMana(100);
+        temp.setLocale(Locale.VI_VN);
+        return temp;
     }
 
     /**
@@ -85,8 +90,8 @@ public class CustomPlayer extends CustomEntity {
         Integer health = EntityUtils.readFrom(p, "health", PersistentDataType.INTEGER);
         Integer lastHealth = EntityUtils.readFrom(p, "lastHealth", PersistentDataType.INTEGER);
         Integer mana = EntityUtils.readFrom(p, "mana", PersistentDataType.INTEGER);
-
-        if (maxHealth == null || maxMana == null || baseDefense == null || health == null || mana == null || maxHealth < 0 || maxMana < 0 || baseDefense < 0 || health < 0 || mana < 0) {
+        String localeString = EntityUtils.readFrom(p, "locale", PersistentDataType.STRING);
+        if (maxHealth == null || maxMana == null || baseDefense == null || health == null || mana == null || localeString == null || maxHealth < 0 || maxMana < 0 || baseDefense < 0 || health < 0 || mana < 0) {
             DebugLogger.debug(maxHealth + " " + maxMana + " " + baseDefense + " " + health + " " + mana + " " + lastHealth);
             throw new InvalidEntityData();
         }
@@ -96,6 +101,7 @@ public class CustomPlayer extends CustomEntity {
         output.setBaseDefense(baseDefense);
         output.setMaxMana(maxMana);
         output.setHealth(health);
+        output.setLocale(Locale.fromString(localeString));
         if (lastHealth == null || lastHealth < 0) {
             output.setLastHealth(health);
         } else {
@@ -186,5 +192,14 @@ public class CustomPlayer extends CustomEntity {
     public void setMana(int m) {
         mana = m;
         EntityUtils.writeTo(getBase(), "mana", m);
+    }
+
+    public Locale getLocale() {
+        return locale;
+    }
+
+    public void setLocale(Locale l) {
+        locale = l;
+        EntityUtils.writeTo(getBase(), "locale", l.toCode());
     }
 }

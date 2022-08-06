@@ -25,6 +25,8 @@
 package ga.baoproject.theseed.commands;
 
 import ga.baoproject.theseed.abc.CustomItem;
+import ga.baoproject.theseed.abc.CustomPlayer;
+import ga.baoproject.theseed.exceptions.InvalidEntityData;
 import ga.baoproject.theseed.exceptions.UnknownItem;
 import ga.baoproject.theseed.utils.ItemUtils;
 import org.bukkit.ChatColor;
@@ -54,13 +56,18 @@ public class GiveItem implements CommandExecutor {
         }
 
         CustomItem item;
+        CustomPlayer player;
         try {
             item = ItemUtils.get(args[0]);
+            player = CustomPlayer.fromPlayer((Player) sender);
         } catch (UnknownItem e) {
             sender.sendMessage("Vật phẩm bạn lựa chọn không tồn tại.");
             return true;
+        } catch (InvalidEntityData e) {
+            sender.sendMessage("u r corrupt");
+            return true;
         }
-        ItemStack itemToGive = item.getItem();
+        ItemStack itemToGive = item.getItem(player.getLocale());
         boolean specifyAmount = false;
         try {
             itemToGive.setAmount(parseInt(args[args.length - 1]));

@@ -1,0 +1,31 @@
+plugin:
+  item:
+    useAction:
+      rightClick: "RIGHT CLICK"
+      shift: "SHIFT"
+      doubleJump: "DOUBLE JUMP"
+    description:
+      specialAbility: "Special Ability"
+      manaCost: "Mana Cost"
+      cooldown: "Cooldown"
+      damage: "Damage"
+      strength: "Strength"
+    rarity:
+      common: "COMMON"
+      uncommon: "UNCOMMON"
+      rare: "RARE"
+      legendary: "LEGENDARY"
+      commonWeapon: "COMMON WEAPON"
+      uncommonWeapon: "UNCOMMON WEAPON"
+      rareWeapon: "RARE WEAPON"
+      legendaryWeapon: "LEGENDARY WEAPON"
+      special: "SPECIAL"
+      hax: "GM ITEM"
+  player:
+    healthCard:
+      health: "♥ HP"
+      mana: "Mana"
+      baseDefense: "Defense"
+  error:
+    noMana: "You don't have enough mana left!"
+    noArgs: "You must give some arguments."

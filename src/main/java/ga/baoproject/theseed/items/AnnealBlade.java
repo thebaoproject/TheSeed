@@ -42,7 +42,7 @@ import org.bukkit.util.Vector;
 
 import java.util.List;
 
-public class AnnealBlade extends Weapon {
+public class AnnealBlade extends CustomWeapon {
 
     public AnnealBlade() {
         super(Material.STONE_SWORD);
@@ -59,7 +59,7 @@ public class AnnealBlade extends Weapon {
                         )
                 ).setUsage(ItemAbilityUseAction.RIGHT_CLICK).setCost(30).setCooldown(3)
         ));
-        super.setRarity(Rarity.UNCOMMON_SWORD);
+        super.setRarity(Rarity.UNCOMMON_WEAPON);
     }
 
     @Override

@@ -33,7 +33,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
 import java.util.List;
 
-public class ObjectEraser extends Weapon {
+public class ObjectEraser extends CustomWeapon {
 
     public ObjectEraser() {
         super(Material.GOLDEN_SWORD);
@@ -42,7 +42,7 @@ public class ObjectEraser extends Weapon {
         super.setDamage(999999999);
         super.setStrength(999999999);
         super.setAbilities(List.of(
-                new Ability().setName("One-hit-kill").setDescription("" +
+                new Ability().setName("One-hit-kill").setDescription(
                         ChatColor.translateAlternateColorCodes(
                                 '&', "&7Giết chết sinh vật chỉ với one hit."
                         )
