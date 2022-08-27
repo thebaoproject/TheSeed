@@ -19,7 +19,6 @@
  * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *
  */
 
 package ga.baoproject.theseed;
@@ -232,7 +231,7 @@ public final class TheSeed extends JavaPlugin implements CommandExecutor {
         getLogger().info("Plugin shut down successfully");
     }
 
-    public void theEnd() {
+    public void terminate() {
         getPluginManager().disablePlugin(this);
     }
 }

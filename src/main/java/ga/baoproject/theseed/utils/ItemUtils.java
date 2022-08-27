@@ -19,7 +19,6 @@
  * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *
  */
 
 package ga.baoproject.theseed.utils;
@@ -81,8 +80,8 @@ public class ItemUtils {
         PersistentDataContainer container = item.getItemMeta().getPersistentDataContainer();
         if (amogus(item)) {
             try {
-                return get(container.get(new NamespacedKey(pl, "id"), PersistentDataType.STRING));
-            } catch (UnknownItem ui) {
+                return get(Objects.requireNonNull(container.get(new NamespacedKey(pl, "id"), PersistentDataType.STRING)));
+            } catch (UnknownItem | NullPointerException ui) {
                 throw new UnknownItem();
             }
         } else {
