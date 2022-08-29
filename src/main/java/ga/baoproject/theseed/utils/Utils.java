@@ -86,7 +86,7 @@ public class Utils {
      */
     @NotNull
     public static String beautifyName(@NotNull String name) {
-        List<String> nameSep = List.of(name.split(" "));
+        List<String> nameSep = List.of(name.split("_"));
         List<String> result = new ArrayList<>();
         for (String n : nameSep) {
             result.add(n.substring(0, 1).toUpperCase(Locale.ROOT) + n.substring(1).toLowerCase(Locale.ROOT));

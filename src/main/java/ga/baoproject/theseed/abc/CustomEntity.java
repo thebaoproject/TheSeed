@@ -74,9 +74,10 @@ public class CustomEntity {
     public static void initialize(@NotNull Damageable p) {
         CustomEntity temp = new CustomEntity(p.getType());
         temp.setBase(p);
-        temp.setMaxHealth((int) Objects.requireNonNull(((LivingEntity) p).getAttribute(Attribute.GENERIC_MAX_HEALTH)).getBaseValue());
+        // Five times the health to add difficulty and fairness to vanilla entities.
+        temp.setMaxHealth(((int) Objects.requireNonNull(((LivingEntity) p).getAttribute(Attribute.GENERIC_MAX_HEALTH)).getBaseValue()) * 5);
         temp.setHealth(temp.getMaxHealth());
-        temp.setLastHealth(temp.getHealth());
+        temp.setLastHealth(temp.getMaxHealth());
         temp.setName(Utils.beautifyName(p.getType().toString()));
         DebugLogger.debug("Name to set for entity initialization: " + temp.getName());
         temp.setLevel(1);
@@ -176,7 +177,7 @@ public class CustomEntity {
     public void setHealth(int h) {
         health = h;
         if (getBase() != null) {
-            if (health < 0) {
+            if (health < 0 || getBase().isDead()) {
                 health = 0;
             }
             EntityUtils.writeTo(getBase(), "health", h);
@@ -187,8 +188,7 @@ public class CustomEntity {
     }
 
     /**
-     * Sets the entity's health according to the health property stored
-     * in the entity {@code PersistentDataContainer}
+     * Sets the entity's health according to its real health
      */
     public void renderHealth() {
         setHealth((int) getBase().getHealth());

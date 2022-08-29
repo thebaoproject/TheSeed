@@ -23,7 +23,10 @@
 
 package ga.baoproject.theseed;
 
-import ga.baoproject.theseed.abc.*;
+import ga.baoproject.theseed.abc.CustomEntity;
+import ga.baoproject.theseed.abc.CustomItem;
+import ga.baoproject.theseed.abc.CustomPlayer;
+import ga.baoproject.theseed.abc.DebugLogger;
 import ga.baoproject.theseed.commands.GiveItem;
 import ga.baoproject.theseed.commands.PlayerDataManipulation;
 import ga.baoproject.theseed.commands.SpawnEntity;
@@ -32,26 +35,21 @@ import ga.baoproject.theseed.completers.PlayerDataManipulationCompleter;
 import ga.baoproject.theseed.completers.SpawnEntityCompleter;
 import ga.baoproject.theseed.events.CentralEventListener;
 import ga.baoproject.theseed.exceptions.InvalidEntityData;
-import ga.baoproject.theseed.exceptions.UnknownItem;
 import ga.baoproject.theseed.i18n.Locale;
 import ga.baoproject.theseed.i18n.Localized;
 import ga.baoproject.theseed.utils.EntityUtils;
 import ga.baoproject.theseed.utils.ItemUtils;
 import ga.baoproject.theseed.utils.LocalizationUtils;
 import ga.baoproject.theseed.utils.Utils;
-import net.kyori.adventure.text.Component;
 import org.bukkit.World;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.slf4j.Logger;
-
-import java.util.List;
 
 import static org.bukkit.Bukkit.*;
 
@@ -207,16 +205,11 @@ public final class TheSeed extends JavaPlugin implements CommandExecutor {
                         if (item == null) {
                             continue;
                         }
-                        if (ItemUtils.amogus(item)) {
-                            CustomItem ci = ItemUtils.get(item);
-                            i.getInventory().setItem(slot, ci.getItem(p.getLocale()));
-                        } else {
-                            ItemMeta meta = item.getItemMeta();
-                            meta.lore(List.of(Component.text(Rarity.COMMON.renderLocalizedString(p.getLocale()))));
-                            item.setItemMeta(meta);
-                        }
+                        CustomItem ci = ItemUtils.get(item);
+                        i.getInventory().setItem(slot, ci.getItem(p.getLocale()));
                     }
-                } catch (InvalidEntityData | UnknownItem ignored) {
+                } catch (InvalidEntityData exc) {
+                    DebugLogger.debug("Received InvalidEntityData or InvalidItemID in item lore task.");
                 }
             }
         }, 1, 10);

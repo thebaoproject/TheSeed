@@ -26,7 +26,7 @@ package ga.baoproject.theseed.events;
 import ga.baoproject.theseed.abc.CustomBoss;
 import ga.baoproject.theseed.abc.CustomEntity;
 import ga.baoproject.theseed.exceptions.InvalidEntityData;
-import ga.baoproject.theseed.exceptions.UnknownEntity;
+import ga.baoproject.theseed.exceptions.InvalidEntityID;
 import ga.baoproject.theseed.utils.EntityUtils;
 import ga.baoproject.theseed.utils.Utils;
 import net.kyori.adventure.text.Component;
@@ -43,7 +43,7 @@ public class EntityEventHandler {
                 b.onDeath(e);
                 e.setCancelled(false);
             }
-        } catch (InvalidEntityData | UnknownEntity ignored) {
+        } catch (InvalidEntityData | InvalidEntityID ignored) {
         }
     }
 

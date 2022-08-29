@@ -25,7 +25,7 @@ package ga.baoproject.theseed.utils;
 
 import ga.baoproject.theseed.TheSeed;
 import ga.baoproject.theseed.abc.CustomEntity;
-import ga.baoproject.theseed.exceptions.UnknownEntity;
+import ga.baoproject.theseed.exceptions.InvalidEntityID;
 import ga.baoproject.theseed.monsters.DemonicServant;
 import ga.baoproject.theseed.monsters.IllfangBoss;
 import org.bukkit.NamespacedKey;
@@ -51,14 +51,14 @@ public class EntityUtils {
      * @return the {@link CustomEntity} found.
      */
     @NotNull
-    public static CustomEntity get(String entityName) throws UnknownEntity {
+    public static CustomEntity get(String entityName) throws InvalidEntityID {
         return switch (entityName) {
-            case "demonic_servant":
+            case "sao:demonic_servant":
                 yield new DemonicServant();
-            case "boss_illfang":
+            case "sao:boss_illfang":
                 yield new IllfangBoss();
             default:
-                throw new UnknownEntity();
+                throw new InvalidEntityID();
         };
     }
 
@@ -83,7 +83,7 @@ public class EntityUtils {
     @NotNull
     @Unmodifiable
     public static List<String> getEntityList() {
-        return List.of("demonic_servant", "boss_illfang");
+        return List.of("sao:demonic_servant", "sao:boss_illfang");
     }
 
     /**

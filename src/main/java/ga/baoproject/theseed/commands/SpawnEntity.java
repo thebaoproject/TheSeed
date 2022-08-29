@@ -24,7 +24,7 @@
 package ga.baoproject.theseed.commands;
 
 import ga.baoproject.theseed.abc.CustomMonster;
-import ga.baoproject.theseed.exceptions.UnknownEntity;
+import ga.baoproject.theseed.exceptions.InvalidEntityID;
 import ga.baoproject.theseed.utils.EntityUtils;
 import net.kyori.adventure.text.Component;
 import org.bukkit.ChatColor;
@@ -54,7 +54,7 @@ public class SpawnEntity implements CommandExecutor {
             entity = (CustomMonster) EntityUtils.get(args[0]);
             entity.spawnAt(p.getLocation());
             sender.sendMessage(Component.text(ChatColor.GREEN + "Whoosh!"));
-        } catch (UnknownEntity e) {
+        } catch (InvalidEntityID e) {
             sender.sendMessage("Entity bạn lựa chọn không tồn tại.");
             return true;
         }

@@ -30,7 +30,7 @@ public class DemonicServant extends CustomMonster {
     public DemonicServant() {
         super(EntityType.WITHER_SKELETON);
         setLevel(10);
-        setID("demonic_servant");
+        setID("sao:demonic_servant");
         setName("Demonic Servant");
         setMaxHealth(100);
         setHealth(100);
