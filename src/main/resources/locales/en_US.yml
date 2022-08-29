@@ -25,7 +25,7 @@ plugin:
     abilityUse: "Whoosh!"
   player:
     healthCard:
-      health: "♥ HP"
+      health: "HP"
       mana: "Mana"
       baseDefense: "Defense"
   error:
