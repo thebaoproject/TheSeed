@@ -23,5 +23,8 @@
 
 package ga.baoproject.theseed.exceptions;
 
-public class UnknownEntity extends Exception {
+/**
+ * Thrown when the entity's ID doesn't exist in the plugin.
+ */
+public class InvalidEntityID extends Exception {
 }

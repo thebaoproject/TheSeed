@@ -36,7 +36,7 @@ public class ObjectEraser extends CustomWeapon {
 
     public ObjectEraser() {
         super(Material.GOLDEN_SWORD);
-        super.setID("object_eraser");
+        super.setID("sao:object_eraser");
         super.setName("Object Eraser");
         super.setDamage(999999999);
         super.setStrength(999999999);

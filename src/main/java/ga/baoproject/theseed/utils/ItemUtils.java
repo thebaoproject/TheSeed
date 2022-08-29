@@ -25,12 +25,16 @@ package ga.baoproject.theseed.utils;
 
 import ga.baoproject.theseed.TheSeed;
 import ga.baoproject.theseed.abc.CustomItem;
-import ga.baoproject.theseed.exceptions.UnknownItem;
+import ga.baoproject.theseed.exceptions.UnknownItemID;
 import ga.baoproject.theseed.items.AnnealBlade;
 import ga.baoproject.theseed.items.BareHand;
 import ga.baoproject.theseed.items.ObjectEraser;
 import ga.baoproject.theseed.items.VanillaItem;
+import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeModifier;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
@@ -41,7 +45,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
+import java.util.UUID;
 
 public class ItemUtils {
 
@@ -52,14 +58,14 @@ public class ItemUtils {
      * @return the {@link CustomItem} found.
      */
     @NotNull
-    public static CustomItem get(String itemID) throws UnknownItem {
+    public static CustomItem get(String itemID) throws UnknownItemID {
         return switch (itemID) {
-            case "anneal_blade":
+            case "sao:anneal_blade":
                 yield new AnnealBlade();
-            case "object_eraser":
+            case "sao:object_eraser":
                 yield new ObjectEraser();
             default:
-                throw new UnknownItem();
+                throw new UnknownItemID();
         };
     }
 
@@ -68,25 +74,33 @@ public class ItemUtils {
      *
      * @param item the item to be converted.
      * @return the converted item.
-     * @throws UnknownItem when the ID stored in the item is invalid.
      */
     @NotNull
-    public static CustomItem get(@NotNull ItemStack item) throws UnknownItem {
+    public static CustomItem get(@NotNull ItemStack item) {
         Plugin pl = TheSeed.getInstance();
         if (item.getItemMeta() == null) {
             // Bare hand
             return new BareHand();
         }
         PersistentDataContainer container = item.getItemMeta().getPersistentDataContainer();
-        if (amogus(item)) {
-            try {
-                return get(Objects.requireNonNull(container.get(new NamespacedKey(pl, "id"), PersistentDataType.STRING)));
-            } catch (UnknownItem | NullPointerException ui) {
-                throw new UnknownItem();
-            }
-        } else {
-            return new VanillaItem();
+        try {
+            return get(Objects.requireNonNull(container.get(new NamespacedKey(pl, "id"), PersistentDataType.STRING)));
+        } catch (UnknownItemID | NullPointerException ignored) {
         }
+        // If the item have no ID or invalid ID then it must be a vanilla item.
+        ItemMeta meta = item.getItemMeta();
+        meta.setUnbreakable(true);
+        // Five times the item damage to be fair with new items.
+        AttributeModifier fiveTimes = new AttributeModifier(
+                UUID.randomUUID(),
+                "generic.attackDamage",
+                5,
+                AttributeModifier.Operation.MULTIPLY_SCALAR_1
+        );
+        meta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, fiveTimes);
+        meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        item.setItemMeta(meta);
+        return new VanillaItem(item.getType());
     }
 
     /**
@@ -97,7 +111,7 @@ public class ItemUtils {
     @Contract(pure = true)
     @NotNull
     public static @Unmodifiable List<String> getItemList() {
-        return List.of("anneal_blade", "object_eraser");
+        return List.of("sao:anneal_blade", "sao:object_eraser");
     }
 
     /**
@@ -147,5 +161,38 @@ public class ItemUtils {
         PersistentDataContainer container = meta.getPersistentDataContainer();
         container.set(new NamespacedKey(pl, "cooldownTimestamp"), PersistentDataType.LONG, t);
         item.setItemMeta(meta);
+    }
+
+    /**
+     * Checks is the item deals any considerable damage.
+     *
+     * @return whether the item deals any considerable damage or not.
+     */
+    public static boolean isWeapon(Material item) {
+        String name = item.name().toLowerCase(Locale.ROOT);
+        return name.contains("sword") || (name.contains("axe") && !name.contains("pickaxe")) || name.contains("shovel") || name.contains("hoe") || name.equals("trident");
+    }
+
+    /**
+     * Gets the damage dealt from a type of item.
+     *
+     * @param item the item to get damage.
+     * @return the damage the item deals when used.
+     */
+    public static int getItemDamage(@NotNull Material item) {
+        // Looks bad, but uses less RAM than any other way (creating ItemStack, etc)
+        return switch (item) {
+            case AIR -> 0;
+            case WOODEN_SHOVEL, GOLDEN_SHOVEL, STONE_HOE -> 2;
+            case STONE_SHOVEL, IRON_HOE -> 3;
+            case WOODEN_SWORD, GOLDEN_SWORD, IRON_SHOVEL, DIAMOND_HOE, NETHERITE_HOE -> 4;
+            case STONE_SWORD, DIAMOND_SHOVEL -> 5;
+            case IRON_SWORD, NETHERITE_SHOVEL -> 6;
+            case DIAMOND_SWORD, WOODEN_AXE, GOLDEN_AXE -> 7;
+            case NETHERITE_SWORD -> 8;
+            case STONE_AXE, IRON_AXE, DIAMOND_AXE -> 9;
+            case NETHERITE_AXE -> 10;
+            default -> 1;
+        };
     }
 }

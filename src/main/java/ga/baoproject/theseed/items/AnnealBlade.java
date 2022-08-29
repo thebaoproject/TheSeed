@@ -47,7 +47,7 @@ public class AnnealBlade extends CustomWeapon {
 
     public AnnealBlade() {
         super(Material.STONE_SWORD);
-        super.setID("anneal_blade");
+        super.setID("sao:anneal_blade");
         super.setName("Anneal Blade");
         super.setDamage(35);
         super.setStrength(2);

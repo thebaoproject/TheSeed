@@ -26,7 +26,6 @@ package ga.baoproject.theseed.events;
 import ga.baoproject.theseed.abc.CustomItem;
 import ga.baoproject.theseed.abc.CustomWeapon;
 import ga.baoproject.theseed.abc.DebugLogger;
-import ga.baoproject.theseed.exceptions.UnknownItem;
 import ga.baoproject.theseed.utils.ItemUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
@@ -52,24 +51,15 @@ public class ItemEventHandler {
         if (isValid(e)) {
             if (e.getItem() != null) {
                 CustomItem item;
-                try {
-                    item = ItemUtils.get(e.getItem());
-                    item.rightClickAction(e);
-                } catch (UnknownItem ex) {
-                    DebugLogger.debug("Received UnknownItem exception in item event listener. Silently ignoring.");
-                }
+                item = ItemUtils.get(e.getItem());
+                item.rightClickAction(e);
             }
         }
     }
 
     public static void onDamage(@NotNull EntityDamageByEntityEvent e) {
         if (e.getDamager() instanceof Player) {
-            CustomItem item = null;
-            try {
-                item = ItemUtils.get(((Player) e.getDamager()).getInventory().getItemInMainHand());
-            } catch (UnknownItem ex) {
-                DebugLogger.debug("Received UnknownItem exception. Silently ignoring.");
-            }
+            CustomItem item = ItemUtils.get(((Player) e.getDamager()).getInventory().getItemInMainHand());
             if (item instanceof CustomWeapon) {
                 ((CustomWeapon) item).attackAction(e);
             } else {

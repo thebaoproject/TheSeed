@@ -26,5 +26,5 @@ package ga.baoproject.theseed.exceptions;
 /**
  * Thrown when the item's ID isn't in the plugin's database.
  */
-public class UnknownItem extends Exception {
+public class UnknownItemID extends Exception {
 }
