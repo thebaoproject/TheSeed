@@ -7,10 +7,15 @@ plugin:
       doubleJump: "NHẢY HAI LẦN"
     description:
       specialAbility: "Khả năng đặc biệt"
+      fullSetBuff: "Buff đủ bộ"
       manaCost: "Tiêu Mana"
       cooldown: "Cooldown"
       damage: "Sát thương"
       strength: "Lực đánh"
+      protection: "Bảo vệ"
+      knockback: "Chống giật lùi"
+      healthBuff: "Tăng máu"
+      speedBuff: "Chạy nhanh"
     rarity:
       common: "THƯỜNG"
       uncommon: "HIẾM"
@@ -38,7 +43,7 @@ plugin:
       description: |
         &7Tiến thẳng tới trước &a5&7 block, gây ra
         &7&c35 &7sát thương cho bất kì sinh vật nào 
-        &7trên đường đi.
+        &7trên đường đi
     ObjectEraser:
       ability: "Phá hủy"
       description: |

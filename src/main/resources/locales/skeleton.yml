@@ -10,10 +10,15 @@ plugin:
       doubleJump: ""
     description:
       specialAbility: ""
+      fullSetBuff: ""
       manaCost: ""
       cooldown: ""
       damage: ""
       strength: ""
+      protection: ""
+      knockback: ""
+      healthBuff: ""
+      speedBuff: ""
     rarity:
       common: ""
       uncommon: ""

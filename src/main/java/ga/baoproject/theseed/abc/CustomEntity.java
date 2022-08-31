@@ -1,24 +1,10 @@
 /*
- * Copyright (c) 2022 the Block Art Online Project contributors
+ * Copyright (c) 2022 the Block Art Online Project contributors.
  *
- * Permission is hereby granted, free of charge, to any person obtaining
- * a copy of this software and associated documentation files (the
- * "Software"), to deal in the Software without restriction, including
- * without limitation the rights to use, copy, modify, merge, publish,
- * distribute, sublicense, and/or sell copies of the Software, and to
- * permit persons to whom the Software is furnished to do so, subject to
- * the following conditions:
- *
- * The above copyright notice and this permission notice shall be
- * included in all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
- * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
- * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
- * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * This work is free. It comes without any warranty, to the extent permitted
+ * by applicable law. You can redistribute it and/or modify it under the terms
+ * of the Do What The Fuck You Want To Public License, Version 2.
+ * See the LICENSE file for more details.
  */
 
 package ga.baoproject.theseed.abc;
@@ -51,7 +37,10 @@ public class CustomEntity {
     private Damageable base;
     private int maxHealth;
     private int health;
+    private int baseHealth;
     private int lastHealth;
+    private int baseSpeed;
+    private int speed;
     private int level;
     private String id;
     private String name;
@@ -71,18 +60,19 @@ public class CustomEntity {
      *
      * @param p the entity to set up.
      */
-    public static void initialize(@NotNull Damageable p) {
+    public static CustomEntity initialize(@NotNull Damageable p) {
         CustomEntity temp = new CustomEntity(p.getType());
         temp.setBase(p);
         // Five times the health to add difficulty and fairness to vanilla entities.
-        temp.setMaxHealth(((int) Objects.requireNonNull(((LivingEntity) p).getAttribute(Attribute.GENERIC_MAX_HEALTH)).getBaseValue()) * 5);
+        temp.setBaseHealth(((int) Objects.requireNonNull(((LivingEntity) p).getAttribute(Attribute.GENERIC_MAX_HEALTH)).getBaseValue()));
+        temp.setMaxHealth(temp.getBaseHealth() * 5);
         temp.setHealth(temp.getMaxHealth());
         temp.setLastHealth(temp.getMaxHealth());
         temp.setName(Utils.beautifyName(p.getType().toString()));
-        DebugLogger.debug("Name to set for entity initialization: " + temp.getName());
         temp.setLevel(1);
         temp.setID(p.getType().toString().toLowerCase(Locale.ROOT));
         temp.getBase().setCustomNameVisible(true);
+        return temp;
     }
 
     /**
@@ -99,17 +89,18 @@ public class CustomEntity {
         PersistentDataContainer container = p.getPersistentDataContainer();
         Integer maxHealth = container.get(new NamespacedKey(pl, "maxHealth"), PersistentDataType.INTEGER);
         Integer health = container.get(new NamespacedKey(pl, "health"), PersistentDataType.INTEGER);
+        Integer baseHealth = container.get(new NamespacedKey(pl, "baseHealth"), PersistentDataType.INTEGER);
         Integer lastHealth = container.get(new NamespacedKey(pl, "lastHealth"), PersistentDataType.INTEGER);
         String name = container.get(new NamespacedKey(pl, "name"), PersistentDataType.STRING);
         Integer level = container.get(new NamespacedKey(pl, "level"), PersistentDataType.INTEGER);
         String id = container.get(new NamespacedKey(pl, "id"), PersistentDataType.STRING);
-
-        if (maxHealth == null || health == null || lastHealth == null || name == null || level == null || id == null || maxHealth < 0 || health < 0 || lastHealth < 0) {
+        if (maxHealth == null || health == null || lastHealth == null || name == null || level == null || id == null || baseHealth == null || maxHealth < 0 || health < 0 || lastHealth < 0 || baseHealth < 0) {
             throw new InvalidEntityData();
         }
         CustomEntity output = new CustomEntity(p);
         output.setMaxHealth(maxHealth);
         output.setHealth(health);
+        output.setBaseHealth(baseHealth);
         output.setLastHealth(lastHealth);
         output.setName(name);
         output.setLevel(level);
@@ -176,14 +167,31 @@ public class CustomEntity {
 
     public void setHealth(int h) {
         health = h;
+
         if (getBase() != null) {
             if (health < 0 || getBase().isDead()) {
                 health = 0;
             }
             EntityUtils.writeTo(getBase(), "health", h);
             if (!(getBase() instanceof Player)) {
-                getBase().setHealth(health);
+                try {
+                    getBase().setHealth(health);
+                } catch (IllegalArgumentException e) {
+                    DebugLogger.debug("Entity " + getBase() + "have error when trying to set health. h:" + getHealth() + " mh" + getMaxHealth() + " bh:" + getBaseHealth() + ". Resetting stats...");
+                    initialize(getBase());
+                }
             }
+        }
+    }
+
+    public int getBaseHealth() {
+        return baseHealth;
+    }
+
+    public void setBaseHealth(int bh) {
+        baseHealth = bh;
+        if (getBase() != null) {
+            EntityUtils.writeTo(getBase(), "baseHealth", bh);
         }
     }
 

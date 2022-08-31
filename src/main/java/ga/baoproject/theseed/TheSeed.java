@@ -1,32 +1,15 @@
 /*
- * Copyright (c) 2022 the Block Art Online Project contributors
+ * Copyright (c) 2022 the Block Art Online Project contributors.
  *
- * Permission is hereby granted, free of charge, to any person obtaining
- * a copy of this software and associated documentation files (the
- * "Software"), to deal in the Software without restriction, including
- * without limitation the rights to use, copy, modify, merge, publish,
- * distribute, sublicense, and/or sell copies of the Software, and to
- * permit persons to whom the Software is furnished to do so, subject to
- * the following conditions:
- *
- * The above copyright notice and this permission notice shall be
- * included in all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
- * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
- * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
- * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * This work is free. It comes without any warranty, to the extent permitted
+ * by applicable law. You can redistribute it and/or modify it under the terms
+ * of the Do What The Fuck You Want To Public License, Version 2.
+ * See the LICENSE file for more details.
  */
 
 package ga.baoproject.theseed;
 
-import ga.baoproject.theseed.abc.CustomEntity;
-import ga.baoproject.theseed.abc.CustomItem;
-import ga.baoproject.theseed.abc.CustomPlayer;
-import ga.baoproject.theseed.abc.DebugLogger;
+import ga.baoproject.theseed.abc.*;
 import ga.baoproject.theseed.commands.GiveItem;
 import ga.baoproject.theseed.commands.PlayerDataManipulation;
 import ga.baoproject.theseed.commands.SpawnEntity;
@@ -35,6 +18,7 @@ import ga.baoproject.theseed.completers.PlayerDataManipulationCompleter;
 import ga.baoproject.theseed.completers.SpawnEntityCompleter;
 import ga.baoproject.theseed.events.CentralEventListener;
 import ga.baoproject.theseed.exceptions.InvalidEntityData;
+import ga.baoproject.theseed.exceptions.UnknownItemID;
 import ga.baoproject.theseed.i18n.Locale;
 import ga.baoproject.theseed.i18n.Localized;
 import ga.baoproject.theseed.utils.EntityUtils;
@@ -50,6 +34,10 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.slf4j.Logger;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.bukkit.Bukkit.*;
 
@@ -73,6 +61,8 @@ public final class TheSeed extends JavaPlugin implements CommandExecutor {
         DebugLogger.setPluginInstance(this);
         l.info(" ---------------------------- The Seed --------------------------- ");
         l.info("    Copyright (c) 2022 the Block Art Online Project contributors.  ");
+        l.info("    This is free software, licensed under the Do What The F**k You ");
+        l.info("    Want To Do Public License.                                     ");
         l.info("                                                                   ");
         l.info("     \"The little seed I planted found purchase in distant networks, ");
         l.info("   where it sprouts its own leaves and branches.\"                   ");
@@ -175,7 +165,7 @@ public final class TheSeed extends JavaPlugin implements CommandExecutor {
                     if (!(i instanceof Player)) {
                         try {
                             if (EntityUtils.impostor(i)) {
-                                DebugLogger.debug("Entity with type of " + i.getName() + " hasn't been set up yet. Automatically setting up...");
+//                                DebugLogger.debug("Entity with type of " + i.getName() + " hasn't been set up yet. Automatically setting up...");
                                 CustomEntity.initialize(i);
                             }
                             e = CustomEntity.fromEntity(i);
@@ -183,7 +173,7 @@ public final class TheSeed extends JavaPlugin implements CommandExecutor {
                             e.setNameTag();
                         } catch (InvalidEntityData ex) {
                             if (i.getHealth() != 0) {
-                                DebugLogger.debug("Entity with type of " + i.getType() + " have invalid entity data (healthbar). Automatically initializing...");
+//                                DebugLogger.debug("Entity with type of " + i.getType() + " have invalid entity data (healthbar). Automatically initializing...");
                                 CustomEntity.initialize(i);
                             }
                         }
@@ -194,7 +184,7 @@ public final class TheSeed extends JavaPlugin implements CommandExecutor {
         if (mobHealthBarTaskID == -1) {
             getSLF4JLogger().error("Scheduling mob health bar task failed.");
         }
-        int itemLoreRefreshTaskID = getServer().getScheduler().scheduleSyncRepeatingTask(this, () -> {
+        int itemLoreAndAddBuffTaskID = getServer().getScheduler().scheduleSyncRepeatingTask(this, () -> {
             for (Player i : getOnlinePlayers()) {
                 CustomPlayer p;
                 try {
@@ -206,15 +196,46 @@ public final class TheSeed extends JavaPlugin implements CommandExecutor {
                             continue;
                         }
                         CustomItem ci = ItemUtils.get(item);
-                        i.getInventory().setItem(slot, ci.getItem(p.getLocale()));
+                        ItemStack newItem = ci.getItem(p.getLocale());
+                        newItem.setAmount(item.getAmount());
+                        i.getInventory().setItem(slot, newItem);
                     }
                 } catch (InvalidEntityData exc) {
-                    DebugLogger.debug("Received InvalidEntityData or InvalidItemID in item lore task.");
+                    DebugLogger.debug("Received InvalidEntityData in item lore task.");
                 }
             }
         }, 1, 10);
-        if (itemLoreRefreshTaskID == -1) {
-            getSLF4JLogger().error("Scheduling item lore updating task failed.");
+        if (itemLoreAndAddBuffTaskID == -1) {
+            getSLF4JLogger().error("Scheduling item lore updating and adding buff task failed.");
+        }
+        int applyBuffTaskID = getScheduler().scheduleSyncRepeatingTask(this, () -> {
+            for (Player i : getOnlinePlayers()) {
+                List<String> ctl = new ArrayList<>();
+                int healthBuff = 0;
+                try {
+                    CustomPlayer p = CustomPlayer.fromPlayer(i);
+                    for (ItemStack item : i.getInventory().getArmorContents()) {
+                        if (item == null) {
+                            continue;
+                        }
+                        CustomItem ci = ItemUtils.get(item);
+                        if (ItemUtils.get(ci.getID()) instanceof CustomTalisman ct) {
+                            if (
+                                    Arrays.stream(i.getInventory().getArmorContents()).toList().contains(ct.getItem(p.getLocale()))
+                                            && ct.getTrigger() == BuffTrigger.WEARING
+                            ) {
+                                // Speed is set by attributes in the item.
+                                healthBuff += ct.getHealthBuff();
+                            }
+                        }
+                    }
+                    p.setMaxHealth(p.getBaseHealth() + healthBuff);
+                } catch (InvalidEntityData | UnknownItemID ignored) {
+                }
+            }
+        }, 1, 1);
+        if (applyBuffTaskID == -1) {
+            getSLF4JLogger().error("Scheduling removing buff task failed.");
         }
     }
 

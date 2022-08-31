@@ -7,10 +7,15 @@ plugin:
       doubleJump: "DOUBLE JUMP"
     description:
       specialAbility: "Special Ability"
+      fullSetBuff: "Full Set Buff"
       manaCost: "Mana Cost"
       cooldown: "Cooldown"
       damage: "Damage"
       strength: "Strength"
+      protection: "Protection"
+      knockback: "Knockback Mitigation"
+      healthBuff: "Health Buff"
+      speedBuff: "Speed Buff"
     rarity:
       common: "COMMON"
       uncommon: "UNCOMMON"

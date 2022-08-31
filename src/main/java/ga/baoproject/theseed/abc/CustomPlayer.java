@@ -1,24 +1,10 @@
 /*
- * Copyright (c) 2022 the Block Art Online Project contributors
+ * Copyright (c) 2022 the Block Art Online Project contributors.
  *
- * Permission is hereby granted, free of charge, to any person obtaining
- * a copy of this software and associated documentation files (the
- * "Software"), to deal in the Software without restriction, including
- * without limitation the rights to use, copy, modify, merge, publish,
- * distribute, sublicense, and/or sell copies of the Software, and to
- * permit persons to whom the Software is furnished to do so, subject to
- * the following conditions:
- *
- * The above copyright notice and this permission notice shall be
- * included in all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
- * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
- * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
- * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * This work is free. It comes without any warranty, to the extent permitted
+ * by applicable law. You can redistribute it and/or modify it under the terms
+ * of the Do What The Fuck You Want To Public License, Version 2.
+ * See the LICENSE file for more details.
  */
 
 package ga.baoproject.theseed.abc;
@@ -66,10 +52,12 @@ public class CustomPlayer extends CustomEntity {
         CustomPlayer temp = new CustomPlayer(p);
         temp.setMaxHealth(100);
         temp.setBaseDefense(100);
+        temp.setBaseHealth(100);
         temp.setMaxMana(100);
         temp.setHealth(100);
         temp.setMana(100);
         temp.setLocale(Locale.VI_VN);
+        temp.setBaseHealth(100);
         return temp;
     }
 
@@ -87,11 +75,12 @@ public class CustomPlayer extends CustomEntity {
         Integer maxMana = EntityUtils.readFrom(p, "maxMana", PersistentDataType.INTEGER);
         Integer baseDefense = EntityUtils.readFrom(p, "baseDefense", PersistentDataType.INTEGER);
         Integer health = EntityUtils.readFrom(p, "health", PersistentDataType.INTEGER);
+        Integer baseHealth = EntityUtils.readFrom(p, "baseHealth", PersistentDataType.INTEGER);
         Integer lastHealth = EntityUtils.readFrom(p, "lastHealth", PersistentDataType.INTEGER);
         Integer mana = EntityUtils.readFrom(p, "mana", PersistentDataType.INTEGER);
         String localeString = EntityUtils.readFrom(p, "locale", PersistentDataType.STRING);
-        if (maxHealth == null || maxMana == null || baseDefense == null || health == null || mana == null || localeString == null || maxHealth < 0 || maxMana < 0 || baseDefense < 0 || health < 0 || mana < 0) {
-            DebugLogger.debug(maxHealth + " " + maxMana + " " + baseDefense + " " + health + " " + mana + " " + lastHealth);
+        if (maxHealth == null || maxMana == null || baseDefense == null || health == null || mana == null || localeString == null || baseHealth == null || maxHealth < 0 || maxMana < 0 || baseDefense < 0 || health < 0 || mana < 0 || baseHealth < 0) {
+            DebugLogger.debug("INVALID ENTITY DATA: mh:" + maxHealth + " mm:" + maxMana + " bd:" + baseDefense + " h:" + health + " m:" + mana + " lh:" + lastHealth + " bh:" + baseHealth + " ls:" + localeString);
             throw new InvalidEntityData();
         }
         CustomPlayer output = new CustomPlayer(p);
@@ -100,6 +89,8 @@ public class CustomPlayer extends CustomEntity {
         output.setBaseDefense(baseDefense);
         output.setMaxMana(maxMana);
         output.setHealth(health);
+        output.setBaseHealth(baseHealth);
+        output.setBaseHealth(baseHealth);
         output.setLocale(Locale.fromString(localeString));
         if (lastHealth == null || lastHealth < 0) {
             output.setLastHealth(health);

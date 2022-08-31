@@ -7,11 +7,11 @@
  * See the LICENSE file for more details.
  */
 
-package ga.baoproject.theseed.exceptions;
+package ga.baoproject.theseed.abc;
 
-/**
- * Thrown when player's internal data is invalid (usually null or negative)
- */
-public class InvalidEntityData extends Exception {
-
+public enum BuffTrigger {
+    IN_INVENTORY,
+    ON_MAIN_HAND,
+    ON_OFF_HAND,
+    WEARING
 }
