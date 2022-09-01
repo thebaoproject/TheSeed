@@ -52,9 +52,9 @@ Bạn cũng nên theo codestyle của dự án. Cơ bản là:
 * Nhớ add copyright vào đầu mỗi file.
 
 ## 📖 Ghi công & Bản quyền.
-
-`Copyright (c) 2022 the Block Art Online Project contributors.`
-Dự án này đi theo con đường mã nguồn mở theo giấy phép MIT. Đọc `LICENSE.md` để xem chi tiết.  
+Đây là môt phần mềm tự do và không bị gò bó được công khai ra phạm vi công cộng.
+Các tác giả của phần mềm này từ bỏ quyền của mình đối với phần mềm này mà trao nó lại cho mọi người. Chúng tôi tin rằng hành động này sẽ làm cho xã hội tốt đẹp hơn.  
+Chúng tôi cho phép bạn làm bất gì điều gì bạn muốn; tuy nhiên chúng tôi không chịu trách nhiệm về bất kì hậu quả nào mà phần mềm này gây nên.
 Tất cả các thành viên trong dự án này đều đóng góp một phần không nhỏ vào công cuộc làm plugin.
 
 ## FAQ
