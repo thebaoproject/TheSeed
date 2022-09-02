@@ -31,7 +31,7 @@ public class Utils {
                 '&',
                 "&c" +
                         p.getHealth() + "/" + p.getMaxHealth() + "❤ " + new Localized("HP", "plugin.player.healthCard.health").render(p.getLocale()) + "    &a" +
-                        p.getBaseDefense() + "❈ " + new Localized("Phòng thủ", "plugin.player.healthCard.baseDefense").render(p.getLocale()) + "    &b" +
+                        p.getDefense() + "❈ " + new Localized("Phòng thủ", "plugin.player.healthCard.baseDefense").render(p.getLocale()) + "    &b" +
                         p.getMana() + "/" + p.getMaxMana() + "✏ " + new Localized("Mana", "plugin.player.healthCard.mana").render(p.getLocale())
         );
         p.getBase().sendActionBar(Component.text(message));

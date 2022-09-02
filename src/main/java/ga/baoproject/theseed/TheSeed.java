@@ -30,13 +30,12 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.slf4j.Logger;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.bukkit.Bukkit.*;
@@ -59,10 +58,9 @@ public final class TheSeed extends JavaPlugin implements CommandExecutor {
         Logger l = getSLF4JLogger();
         DebugLogger.setEnabled();
         DebugLogger.setPluginInstance(this);
-        l.info(" ---------------------------- The Seed --------------------------- ");
+        l.info(" ------------ The Block Art Online Project | The Seed ------------ ");
         l.info("    Copyright (c) 2022 the Block Art Online Project contributors.  ");
-        l.info("    This is free software, licensed under the Do What The F**k You ");
-        l.info("    Want To Do Public License.                                     ");
+        l.info("    This is free software, licensed under the WTFPL.               ");
         l.info("                                                                   ");
         l.info("     \"The little seed I planted found purchase in distant networks, ");
         l.info("   where it sprouts its own leaves and branches.\"                   ");
@@ -197,8 +195,10 @@ public final class TheSeed extends JavaPlugin implements CommandExecutor {
                         }
                         CustomItem ci = ItemUtils.get(item);
                         ItemStack newItem = ci.getItem(p.getLocale());
-                        newItem.setAmount(item.getAmount());
-                        i.getInventory().setItem(slot, newItem);
+                        if (!newItem.equals(item)) {
+                            newItem.setAmount(item.getAmount());
+                            i.getInventory().setItem(slot, newItem);
+                        }
                     }
                 } catch (InvalidEntityData exc) {
                     DebugLogger.debug("Received InvalidEntityData in item lore task.");
@@ -210,8 +210,8 @@ public final class TheSeed extends JavaPlugin implements CommandExecutor {
         }
         int applyBuffTaskID = getScheduler().scheduleSyncRepeatingTask(this, () -> {
             for (Player i : getOnlinePlayers()) {
-                List<String> ctl = new ArrayList<>();
                 int healthBuff = 0;
+                int defenseBuff = 0;
                 try {
                     CustomPlayer p = CustomPlayer.fromPlayer(i);
                     for (ItemStack item : i.getInventory().getArmorContents()) {
@@ -220,16 +220,15 @@ public final class TheSeed extends JavaPlugin implements CommandExecutor {
                         }
                         CustomItem ci = ItemUtils.get(item);
                         if (ItemUtils.get(ci.getID()) instanceof CustomTalisman ct) {
-                            if (
-                                    Arrays.stream(i.getInventory().getArmorContents()).toList().contains(ct.getItem(p.getLocale()))
-                                            && ct.getTrigger() == BuffTrigger.WEARING
-                            ) {
+                            if (List.of(EquipmentSlot.HAND, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET).contains(ct.getTrigger())) {
                                 // Speed is set by attributes in the item.
                                 healthBuff += ct.getHealthBuff();
+                                defenseBuff += ct.getProtection();
                             }
                         }
                     }
                     p.setMaxHealth(p.getBaseHealth() + healthBuff);
+                    p.setDefense(p.getBaseDefense() + defenseBuff);
                 } catch (InvalidEntityData | UnknownItemID ignored) {
                 }
             }

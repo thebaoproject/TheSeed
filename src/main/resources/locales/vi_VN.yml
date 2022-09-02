@@ -37,6 +37,10 @@ plugin:
     noMana: "Bạn không có đủ Mana!"
     noArgs: "Bạn phải đưa ra các tham số!"
     invalidArg: "Tham số mà bạn đưa ra không hợp lệ!"
+  messages:
+    player:
+      otherDead: "đã chết."
+      death: "Bạn đã chết. Đang hồi sinh..."
   itemDetails:
     AnnealBlade:
       ability: "Rage Spike"

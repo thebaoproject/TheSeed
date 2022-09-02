@@ -16,6 +16,7 @@ import ga.baoproject.theseed.exceptions.InvalidEntityData;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.jetbrains.annotations.NotNull;
 
 
@@ -34,15 +35,24 @@ public class PlayerEventHandler {
         try {
             CustomPlayer p = CustomPlayer.fromPlayer((Player) event.getEntity());
             // TODO - Custom potions
+            int originalDamage = (int) event.getFinalDamage();
+            int damage;
             if (event.getCause() != EntityDamageEvent.DamageCause.FALL) {
                 // Damage inflation, normal health is now 100, not 20.
-                p.setHealth(p.getHealth() - (int) event.getFinalDamage() * 5);
+                // If someone ever had 1000 defense, that means 100% damage reduction.
+                // Formula: damage = 5*finalDamage * (100-defense/100)%
+                damage = (5 * originalDamage * (100 - p.getDefense() / 100)) / 100;
             } else {
                 // Let x be our original damage.
                 // x = health/maxHealth * 20 <-> health/maxHealth = x/20 <-> 20*health = maxHealth*x <-> health = maxHealth*x/20
-                p.setHealth(p.getHealth() - (int) event.getFinalDamage() * p.getMaxHealth() / 20);
+                damage = (int) event.getFinalDamage() * p.getMaxHealth() / 20;
             }
-            DebugLogger.debug("Setting " + p.getBase().getName() + "'s health to " + (p.getHealth() - (int) event.getFinalDamage()));
+            int healthAfter = p.getHealth() - damage;
+            if (healthAfter < 0) {
+                healthAfter = 0;
+            }
+            p.setHealth(healthAfter);
+            DebugLogger.debug("Setting " + p.getBase().getName() + "'s health to " + healthAfter);
             event.setCancelled(true);
         } catch (InvalidEntityData e) {
             if (((Player) event.getEntity()).getHealth() != 0) {
@@ -58,6 +68,21 @@ public class PlayerEventHandler {
     public static void onEntityRegen(@NotNull EntityRegainHealthEvent event) {
         if (event.getEntity() instanceof Player) {
             event.setCancelled(true);
+        }
+    }
+
+    /**
+     * Due to a bug in minecraft, when the health is equal to the max health set in the
+     * attributes, it just renders 20 health when it is in fact, 40, so we have to employ
+     * some tricks.
+     */
+    public static void onJoin(PlayerJoinEvent e) {
+        try {
+
+            CustomPlayer p = CustomPlayer.fromPlayer(e.getPlayer());
+            p.getBase().setHealth(39);
+            p.renderHealth();
+        } catch (InvalidEntityData ignored) {
         }
     }
 

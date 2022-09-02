@@ -146,7 +146,10 @@ public class CustomEntity {
         maxHealth = h;
         if (getBase() != null) {
             EntityUtils.writeTo(getBase(), "maxHealth", h);
-            Objects.requireNonNull(((LivingEntity) getEntity()).getAttribute(Attribute.GENERIC_MAX_HEALTH)).setBaseValue(h);
+            // Players have their own health system.
+            if (!(getBase() instanceof Player)) {
+                Objects.requireNonNull(((LivingEntity) getEntity()).getAttribute(Attribute.GENERIC_MAX_HEALTH)).setBaseValue(h);
+            }
         }
     }
 

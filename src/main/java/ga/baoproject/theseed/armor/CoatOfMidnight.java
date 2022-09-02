@@ -9,10 +9,10 @@
 
 package ga.baoproject.theseed.armor;
 
-import ga.baoproject.theseed.abc.BuffTrigger;
 import ga.baoproject.theseed.abc.CustomTalisman;
 import ga.baoproject.theseed.abc.Rarity;
 import org.bukkit.Material;
+import org.bukkit.inventory.EquipmentSlot;
 
 public class CoatOfMidnight extends CustomTalisman {
     public CoatOfMidnight() {
@@ -24,6 +24,6 @@ public class CoatOfMidnight extends CustomTalisman {
         setSpeedBuff(10);
         setName("Coat of Midnight");
         setRarity(Rarity.RARE);
-        setTrigger(BuffTrigger.WEARING);
+        setTrigger(EquipmentSlot.CHEST);
     }
 }

@@ -17,6 +17,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -44,5 +45,10 @@ public class CentralEventListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public static void onDeath(EntityDeathEvent e) {
         EntityEventHandler.onDeath(e);
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public static void onPlayerJoin(PlayerJoinEvent e) {
+        PlayerEventHandler.onJoin(e);
     }
 }

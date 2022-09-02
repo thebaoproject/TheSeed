@@ -40,6 +40,10 @@ plugin:
     noMana: ""
     noArgs: ""
     invalidArg: ""
+  messages:
+    player:
+      otherDeath: ""
+      death: ""
   itemDetails:
     AnnealBlade:
       ability: ""

@@ -18,6 +18,7 @@ import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -40,7 +41,7 @@ public class CustomTalisman extends CustomItem {
     private int knockbackMitigation;
     private int speedBuff;
     private int healthBuff;
-    private BuffTrigger trigger;
+    private EquipmentSlot trigger;
 
     public CustomTalisman(Material m) {
         super(m);
@@ -72,7 +73,8 @@ public class CustomTalisman extends CustomItem {
                 UUID.randomUUID(),
                 "generic.movementSpeed",
                 getSpeedBuff() / 400F,
-                AttributeModifier.Operation.ADD_NUMBER
+                AttributeModifier.Operation.ADD_NUMBER,
+                getTrigger()
         );
         meta.addAttributeModifier(Attribute.GENERIC_MOVEMENT_SPEED, sb);
         meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_UNBREAKABLE);
@@ -116,11 +118,11 @@ public class CustomTalisman extends CustomItem {
         this.healthBuff = healthBuff;
     }
 
-    public BuffTrigger getTrigger() {
+    public EquipmentSlot getTrigger() {
         return trigger;
     }
 
-    public void setTrigger(BuffTrigger trigger) {
+    public void setTrigger(EquipmentSlot trigger) {
         this.trigger = trigger;
     }
 }

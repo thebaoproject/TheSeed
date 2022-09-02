@@ -37,6 +37,10 @@ plugin:
     noMana: "You don't have enough mana left!"
     noArgs: "You must give some arguments."
     invalidArg: "You gave invalid arguments!"
+  messages:
+    player:
+      otherDeath: "died."
+      death: "You died. Respawning..."
   itemDetails:
     AnnealBlade:
       ability: "Rage Spike"
