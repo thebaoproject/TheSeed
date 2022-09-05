@@ -13,6 +13,7 @@ import ga.baoproject.theseed.TheSeed;
 import ga.baoproject.theseed.abc.CustomPlayer;
 import ga.baoproject.theseed.abc.DebugLogger;
 import ga.baoproject.theseed.exceptions.InvalidEntityData;
+import ga.baoproject.theseed.utils.PlayerUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
@@ -34,7 +35,6 @@ public class PlayerEventHandler {
         }
         try {
             CustomPlayer p = CustomPlayer.fromPlayer((Player) event.getEntity());
-            // TODO - Custom potions
             int originalDamage = (int) event.getFinalDamage();
             int damage;
             if (event.getCause() != EntityDamageEvent.DamageCause.FALL) {
@@ -77,13 +77,7 @@ public class PlayerEventHandler {
      * some tricks.
      */
     public static void onJoin(PlayerJoinEvent e) {
-        try {
-
-            CustomPlayer p = CustomPlayer.fromPlayer(e.getPlayer());
-            p.getBase().setHealth(39);
-            p.renderHealth();
-        } catch (InvalidEntityData ignored) {
-        }
+        PlayerUtils.fixJoinHealthBar(e.getPlayer());
     }
 
 }

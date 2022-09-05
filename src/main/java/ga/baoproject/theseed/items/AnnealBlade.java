@@ -33,11 +33,11 @@ public class AnnealBlade extends CustomWeapon {
 
     public AnnealBlade() {
         super(Material.STONE_SWORD);
-        super.setID("sao:anneal_blade");
-        super.setName("Anneal Blade");
-        super.setDamage(35);
-        super.setStrength(2);
-        super.setAbilities(List.of(
+        setID("sao:anneal_blade");
+        setName("Anneal Blade");
+        setDamage(35);
+        setStrength(2);
+        setAbilities(List.of(
                 new Ability().setName(new Localized("Rage Spike", "plugin.itemDetails.AnnealBlade.ability"))
                         .setDescription(new Localized("""
                                 &7Tiến thẳng tới trước &a5&7 block, gây ra
@@ -46,7 +46,7 @@ public class AnnealBlade extends CustomWeapon {
                                 """, "plugin.itemDetails.AnnealBlade.description"
                         )).setUsage(ItemAbilityUseAction.RIGHT_CLICK).setCost(30).setCooldown(3)
         ));
-        super.setRarity(Rarity.UNCOMMON_WEAPON);
+        setRarity(Rarity.UNCOMMON_WEAPON);
     }
 
     @Override

@@ -25,7 +25,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Objects;
 
 
-public class CustomBoss extends CustomMonster {
+public abstract class CustomBoss extends CustomMonster {
 
     private BossBar bossBar;
 

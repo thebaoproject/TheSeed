@@ -41,7 +41,7 @@ public class EntityUtils {
         return switch (entityName) {
             case "sao:demonic_servant":
                 yield new DemonicServant();
-            case "sao:boss_illfang":
+            case "sao:illfang_boss":
                 yield new IllfangBoss();
             default:
                 throw new InvalidEntityID();
@@ -66,10 +66,8 @@ public class EntityUtils {
     }
 
     @Contract(pure = true)
-    @NotNull
-    @Unmodifiable
-    public static List<String> getEntityList() {
-        return List.of("sao:demonic_servant", "sao:boss_illfang");
+    public static @NotNull @Unmodifiable List<String> getEntityList() {
+        return List.of("sao:demonic_servant", "sao:illfang_boss");
     }
 
     /**

@@ -23,7 +23,7 @@ public class IllfangBoss extends CustomBoss {
         super(EntityType.WARDEN);
         DebugLogger.debug("Trying to spawn an Illfang the Kobold Lord...");
         setLevel(30);
-        setID("sao:boss_illfang");
+        setID("sao:illfang_boss");
         setName("Illfang the Kobold Lord");
         setMaxHealth(1000);
         setHealth(1000);

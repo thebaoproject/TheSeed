@@ -44,7 +44,17 @@ plugin:
     player:
       otherDeath: ""
       death: ""
+    effect:
+      paralyze:
+        name: ""
+        description: ""
+      healing:
+        name: ""
+        description: ""
   itemDetails:
+    HealingCrystal:
+      ability: ""
+      description: ""
     AnnealBlade:
       ability: ""
       description: ""

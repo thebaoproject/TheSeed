@@ -1,5 +1,5 @@
 plugin:
-  localeCheck: "OK"
+  localeCheck: "check vi_VN -> OK"
   item:
     useAction:
       rightClick: "CHUỘT PHẢI"
@@ -36,12 +36,24 @@ plugin:
   error:
     noMana: "Bạn không có đủ Mana!"
     noArgs: "Bạn phải đưa ra các tham số!"
-    invalidArg: "Tham số mà bạn đưa ra không hợp lệ!"
+    invalidArg: "Tham số mà bạn đưa ra không hợp lệ:"
   messages:
     player:
       otherDead: "đã chết."
       death: "Bạn đã chết. Đang hồi sinh..."
+  effect:
+    paralyze:
+      name: "Tê liệt"
+      description: "Gây tê liệt toàn thân, làm cho người chơi không thê di chuyển được."
+    healing:
+      name: "Hồi máu"
+      description: "Hồi máu người chơi."
   itemDetails:
+    HealingCrystal:
+      ability: "Hồi máu"
+      description: |
+        &7Hồi &a20&7 HP trong 3 giây. 
+        &7Hiệu ứng này kéo dài &a20&7 giây.
     AnnealBlade:
       ability: "Rage Spike"
       description: |

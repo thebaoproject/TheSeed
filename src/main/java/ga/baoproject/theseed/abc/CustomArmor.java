@@ -35,7 +35,7 @@ import java.util.UUID;
  * receive buff or armor, there is no difference in the effect of the two.
  * TODO: protection and knockback mitigation.
  */
-public class CustomTalisman extends CustomItem {
+public abstract class CustomArmor extends CustomItem {
 
     private int protection;
     private int knockbackMitigation;
@@ -43,7 +43,7 @@ public class CustomTalisman extends CustomItem {
     private int healthBuff;
     private EquipmentSlot trigger;
 
-    public CustomTalisman(Material m) {
+    public CustomArmor(Material m) {
         super(m);
     }
 

@@ -37,4 +37,18 @@ public class PlayerUtils {
         }
         return false;
     }
+
+    /**
+     * Due to a bug in minecraft, when the health is equal to the max health set in the
+     * attributes, it just renders 20 health when it is in fact, 40, so we have to employ
+     * some tricks.
+     */
+    public static void fixJoinHealthBar(Player player) {
+        try {
+            CustomPlayer p = CustomPlayer.fromPlayer(player);
+            p.getBase().setHealth(39);
+            p.renderHealth();
+        } catch (InvalidEntityData ignored) {
+        }
+    }
 }

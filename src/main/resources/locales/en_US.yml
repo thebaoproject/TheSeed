@@ -1,5 +1,5 @@
 plugin:
-  localeCheck: "OK"
+  localeCheck: "check en_US -> OK"
   item:
     useAction:
       rightClick: "RIGHT CLICK"
@@ -36,12 +36,24 @@ plugin:
   error:
     noMana: "You don't have enough mana left!"
     noArgs: "You must give some arguments."
-    invalidArg: "You gave invalid arguments!"
+    invalidArg: "You gave invalid arguments:"
   messages:
     player:
       otherDeath: "died."
       death: "You died. Respawning..."
+  effect:
+    paralyze:
+      name: "Paralyze"
+      description: "Makes a player unable to move."
+    healing:
+      name: "Healing"
+      description: "Heals health."
   itemDetails:
+    HealingCrystal:
+      ability: "Healing"
+      description: |
+        &7Heal yourself &a20&7 HP in 3 seconds.
+        &7The effect lasts &a20&7 seconds.
     AnnealBlade:
       ability: "Rage Spike"
       description: |

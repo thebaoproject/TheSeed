@@ -13,10 +13,7 @@ import ga.baoproject.theseed.TheSeed;
 import ga.baoproject.theseed.abc.CustomItem;
 import ga.baoproject.theseed.armor.CoatOfMidnight;
 import ga.baoproject.theseed.exceptions.UnknownItemID;
-import ga.baoproject.theseed.items.AnnealBlade;
-import ga.baoproject.theseed.items.BareHand;
-import ga.baoproject.theseed.items.ObjectEraser;
-import ga.baoproject.theseed.items.VanillaItem;
+import ga.baoproject.theseed.items.*;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
@@ -50,6 +47,7 @@ public class ItemUtils {
             case "sao:anneal_blade" -> new AnnealBlade();
             case "sao:object_eraser" -> new ObjectEraser();
             case "sao:coat_of_midnight" -> new CoatOfMidnight();
+            case "sao:healing_crystal" -> new HealingCrystal();
             default -> throw new UnknownItemID();
         };
     }
@@ -99,7 +97,8 @@ public class ItemUtils {
         return List.of(
                 "sao:anneal_blade",
                 "sao:object_eraser",
-                "sao:coat_of_midnight"
+                "sao:coat_of_midnight",
+                "sao:healing_crystal"
         );
     }
 

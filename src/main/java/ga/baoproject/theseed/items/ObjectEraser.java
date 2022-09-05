@@ -22,11 +22,11 @@ public class ObjectEraser extends CustomWeapon {
 
     public ObjectEraser() {
         super(Material.GOLDEN_SWORD);
-        super.setID("sao:object_eraser");
-        super.setName("Object Eraser");
-        super.setDamage(999999999);
-        super.setStrength(999999999);
-        super.setAbilities(List.of(
+        setID("sao:object_eraser");
+        setName("Object Eraser");
+        setDamage(999999999);
+        setStrength(999999999);
+        setAbilities(List.of(
                 new Ability()
                         .setName(new Localized("Phá hủy", "plugin.itemDetails.ObjectEraser.ability"))
                         .setDescription(new Localized(
@@ -34,7 +34,7 @@ public class ObjectEraser extends CustomWeapon {
                                 "plugin.itemDetails.ObjectEraser.description"
                         )).setUsage(ItemAbilityUseAction.NONE).setCost(0).setCooldown(0)
         ));
-        super.setRarity(Rarity.HAX);
+        setRarity(Rarity.HAX);
     }
 
     public void attackAction(EntityDamageByEntityEvent e) {

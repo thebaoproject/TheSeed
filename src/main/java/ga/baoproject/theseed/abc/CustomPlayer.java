@@ -9,10 +9,12 @@
 
 package ga.baoproject.theseed.abc;
 
+import com.google.gson.Gson;
 import ga.baoproject.theseed.exceptions.InvalidEntityData;
 import ga.baoproject.theseed.i18n.Locale;
 import ga.baoproject.theseed.i18n.Localized;
 import ga.baoproject.theseed.utils.EntityUtils;
+import ga.baoproject.theseed.utils.PlayerUtils;
 import ga.baoproject.theseed.utils.Utils;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
@@ -25,6 +27,8 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -40,6 +44,7 @@ public class CustomPlayer extends CustomEntity {
     private int baseMana;
     private int mana;
     private Locale locale;
+    private List<CustomEffect> effects;
 
     public CustomPlayer(Player p) {
         super(p);
@@ -65,6 +70,8 @@ public class CustomPlayer extends CustomEntity {
         temp.setBaseMana(100);
         temp.setMana(100);
         temp.setLocale(Locale.VI_VN);
+        temp.setEffects(List.of());
+        PlayerUtils.fixJoinHealthBar(p);
         return temp;
     }
 
@@ -88,8 +95,9 @@ public class CustomPlayer extends CustomEntity {
         Integer mana = EntityUtils.readFrom(p, "mana", PersistentDataType.INTEGER);
         Integer baseMana = EntityUtils.readFrom(p, "baseMana", PersistentDataType.INTEGER);
         String localeString = EntityUtils.readFrom(p, "locale", PersistentDataType.STRING);
-        if (maxHealth == null || maxMana == null || baseDefense == null || defense == null || health == null || mana == null || localeString == null || baseHealth == null || baseMana == null || maxHealth < 0 || maxMana < 0 || baseDefense < 0 || defense < 0 || health < 0 || mana < 0 || baseHealth < 0 || baseMana < 0) {
-            DebugLogger.debug("INVALID ENTITY DATA: mh:" + maxHealth + " mm:" + maxMana + " bd:" + baseDefense + " h:" + health + " m:" + mana + " lh:" + lastHealth + " bh:" + baseHealth + " ls:" + localeString);
+        String effectList = EntityUtils.readFrom(p, "effects", PersistentDataType.STRING);
+        if (maxHealth == null || maxMana == null || baseDefense == null || defense == null || health == null || mana == null || localeString == null || baseHealth == null || baseMana == null || effectList == null || maxHealth < 0 || maxMana < 0 || baseDefense < 0 || defense < 0 || health < 0 || mana < 0 || baseHealth < 0 || baseMana < 0) {
+            DebugLogger.debug("INVALID ENTITY DATA: mh:" + maxHealth + " mm:" + maxMana + " bd:" + baseDefense + " h:" + health + " m:" + mana + " lh:" + lastHealth + " bh:" + baseHealth + " ls:" + localeString + " ef: " + effectList);
             throw new InvalidEntityData();
         }
         CustomPlayer output = new CustomPlayer(p);
@@ -104,6 +112,14 @@ public class CustomPlayer extends CustomEntity {
         output.setBaseMana(baseMana);
         output.setMana(mana);
         output.setLocale(Locale.fromString(localeString));
+        Gson gson = new Gson();
+        List<?> partialEffectList = gson.fromJson(effectList, List.class);
+        List<CustomEffect> realEffectList = new ArrayList<>();
+        for (Object i : partialEffectList) {
+            realEffectList.add(gson.fromJson((String) i, CustomEffect.class));
+        }
+        output.setEffects(realEffectList);
+
         if (lastHealth == null || lastHealth < 0) {
             output.setLastHealth(health);
         } else {
@@ -155,7 +171,6 @@ public class CustomPlayer extends CustomEntity {
         }
         // f**k java floating point arithmetic, took a long time to figure out
         double newHealth = ((double) getHealth() / getMaxHealth()) * 40;
-        DebugLogger.debug("RENDER: setting " + getBase().getName() + "'s health to " + newHealth);
         if (newHealth <= 0) {
             DebugLogger.debug("Player is designated to die. Setting health to max health... " + getHealth());
             setHealth(getMaxHealth());
@@ -229,5 +244,29 @@ public class CustomPlayer extends CustomEntity {
     public void setLocale(Locale l) {
         locale = l;
         EntityUtils.writeTo(getBase(), "locale", l.toCode());
+    }
+
+    public List<CustomEffect> getEffects() {
+        return effects;
+    }
+
+    public void setEffects(List<CustomEffect> effects) {
+        this.effects = effects;
+        Gson gson = new Gson();
+        List<String> output = new java.util.ArrayList<>();
+        for (CustomEffect i : effects) {
+            output.add(gson.toJson(i));
+        }
+        EntityUtils.writeTo(getBase(), "effects", gson.toJson(output));
+    }
+
+    public void addEffect(CustomEffect effect) {
+        this.effects.add(effect);
+        Gson gson = new Gson();
+        List<String> output = new java.util.ArrayList<>();
+        for (CustomEffect i : effects) {
+            output.add(gson.toJson(i));
+        }
+        EntityUtils.writeTo(getBase(), "effects", gson.toJson(output));
     }
 }

@@ -9,6 +9,7 @@
 
 package ga.baoproject.theseed.completers;
 
+import ga.baoproject.theseed.utils.EffectUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
@@ -22,15 +23,19 @@ public class PlayerDataManipulationCompleter implements TabCompleter {
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         if (sender instanceof Player) {
             if (args.length == 1) {
-                return List.of("init", "check", "modify", "reboot", "killall");
-            } else if (args[0].equalsIgnoreCase("modify")) {
+                return List.of("init", "check", "set", "reboot", "killall");
+            } else if (args[0].equalsIgnoreCase("set")) {
                 if (args.length == 2) {
-                    return List.of("health", "mana", "base_defense", "max_health", "max_mana", "locale");
+                    return List.of("health", "mana", "base_defense", "max_health", "max_mana", "locale", "effect");
                 } else if (args.length == 3) {
-                    if (args[2].equalsIgnoreCase("locale")) {
-                        return List.of("100", "50", "10", "0");
-                    } else {
+                    if (args[1].equalsIgnoreCase("locale")) {
                         return List.of("vi", "en", "vim");
+                    } else if (args[1].equalsIgnoreCase("effect")) {
+                        List<String> output = new java.util.ArrayList<>(EffectUtils.getEffectList());
+                        output.add("clear");
+                        return output;
+                    } else {
+                        return List.of("100", "50", "10", "0");
                     }
                 }
             }

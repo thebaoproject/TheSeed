@@ -9,12 +9,12 @@
 
 package ga.baoproject.theseed.armor;
 
-import ga.baoproject.theseed.abc.CustomTalisman;
+import ga.baoproject.theseed.abc.CustomArmor;
 import ga.baoproject.theseed.abc.Rarity;
 import org.bukkit.Material;
 import org.bukkit.inventory.EquipmentSlot;
 
-public class CoatOfMidnight extends CustomTalisman {
+public class CoatOfMidnight extends CustomArmor {
     public CoatOfMidnight() {
         super(Material.LEATHER_CHESTPLATE);
         setID("sao:coat_of_midnight");
