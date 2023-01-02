@@ -1,10 +1,17 @@
 /*
- * Copyright (c) 2022 the Block Art Online Project contributors.
+ * Copyright 2022-2023 SpikeBonjour
  *
- * This work is free. It comes without any warranty, to the extent permitted
- * by applicable law.You can redistribute it and/or modify it under the terms
- * of the Do What The Fuck You Want To Public License, Version 2.
- * See the LICENSE file for more details.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package ga.baoproject.theseed;
@@ -36,20 +43,20 @@ public class DaemonManager {
         // Health bar task
         int playerHealthBarTaskID = getServer().getScheduler().scheduleSyncRepeatingTask(plugin, () -> {
             for (Player i : getOnlinePlayers()) {
-                CustomPlayer p;
+                SeedPlayer p;
                 try {
                     if (EntityUtils.impostor(i)) {
                         DebugLogger.debug("The player with name of " + i.getName() + "hasn't been set up yet. Automatically setting up...");
-                        CustomPlayer.initialize(i);
+                        SeedPlayer.initialize(i);
                     }
-                    p = CustomPlayer.fromPlayer(i);
+                    p = SeedPlayer.fromPlayer(i);
                     Utils.showHPBar(p);
                     p.renderHealth();
                     p.ensureNoHunger();
                 } catch (InvalidEntityData e) {
                     if (i.getHealth() != 0) {
                         DebugLogger.debug("The player with name of " + i.getName() + "have invalid player data (healthbar). Automatically resetting...");
-                        CustomPlayer.initialize(i);
+                        SeedPlayer.initialize(i);
                     }
                 }
             }
@@ -60,13 +67,13 @@ public class DaemonManager {
         // Regen task
         int regenTaskID = getServer().getScheduler().scheduleSyncRepeatingTask(plugin, () -> {
             for (Player i : getOnlinePlayers()) {
-                CustomPlayer p;
+                SeedPlayer p;
                 try {
                     if (EntityUtils.impostor(i)) {
                         DebugLogger.debug("The player with name of " + i.getName() + "hasn't been set up yet. Automatically setting up...");
-                        CustomPlayer.initialize(i);
+                        SeedPlayer.initialize(i);
                     }
-                    p = CustomPlayer.fromPlayer(i);
+                    p = SeedPlayer.fromPlayer(i);
                     p.applyRegen();
                 } catch (InvalidEntityData e) {
                     if (i.getHealth() != 0) {
@@ -82,20 +89,20 @@ public class DaemonManager {
         int mobHealthBarTaskID = getServer().getScheduler().scheduleSyncRepeatingTask(plugin, () -> {
             for (World w : getWorlds()) {
                 for (Damageable i : w.getLivingEntities()) {
-                    CustomEntity e;
+                    SeedEntity e;
                     if (!(i instanceof Player)) {
                         try {
                             if (EntityUtils.impostor(i)) {
 //                                DebugLogger.debug("Entity with type of " + i.getName() + " hasn't been set up yet. Automatically setting up...");
-                                CustomEntity.initialize(i);
+                                SeedEntity.initialize(i);
                             }
-                            e = CustomEntity.fromEntity(i);
+                            e = SeedEntity.fromEntity(i);
                             e.renderHealth();
                             e.setNameTag();
                         } catch (InvalidEntityData ex) {
                             if (i.getHealth() != 0) {
 //                                DebugLogger.debug("Entity with type of " + i.getType() + " have invalid entity data (healthbar). Automatically initializing...");
-                                CustomEntity.initialize(i);
+                                SeedEntity.initialize(i);
                             }
                         }
                     }
@@ -107,16 +114,16 @@ public class DaemonManager {
         }
         int itemLoreAndAddBuffTaskID = getServer().getScheduler().scheduleSyncRepeatingTask(plugin, () -> {
             for (Player i : getOnlinePlayers()) {
-                CustomPlayer p;
+                SeedPlayer p;
                 try {
-                    p = CustomPlayer.fromPlayer(i);
+                    p = SeedPlayer.fromPlayer(i);
                     ItemStack[] inventory = i.getInventory().getContents();
                     for (int slot = 0; slot < inventory.length; slot++) {
                         ItemStack item = inventory[slot];
                         if (item == null) {
                             continue;
                         }
-                        CustomItem ci = ItemUtils.get(item);
+                        SeedItem ci = ItemUtils.get(item);
                         ItemStack newItem = ci.getItem(p.getLocale());
                         if (!newItem.equals(item)) {
                             newItem.setAmount(item.getAmount());
@@ -136,13 +143,13 @@ public class DaemonManager {
                 int healthBuff = 0;
                 int defenseBuff = 0;
                 try {
-                    CustomPlayer p = CustomPlayer.fromPlayer(i);
+                    SeedPlayer p = SeedPlayer.fromPlayer(i);
                     for (ItemStack item : i.getInventory().getArmorContents()) {
                         if (item == null) {
                             continue;
                         }
-                        CustomItem ci = ItemUtils.get(item);
-                        if (ItemUtils.get(ci.getID()) instanceof CustomArmor ct) {
+                        SeedItem ci = ItemUtils.get(item);
+                        if (ItemUtils.get(ci.getID()) instanceof SeedArmor ct) {
                             if (List.of(EquipmentSlot.HAND, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET).contains(ct.getTrigger())) {
                                 // Speed is set by attributes in the item.
                                 healthBuff += ct.getHealthBuff();
@@ -162,9 +169,9 @@ public class DaemonManager {
         int potionEffectApplyTaskID = getScheduler().scheduleSyncRepeatingTask(plugin, () -> {
             for (Player i : getOnlinePlayers()) {
                 try {
-                    CustomPlayer p = CustomPlayer.fromPlayer(i);
-                    List<CustomEffect> effectList = new ArrayList<>();
-                    for (CustomEffect e : p.getEffects()) {
+                    SeedPlayer p = SeedPlayer.fromPlayer(i);
+                    List<SeedEffect> effectList = new ArrayList<>();
+                    for (SeedEffect e : p.getEffects()) {
                         if (e.getDuration() == 0) {
                             continue;
                         }

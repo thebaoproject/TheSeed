@@ -53,12 +53,7 @@ Bạn cũng nên theo codestyle của dự án. Cơ bản là:
 
 ## 📖 Ghi công & Bản quyền.
 
-Đây là môt phần mềm tự do và không bị gò bó được công khai ra phạm vi công cộng.
-Các tác giả của phần mềm này từ bỏ quyền của mình đối với phần mềm này mà trao nó lại cho mọi người. Chúng tôi tin rằng
-hành động này sẽ làm cho xã hội tốt đẹp hơn.  
-Chúng tôi cho phép bạn làm bất gì điều gì bạn muốn; tuy nhiên chúng tôi không chịu trách nhiệm về bất kì hậu quả nào mà
-phần mềm này gây nên.
-Tất cả các thành viên trong dự án này đều đóng góp một phần không nhỏ vào công cuộc làm plugin.
+Dự án này được đặt dưới giấy phép Apache, bản 2.0. Các tác giả của phần mềm này cho phép bạn sử dụng cho mục đích cá nhân hoặc thương mại, tích hợp phần mềm này vào một phần mềm khác; miễn là bạn đính kèm một bản sao giấy phép Apache cùng với danh sách thay đổi của bạn.
 
 ## FAQ
 

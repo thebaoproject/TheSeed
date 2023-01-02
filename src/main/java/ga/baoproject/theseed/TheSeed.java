@@ -1,10 +1,17 @@
 /*
- * Copyright (c) 2022 the Block Art Online Project contributors.
+ * Copyright 2022-2023 SpikeBonjour
  *
- * This work is free. It comes without any warranty, to the extent permitted
- * by applicable law. You can redistribute it and/or modify it under the terms
- * of the Do What The Fuck You Want To Public License, Version 2.
- * See the LICENSE file for more details.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package ga.baoproject.theseed;
@@ -14,14 +21,13 @@ import ga.baoproject.theseed.events.CentralEventListener;
 import ga.baoproject.theseed.i18n.Locale;
 import ga.baoproject.theseed.i18n.Localized;
 import ga.baoproject.theseed.utils.LocalizationUtils;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.slf4j.Logger;
 
 import static org.bukkit.Bukkit.getPluginManager;
 
-public final class TheSeed extends JavaPlugin implements CommandExecutor {
+public class TheSeed extends JavaPlugin {
 
     private static TheSeed instance;
 
@@ -39,7 +45,7 @@ public final class TheSeed extends JavaPlugin implements CommandExecutor {
         Logger l = getSLF4JLogger();
         DebugLogger.setEnabled();
         DebugLogger.setPluginInstance(this);
-        l.info(" ------------ The Block Art Online Project | The Seed ------------ ");
+        l.info(" ----------- The Block Art Online Project | The Seed ----------- ");
         l.info("    Copyright (c) 2022 the Block Art Online Project contributors.  ");
         l.info("    This is free software, licensed under the WTFPL.               ");
         l.info("                                                                   ");

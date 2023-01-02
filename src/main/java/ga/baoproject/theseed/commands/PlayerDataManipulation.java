@@ -1,17 +1,24 @@
 /*
- * Copyright (c) 2022 the Block Art Online Project contributors.
+ * Copyright 2022-2023 SpikeBonjour
  *
- * This work is free. It comes without any warranty, to the extent permitted
- * by applicable law. You can redistribute it and/or modify it under the terms
- * of the Do What The Fuck You Want To Public License, Version 2.
- * See the LICENSE file for more details.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package ga.baoproject.theseed.commands;
 
-import ga.baoproject.theseed.abc.CustomEffect;
-import ga.baoproject.theseed.abc.CustomEntity;
-import ga.baoproject.theseed.abc.CustomPlayer;
+import ga.baoproject.theseed.abc.SeedEffect;
+import ga.baoproject.theseed.abc.SeedEntity;
+import ga.baoproject.theseed.abc.SeedPlayer;
 import ga.baoproject.theseed.abc.DebugLogger;
 import ga.baoproject.theseed.exceptions.InvalidEntityData;
 import ga.baoproject.theseed.i18n.Localized;
@@ -43,7 +50,7 @@ public class PlayerDataManipulation implements CommandExecutor {
 
         if (args.length == 0) {
             try {
-                CustomPlayer temp = CustomPlayer.fromPlayer((Player) sender);
+                SeedPlayer temp = SeedPlayer.fromPlayer((Player) sender);
                 temp.getBase().sendMessage(ChatColor.RED + new Localized("Chọn gì đó đi chứ!", "plugin.error.noArgs").render(temp.getLocale()));
             } catch (InvalidEntityData ignored) {
                 sender.sendMessage(ChatColor.RED + "Please specify arguments.");
@@ -51,13 +58,13 @@ public class PlayerDataManipulation implements CommandExecutor {
             return true;
         }
         switch (args[0].toLowerCase(Locale.ROOT)) {
-            case "init":
-                CustomPlayer.initialize((Player) sender);
+            case "init" -> {
+                SeedPlayer.initialize((Player) sender);
                 sender.sendMessage(ChatColor.GREEN + "Your player data has been initialized!");
-                break;
-            case "check":
+            }
+            case "check" -> {
                 try {
-                    CustomPlayer ip = CustomPlayer.fromPlayer((Player) sender);
+                    SeedPlayer ip = SeedPlayer.fromPlayer((Player) sender);
                     StringBuilder message = new StringBuilder(Utils.color(
                             "BASE STATS:\n" + "&c" +
                                     ip.getHealth() + "/" + ip.getMaxHealth() + "❤ " + new Localized("HP", "plugin.player.healthCard.health").render(ip.getLocale()) + "    &a" +
@@ -66,7 +73,7 @@ public class PlayerDataManipulation implements CommandExecutor {
                                     ip.getLocale().toString()
                                     + "ACTIVE EFFECTS:\n"
                     ));
-                    for (CustomEffect i : ip.getEffects()) {
+                    for (SeedEffect i : ip.getEffects()) {
                         message.append("--------------\n");
                         message.append("   name: ").append(i.getName().render(ip.getLocale())).append("\n");
                         message.append("   description: ").append(i.getDescription().render(ip.getLocale())).append("\n");
@@ -77,11 +84,11 @@ public class PlayerDataManipulation implements CommandExecutor {
                 } catch (InvalidEntityData e) {
                     sender.sendMessage(ChatColor.RED + "The player data stored in the player is invalid. You can run /mpd init again to re-initialize.");
                 }
-                break;
-            case "set":
-                CustomPlayer ip = null;
+            }
+            case "set" -> {
+                SeedPlayer ip = null;
                 try {
-                    ip = CustomPlayer.fromPlayer((Player) sender);
+                    ip = SeedPlayer.fromPlayer((Player) sender);
                     int number = Integer.parseInt(args[2]);
                     switch (args[1].toLowerCase(Locale.ROOT)) {
                         case "health" -> ip.setHealth(number);
@@ -96,7 +103,7 @@ public class PlayerDataManipulation implements CommandExecutor {
                     if (args[1].equalsIgnoreCase("locale") && ip != null) {
                         ip.setLocale(ga.baoproject.theseed.i18n.Locale.fromString(args[2]));
                     } else if (args[1].equalsIgnoreCase("effect") && ip != null) {
-                        CustomEffect nEffect = EffectUtils.get(args[2]);
+                        SeedEffect nEffect = EffectUtils.get(args[2]);
                         try {
                             if (args.length < 4) {
                                 nEffect.setDuration(20);
@@ -116,20 +123,19 @@ public class PlayerDataManipulation implements CommandExecutor {
                 } catch (InvalidEntityData e) {
                     sender.sendMessage(ChatColor.RED + "The player data stored in the player is invalid. You can run /mpd init again to re-initialize.");
                 }
-                break;
-            case "reboot":
+            }
+            case "reboot" -> {
                 for (Damageable entity : ((Player) sender).getWorld().getLivingEntities()) {
-                    CustomEntity.initialize(entity);
+                    SeedEntity.initialize(entity);
                 }
-                break;
-            case "killall":
+            }
+            case "killall" -> {
                 for (Damageable entity : ((Player) sender).getWorld().getLivingEntities()) {
-                    CustomEntity ce = CustomEntity.initialize(entity);
+                    SeedEntity ce = SeedEntity.initialize(entity);
                     ce.setHealth(0);
                 }
-                break;
-            default:
-                sender.sendMessage(ChatColor.RED + "Câu lệnh mà bạn đã nhập không tồn tại!");
+            }
+            default -> sender.sendMessage(ChatColor.RED + "Câu lệnh mà bạn đã nhập không tồn tại!");
         }
         return true;
     }

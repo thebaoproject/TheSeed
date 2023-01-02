@@ -1,10 +1,17 @@
 /*
- * Copyright (c) 2022 the Block Art Online Project contributors.
+ * Copyright 2022-2023 SpikeBonjour
  *
- * This work is free. It comes without any warranty, to the extent permitted
- * by applicable law. You can redistribute it and/or modify it under the terms
- * of the Do What The Fuck You Want To Public License, Version 2.
- * See the LICENSE file for more details.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package ga.baoproject.theseed.abc;
@@ -36,7 +43,7 @@ import java.util.Objects;
  * object will automatically write to the player {@link PersistentDataContainer},
  * which is internally used to store player data.
  */
-public class CustomPlayer extends CustomEntity {
+public class SeedPlayer extends SeedEntity {
     private final Player base;
     private int maxMana;
     private int baseDefense;
@@ -44,9 +51,9 @@ public class CustomPlayer extends CustomEntity {
     private int baseMana;
     private int mana;
     private Locale locale;
-    private List<CustomEffect> effects;
+    private List<SeedEffect> effects;
 
-    public CustomPlayer(Player p) {
+    public SeedPlayer(Player p) {
         super(p);
         base = p;
         setName(p.getName());
@@ -58,8 +65,8 @@ public class CustomPlayer extends CustomEntity {
      * @param p the player to set up.
      * @return the player which has just been set up.
      */
-    public static CustomPlayer initialize(Player p) {
-        CustomPlayer temp = new CustomPlayer(p);
+    public static @NotNull SeedPlayer initialize(Player p) {
+        SeedPlayer temp = new SeedPlayer(p);
         temp.setName(p.getName());
         temp.setMaxHealth(100);
         temp.setBaseHealth(100);
@@ -84,7 +91,7 @@ public class CustomPlayer extends CustomEntity {
      *                           of the player contains invalid values (null or negative)
      */
     @NotNull
-    public static CustomPlayer fromPlayer(@NotNull Player p) throws InvalidEntityData {
+    public static SeedPlayer fromPlayer(@NotNull Player p) throws InvalidEntityData {
         Integer maxHealth = EntityUtils.readFrom(p, "maxHealth", PersistentDataType.INTEGER);
         Integer maxMana = EntityUtils.readFrom(p, "maxMana", PersistentDataType.INTEGER);
         Integer baseDefense = EntityUtils.readFrom(p, "baseDefense", PersistentDataType.INTEGER);
@@ -100,7 +107,7 @@ public class CustomPlayer extends CustomEntity {
             DebugLogger.debug("INVALID ENTITY DATA: mh:" + maxHealth + " mm:" + maxMana + " bd:" + baseDefense + " h:" + health + " m:" + mana + " lh:" + lastHealth + " bh:" + baseHealth + " ls:" + localeString + " ef: " + effectList);
             throw new InvalidEntityData();
         }
-        CustomPlayer output = new CustomPlayer(p);
+        SeedPlayer output = new SeedPlayer(p);
         output.setBase(p);
         output.setName(p.getName());
         output.setMaxHealth(maxHealth);
@@ -114,9 +121,9 @@ public class CustomPlayer extends CustomEntity {
         output.setLocale(Locale.fromString(localeString));
         Gson gson = new Gson();
         List<?> partialEffectList = gson.fromJson(effectList, List.class);
-        List<CustomEffect> realEffectList = new ArrayList<>();
+        List<SeedEffect> realEffectList = new ArrayList<>();
         for (Object i : partialEffectList) {
-            realEffectList.add(gson.fromJson((String) i, CustomEffect.class));
+            realEffectList.add(gson.fromJson((String) i, SeedEffect.class));
         }
         output.setEffects(realEffectList);
 
@@ -183,7 +190,7 @@ public class CustomPlayer extends CustomEntity {
             for (Player i : Bukkit.getOnlinePlayers()) {
                 if (!i.getUniqueId().equals(base.getUniqueId())) {
                     try {
-                        CustomPlayer ip = CustomPlayer.fromPlayer(i);
+                        SeedPlayer ip = SeedPlayer.fromPlayer(i);
                         i.sendMessage(Component.text(Utils.color("&7" + i.getName() + " " + new Localized("đã chết.", "plugin.messages.death.otherDeath").render(ip.getLocale()))));
                     } catch (InvalidEntityData ignored) {
                     }
@@ -246,25 +253,25 @@ public class CustomPlayer extends CustomEntity {
         EntityUtils.writeTo(getBase(), "locale", l.toCode());
     }
 
-    public List<CustomEffect> getEffects() {
+    public List<SeedEffect> getEffects() {
         return effects;
     }
 
-    public void setEffects(List<CustomEffect> effects) {
+    public void setEffects(List<SeedEffect> effects) {
         this.effects = effects;
         Gson gson = new Gson();
         List<String> output = new java.util.ArrayList<>();
-        for (CustomEffect i : effects) {
+        for (SeedEffect i : effects) {
             output.add(gson.toJson(i));
         }
         EntityUtils.writeTo(getBase(), "effects", gson.toJson(output));
     }
 
-    public void addEffect(CustomEffect effect) {
+    public void addEffect(SeedEffect effect) {
         this.effects.add(effect);
         Gson gson = new Gson();
         List<String> output = new java.util.ArrayList<>();
-        for (CustomEffect i : effects) {
+        for (SeedEffect i : effects) {
             output.add(gson.toJson(i));
         }
         EntityUtils.writeTo(getBase(), "effects", gson.toJson(output));

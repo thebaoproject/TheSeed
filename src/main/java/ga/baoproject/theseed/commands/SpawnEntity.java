@@ -1,15 +1,22 @@
 /*
- * Copyright (c) 2022 the Block Art Online Project contributors.
+ * Copyright 2022-2023 SpikeBonjour
  *
- * This work is free. It comes without any warranty, to the extent permitted
- * by applicable law. You can redistribute it and/or modify it under the terms
- * of the Do What The Fuck You Want To Public License, Version 2.
- * See the LICENSE file for more details.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package ga.baoproject.theseed.commands;
 
-import ga.baoproject.theseed.abc.CustomMonster;
+import ga.baoproject.theseed.abc.SeedMonster;
 import ga.baoproject.theseed.exceptions.InvalidEntityID;
 import ga.baoproject.theseed.utils.EntityUtils;
 import net.kyori.adventure.text.Component;
@@ -35,9 +42,9 @@ public class SpawnEntity implements CommandExecutor {
             return true;
         }
 
-        CustomMonster entity;
+        SeedMonster entity;
         try {
-            entity = (CustomMonster) EntityUtils.get(args[0]);
+            entity = (SeedMonster) EntityUtils.get(args[0]);
             entity.spawnAt(p.getLocation());
             sender.sendMessage(Component.text(ChatColor.GREEN + "Whoosh!"));
         } catch (InvalidEntityID e) {

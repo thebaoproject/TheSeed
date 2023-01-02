@@ -1,16 +1,23 @@
 /*
- * Copyright (c) 2022 the Block Art Online Project contributors.
+ * Copyright 2022-2023 SpikeBonjour
  *
- * This work is free. It comes without any warranty, to the extent permitted
- * by applicable law. You can redistribute it and/or modify it under the terms
- * of the Do What The Fuck You Want To Public License, Version 2.
- * See the LICENSE file for more details.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package ga.baoproject.theseed.commands;
 
-import ga.baoproject.theseed.abc.CustomItem;
-import ga.baoproject.theseed.abc.CustomPlayer;
+import ga.baoproject.theseed.abc.SeedItem;
+import ga.baoproject.theseed.abc.SeedPlayer;
 import ga.baoproject.theseed.exceptions.InvalidEntityData;
 import ga.baoproject.theseed.exceptions.UnknownItemID;
 import ga.baoproject.theseed.utils.ItemUtils;
@@ -40,11 +47,11 @@ public class GiveItem implements CommandExecutor {
             return true;
         }
 
-        CustomItem item;
-        CustomPlayer player;
+        SeedItem item;
+        SeedPlayer player;
         try {
             item = ItemUtils.get(args[0]);
-            player = CustomPlayer.fromPlayer((Player) sender);
+            player = SeedPlayer.fromPlayer((Player) sender);
         } catch (UnknownItemID e) {
             sender.sendMessage("Vật phẩm bạn lựa chọn không tồn tại.");
             return true;

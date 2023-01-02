@@ -1,10 +1,17 @@
 /*
- * Copyright (c) 2022 the Block Art Online Project contributors.
+ * Copyright 2022-2023 SpikeBonjour
  *
- * This work is free. It comes without any warranty, to the extent permitted
- * by applicable law.You can redistribute it and/or modify it under the terms
- * of the Do What The Fuck You Want To Public License, Version 2.
- * See the LICENSE file for more details.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package ga.baoproject.theseed.items;
@@ -18,7 +25,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 
 import java.util.List;
 
-public class HealingCrystal extends CustomItem {
+public class HealingCrystal extends SeedItem {
     public HealingCrystal() {
         super(Material.EMERALD);
         setID("sao:healing_crystal");
@@ -34,7 +41,7 @@ public class HealingCrystal extends CustomItem {
     @Override
     public void rightClickAction(PlayerInteractEvent e) {
         try {
-            CustomPlayer p = CustomPlayer.fromPlayer(e.getPlayer());
+            SeedPlayer p = SeedPlayer.fromPlayer(e.getPlayer());
             Healing h = new Healing();
             h.setDuration(20);
             p.addEffect(h);

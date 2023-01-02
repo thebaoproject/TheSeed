@@ -1,16 +1,23 @@
 /*
- * Copyright (c) 2022 the Block Art Online Project contributors.
+ * Copyright 2022-2023 SpikeBonjour
  *
- * This work is free. It comes without any warranty, to the extent permitted
- * by applicable law. You can redistribute it and/or modify it under the terms
- * of the Do What The Fuck You Want To Public License, Version 2.
- * See the LICENSE file for more details.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package ga.baoproject.theseed.utils;
 
 import ga.baoproject.theseed.TheSeed;
-import ga.baoproject.theseed.abc.CustomEntity;
+import ga.baoproject.theseed.abc.SeedEntity;
 import ga.baoproject.theseed.exceptions.InvalidEntityID;
 import ga.baoproject.theseed.monsters.DemonicServant;
 import ga.baoproject.theseed.monsters.IllfangBoss;
@@ -31,13 +38,13 @@ import java.util.Objects;
 
 public class EntityUtils {
     /**
-     * Gets the {@link CustomEntity} object from the {@link Entity}.
+     * Gets the {@link SeedEntity} object from the {@link Entity}.
      *
      * @param entityName the ID of the entity.
-     * @return the {@link CustomEntity} found.
+     * @return the {@link SeedEntity} found.
      */
     @NotNull
-    public static CustomEntity get(String entityName) throws InvalidEntityID {
+    public static SeedEntity get(String entityName) throws InvalidEntityID {
         return switch (entityName) {
             case "sao:demonic_servant":
                 yield new DemonicServant();
@@ -90,7 +97,7 @@ public class EntityUtils {
      * @param path  the path of the tag.
      * @param value the value of the tag.
      */
-    public static void writeTo(@NotNull Damageable e, String path, Object value) {
+    public static void writeTo(@NotNull Entity e, String path, Object value) {
         Plugin pl = TheSeed.getInstance();
         PersistentDataContainer container = e.getPersistentDataContainer();
         if (value instanceof Integer) {
@@ -114,7 +121,7 @@ public class EntityUtils {
      * @return the value read from the tag.
      */
     @Nullable
-    public static <T> T readFrom(@NotNull Damageable e, String path, PersistentDataType<T, T> expectedType) {
+    public static <T> T readFrom(@NotNull Entity e, String path, PersistentDataType<T, T> expectedType) {
         Plugin pl = TheSeed.getInstance();
         PersistentDataContainer container = e.getPersistentDataContainer();
         return container.get(new NamespacedKey(pl, path), expectedType);

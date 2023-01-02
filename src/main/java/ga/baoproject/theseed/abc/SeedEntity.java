@@ -1,10 +1,17 @@
 /*
- * Copyright (c) 2022 the Block Art Online Project contributors.
+ * Copyright 2022-2023 SpikeBonjour
  *
- * This work is free. It comes without any warranty, to the extent permitted
- * by applicable law. You can redistribute it and/or modify it under the terms
- * of the Do What The Fuck You Want To Public License, Version 2.
- * See the LICENSE file for more details.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package ga.baoproject.theseed.abc;
@@ -32,7 +39,7 @@ import java.util.Objects;
 /**
  * Represents a custom entity.
  */
-public class CustomEntity {
+public class SeedEntity {
     private final EntityType baseType;
     private Damageable base;
     private int maxHealth;
@@ -45,11 +52,11 @@ public class CustomEntity {
     private String id;
     private String name;
 
-    public CustomEntity(EntityType b) {
+    public SeedEntity(EntityType b) {
         baseType = b;
     }
 
-    public CustomEntity(@NotNull Damageable p) {
+    public SeedEntity(@NotNull Damageable p) {
         baseType = EntityType.PLAYER;
         // Players are not spawn-able
         setBase(p);
@@ -60,8 +67,8 @@ public class CustomEntity {
      *
      * @param p the entity to set up.
      */
-    public static CustomEntity initialize(@NotNull Damageable p) {
-        CustomEntity temp = new CustomEntity(p.getType());
+    public static SeedEntity initialize(@NotNull Damageable p) {
+        SeedEntity temp = new SeedEntity(p.getType());
         temp.setBase(p);
         // Five times the health to add difficulty and fairness to vanilla entities.
         temp.setBaseHealth(((int) Objects.requireNonNull(((LivingEntity) p).getAttribute(Attribute.GENERIC_MAX_HEALTH)).getBaseValue()));
@@ -84,7 +91,7 @@ public class CustomEntity {
      *                           of the entity contains invalid values (null or negative)
      */
     @NotNull
-    public static CustomEntity fromEntity(@NotNull Damageable p) throws InvalidEntityData {
+    public static SeedEntity fromEntity(@NotNull Damageable p) throws InvalidEntityData {
         Plugin pl = TheSeed.getInstance();
         PersistentDataContainer container = p.getPersistentDataContainer();
         Integer maxHealth = container.get(new NamespacedKey(pl, "maxHealth"), PersistentDataType.INTEGER);
@@ -97,7 +104,7 @@ public class CustomEntity {
         if (maxHealth == null || health == null || lastHealth == null || name == null || level == null || id == null || baseHealth == null || maxHealth < 0 || health < 0 || lastHealth < 0 || baseHealth < 0) {
             throw new InvalidEntityData();
         }
-        CustomEntity output = new CustomEntity(p);
+        SeedEntity output = new SeedEntity(p);
         output.setMaxHealth(maxHealth);
         output.setHealth(health);
         output.setBaseHealth(baseHealth);
