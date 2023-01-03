@@ -16,30 +16,21 @@
 
 package ga.baoproject.theseed.abc;
 
-import org.bukkit.plugin.Plugin;
+import ga.baoproject.theseed.TheSeed;
+import org.slf4j.Logger;
 
 /**
  * Reinventing the wheel.
  */
 public class DebugLogger {
 
-    private static Plugin pl;
+    private static final TheSeed pl = TheSeed.getInstance();
     private static boolean enabled;
 
 
     public static void debug(String message) {
         pl.getSLF4JLogger().info("[DEBUG] " + message);
     }
-
-    /**
-     * Sets the plugin instance which is used to log the messages.
-     *
-     * @param plugin the plugin instance.
-     */
-    public static void setPluginInstance(Plugin plugin) {
-        pl = plugin;
-    }
-
     /**
      * Toggles the debug logger.
      *
@@ -53,7 +44,7 @@ public class DebugLogger {
      * Turns on the debug logger.
      */
     public static void setEnabled() {
-        enabled = false;
+        enabled = true;
     }
 }
 

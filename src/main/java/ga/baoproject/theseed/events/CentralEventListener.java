@@ -16,6 +16,7 @@
 
 package ga.baoproject.theseed.events;
 
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -54,5 +55,12 @@ public class CentralEventListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public static void onPlayerJoin(PlayerJoinEvent e) {
         PlayerEventHandler.onJoin(e);
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public static void onPickUp(EntityPickupItemEvent event) {
+        if (event.getEntity() instanceof Player) {
+            PlayerEventHandler.onPickUp(event);
+        }
     }
 }

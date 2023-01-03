@@ -43,8 +43,7 @@ public class TheSeed extends JavaPlugin {
     public void onEnable() {
         long startTime = System.currentTimeMillis();
         Logger l = getSLF4JLogger();
-        DebugLogger.setEnabled();
-        DebugLogger.setPluginInstance(this);
+        DebugLogger.setEnabled(true);
         l.info(" ----------- The Block Art Online Project | The Seed ----------- ");
         l.info("    Copyright (c) 2022 the Block Art Online Project contributors.  ");
         l.info("    This is free software, licensed under the WTFPL.               ");

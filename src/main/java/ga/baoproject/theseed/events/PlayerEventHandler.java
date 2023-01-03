@@ -17,14 +17,18 @@
 package ga.baoproject.theseed.events;
 
 import ga.baoproject.theseed.TheSeed;
+import ga.baoproject.theseed.abc.SeedItem;
 import ga.baoproject.theseed.abc.SeedPlayer;
 import ga.baoproject.theseed.abc.DebugLogger;
 import ga.baoproject.theseed.exceptions.InvalidEntityData;
+import ga.baoproject.theseed.utils.ItemUtils;
 import ga.baoproject.theseed.utils.PlayerUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 
@@ -87,4 +91,31 @@ public class PlayerEventHandler {
         PlayerUtils.fixJoinHealthBar(e.getPlayer());
     }
 
+    public static void onPickUp(EntityPickupItemEvent event) {
+
+        ItemStack pickedUp = event.getItem().getItemStack();
+        Player p = (Player) event.getEntity();
+        SeedItem spu = ItemUtils.get(pickedUp);
+        ItemStack[] inventory = p.getInventory().getContents();
+        SeedPlayer cp;
+        try {
+            cp = SeedPlayer.fromPlayer(p);
+        } catch (InvalidEntityData e) {
+            return;
+        }
+        for (int slot = 0; slot < inventory.length; slot ++) {
+            ItemStack playerItem = inventory[slot];
+            if (playerItem == null) {
+                continue;
+            }
+            // TODO - implement stricter item filter
+            if (pickedUp.getType().equals(playerItem.getType()) && playerItem.getAmount() + pickedUp.getAmount() <= playerItem.getType().getMaxStackSize()) {
+                playerItem.setAmount(playerItem.getAmount() + pickedUp.getAmount());
+                p.getInventory().setItem(slot, playerItem);
+                event.setCancelled(true);
+                event.getItem().setHealth(0);
+                break;
+            }
+        }
+    }
 }

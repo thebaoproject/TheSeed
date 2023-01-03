@@ -24,6 +24,7 @@ import ga.baoproject.theseed.utils.EffectUtils;
 import ga.baoproject.theseed.utils.EntityUtils;
 import ga.baoproject.theseed.utils.ItemUtils;
 import ga.baoproject.theseed.utils.Utils;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Player;
@@ -125,7 +126,7 @@ public class DaemonManager {
                         }
                         SeedItem ci = ItemUtils.get(item);
                         ItemStack newItem = ci.getItem(p.getLocale());
-                        if (!newItem.equals(item)) {
+                        if (!newItem.isSimilar(item)) {
                             newItem.setAmount(item.getAmount());
                             i.getInventory().setItem(slot, newItem);
                         }
