@@ -53,7 +53,9 @@ Bạn cũng nên theo codestyle của dự án. Cơ bản là:
 
 ## 📖 Ghi công & Bản quyền.
 
-Dự án này được đặt dưới giấy phép Apache, bản 2.0. Các tác giả của phần mềm này cho phép bạn sử dụng cho mục đích cá nhân hoặc thương mại, tích hợp phần mềm này vào một phần mềm khác; miễn là bạn đính kèm một bản sao giấy phép Apache cùng với danh sách thay đổi của bạn.
+Dự án này được đặt dưới giấy phép Apache, bản 2.0. Các tác giả của phần mềm này cho phép bạn sử dụng cho mục đích cá
+nhân hoặc thương mại, tích hợp phần mềm này vào một phần mềm khác; miễn là bạn đính kèm một bản sao giấy phép Apache
+cùng với danh sách thay đổi của bạn.
 
 ## FAQ
 

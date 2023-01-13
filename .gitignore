@@ -114,3 +114,7 @@ buildNumber.properties
 
 # Common working directory
 run/
+.vscode
+.idea
+/.settings/org.eclipse.buildship.core.prefs
+.settings

@@ -16,25 +16,24 @@
 
 package ga.baoproject.theseed.abc;
 
+import ga.baoproject.theseed.TheSeed;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
-import org.bukkit.entity.Damageable;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.LivingEntity;
+import org.bukkit.boss.KeyedBossBar;
+import org.bukkit.entity.*;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
-
 public abstract class SeedBoss extends SeedMonster {
-
-    private BossBar bossBar;
 
     public SeedBoss(EntityType b) {
         super(b);
@@ -44,6 +43,7 @@ public abstract class SeedBoss extends SeedMonster {
     public void renderHealth() {
         setHealth((int) getBase().getHealth());
         getBossBar().setProgress(((float) getHealth() / getMaxHealth()));
+        DebugLogger.debug("Setting bossbar progress to " + (float) getHealth() / getMaxHealth());
     }
 
     /**
@@ -65,20 +65,50 @@ public abstract class SeedBoss extends SeedMonster {
         setName(getName());
         setHealth(getHealth());
         setLastHealth(getLastHealth());
-        Objects.requireNonNull(((LivingEntity) getEntity()).getAttribute(Attribute.GENERIC_MAX_HEALTH)).setBaseValue(getMaxHealth());
-        setBossBar(Bukkit.createBossBar(ChatColor.RED + getName(), BarColor.RED, BarStyle.SOLID));
-        getBossBar().setProgress(1);
+        setBaseHealth(getBaseHealth());
+        Objects.requireNonNull(((LivingEntity) getEntity()).getAttribute(Attribute.GENERIC_MAX_HEALTH))
+                .setBaseValue(getMaxHealth());
+        // TODO - makes bossbars disappear when out of range
+        DebugLogger.debug(
+                "Setting bossbar: " + new NamespacedKey(TheSeed.getInstance(), getBase().getUniqueId().toString()));
+        KeyedBossBar kb = Bukkit.createBossBar(
+                new NamespacedKey(TheSeed.getInstance(), getBase().getUniqueId().toString()), ChatColor.RED + getName(),
+                BarColor.RED, BarStyle.SOLID);
+        for (Entity i : getBase().getNearbyEntities(100, 20, 100)) {
+            if (i instanceof Player p)
+                kb.addPlayer(p);
+        }
+        Objects.requireNonNull(getBossBar()).setProgress(1);
         return getBase();
     }
 
+    @Nullable
     public BossBar getBossBar() {
-        return bossBar;
+        if (getBase() != null) {
+            DebugLogger.debug(
+                    "Getting bossbar: " + new NamespacedKey(TheSeed.getInstance(), getBase().getUniqueId().toString()));
+            KeyedBossBar kb = Bukkit
+                    .getBossBar(new NamespacedKey(TheSeed.getInstance(), getBase().getUniqueId().toString()));
+            if (kb != null) {
+                for (Entity i : getBase().getNearbyEntities(100, 20, 100)) {
+                    if (i instanceof Player p)
+                        kb.addPlayer(p);
+                }
+            }
+            return kb;
+        }
+        return null;
     }
 
-    public void setBossBar(BossBar b) {
-        bossBar = b;
-    }
+    public abstract void onDeath(@NotNull EntityDeathEvent e);
 
-    public void onDeath(@NotNull EntityDeathEvent e) {
+    public void removeBossBar(Damageable e) {
+        KeyedBossBar kb = Bukkit.getBossBar(new NamespacedKey(TheSeed.getInstance(), e.getUniqueId().toString()));
+        if (kb == null) {
+            return;
+        }
+        kb.setVisible(false);
+        kb.removeAll();
+        Bukkit.removeBossBar(new NamespacedKey(TheSeed.getInstance(), e.getUniqueId().toString()));
     }
 }

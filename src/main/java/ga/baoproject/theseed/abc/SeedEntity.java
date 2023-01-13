@@ -21,6 +21,7 @@ import ga.baoproject.theseed.exceptions.InvalidEntityData;
 import ga.baoproject.theseed.utils.EntityUtils;
 import ga.baoproject.theseed.utils.Utils;
 import net.kyori.adventure.text.Component;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
@@ -72,7 +73,7 @@ public class SeedEntity {
         temp.setBase(p);
         // Five times the health to add difficulty and fairness to vanilla entities.
         temp.setBaseHealth(((int) Objects.requireNonNull(((LivingEntity) p).getAttribute(Attribute.GENERIC_MAX_HEALTH)).getBaseValue()));
-        temp.setMaxHealth(temp.getBaseHealth() * 5);
+        temp.setMaxHealth(temp.getBaseHealth() * 3);
         temp.setHealth(temp.getMaxHealth());
         temp.setLastHealth(temp.getMaxHealth());
         temp.setName(Utils.beautifyName(p.getType().toString()));
@@ -101,7 +102,9 @@ public class SeedEntity {
         String name = container.get(new NamespacedKey(pl, "name"), PersistentDataType.STRING);
         Integer level = container.get(new NamespacedKey(pl, "level"), PersistentDataType.INTEGER);
         String id = container.get(new NamespacedKey(pl, "id"), PersistentDataType.STRING);
-        if (maxHealth == null || health == null || lastHealth == null || name == null || level == null || id == null || baseHealth == null || maxHealth < 0 || health < 0 || lastHealth < 0 || baseHealth < 0) {
+        // Health can be less than 0 because the entity can be dead.
+        if (maxHealth == null || health == null || lastHealth == null || name == null || level == null || id == null || baseHealth == null || maxHealth < 0 || lastHealth < 0 || baseHealth < 0) {
+//            Bukkit.broadcast(Component.text("mh" + maxHealth + " h" + health + " lh" + lastHealth + " n" + name + " lv" + level + " id'" + id + "' bh" + baseHealth));
             throw new InvalidEntityData();
         }
         SeedEntity output = new SeedEntity(p);
@@ -133,6 +136,7 @@ public class SeedEntity {
         setName(getName());
         setHealth(getHealth());
         setLastHealth(getLastHealth());
+        setBaseHealth(getBaseHealth());
         Objects.requireNonNull(((LivingEntity) getEntity()).getAttribute(Attribute.GENERIC_MAX_HEALTH)).setBaseValue(getMaxHealth());
         return getBase();
     }

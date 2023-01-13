@@ -16,15 +16,14 @@
 
 package ga.baoproject.theseed;
 
-
 import ga.baoproject.theseed.abc.*;
 import ga.baoproject.theseed.exceptions.InvalidEntityData;
+import ga.baoproject.theseed.exceptions.InvalidEntityID;
 import ga.baoproject.theseed.exceptions.UnknownItemID;
 import ga.baoproject.theseed.utils.EffectUtils;
 import ga.baoproject.theseed.utils.EntityUtils;
 import ga.baoproject.theseed.utils.ItemUtils;
 import ga.baoproject.theseed.utils.Utils;
-import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Player;
@@ -47,7 +46,8 @@ public class DaemonManager {
                 SeedPlayer p;
                 try {
                     if (EntityUtils.impostor(i)) {
-                        DebugLogger.debug("The player with name of " + i.getName() + "hasn't been set up yet. Automatically setting up...");
+                        DebugLogger.debug("The player with name of " + i.getName()
+                                + "hasn't been set up yet. Automatically setting up...");
                         SeedPlayer.initialize(i);
                     }
                     p = SeedPlayer.fromPlayer(i);
@@ -56,7 +56,8 @@ public class DaemonManager {
                     p.ensureNoHunger();
                 } catch (InvalidEntityData e) {
                     if (i.getHealth() != 0) {
-                        DebugLogger.debug("The player with name of " + i.getName() + "have invalid player data (healthbar). Automatically resetting...");
+                        DebugLogger.debug("The player with name of " + i.getName()
+                                + "have invalid player data (healthbar). Automatically resetting...");
                         SeedPlayer.initialize(i);
                     }
                 }
@@ -71,14 +72,16 @@ public class DaemonManager {
                 SeedPlayer p;
                 try {
                     if (EntityUtils.impostor(i)) {
-                        DebugLogger.debug("The player with name of " + i.getName() + "hasn't been set up yet. Automatically setting up...");
+                        DebugLogger.debug("The player with name of " + i.getName()
+                                + "hasn't been set up yet. Automatically setting up...");
                         SeedPlayer.initialize(i);
                     }
                     p = SeedPlayer.fromPlayer(i);
                     p.applyRegen();
                 } catch (InvalidEntityData e) {
                     if (i.getHealth() != 0) {
-                        DebugLogger.debug("The player with name of " + i.getName() + "have invalid player data (regen). Silently ignoring...");
+                        DebugLogger.debug("The player with name of " + i.getName()
+                                + "have invalid player data (regen). Silently ignoring...");
                     }
                 }
             }
@@ -94,15 +97,28 @@ public class DaemonManager {
                     if (!(i instanceof Player)) {
                         try {
                             if (EntityUtils.impostor(i)) {
-//                                DebugLogger.debug("Entity with type of " + i.getName() + " hasn't been set up yet. Automatically setting up...");
+                                // DebugLogger.debug("Entity with type of " + i.getName() + " hasn't been set up
+                                // yet. Automatically setting up...");
                                 SeedEntity.initialize(i);
                             }
                             e = SeedEntity.fromEntity(i);
-                            e.renderHealth();
-                            e.setNameTag();
+                            try {
+                                EntityUtils.get(e.getID());
+                                if (EntityUtils.get(e.getID()) instanceof SeedBoss b) {
+                                    b.setBase(i);
+                                    b.renderHealth();
+                                    b.setNameTag();
+
+                                }
+                            } catch (InvalidEntityID ignored) {
+                                e.renderHealth();
+                                e.setNameTag();
+                            }
                         } catch (InvalidEntityData ex) {
                             if (i.getHealth() != 0) {
-//                                DebugLogger.debug("Entity with type of " + i.getType() + " have invalid entity data (healthbar). Automatically initializing...");
+                                // DebugLogger.debug("Entity with type of " + i.getType() + " have invalid
+                                // entity data (healthbar). Automatically initializing...");
+                                ex.printStackTrace();
                                 SeedEntity.initialize(i);
                             }
                         }
@@ -151,7 +167,8 @@ public class DaemonManager {
                         }
                         SeedItem ci = ItemUtils.get(item);
                         if (ItemUtils.get(ci.getID()) instanceof SeedArmor ct) {
-                            if (List.of(EquipmentSlot.HAND, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET).contains(ct.getTrigger())) {
+                            if (List.of(EquipmentSlot.HAND, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET)
+                                    .contains(ct.getTrigger())) {
                                 // Speed is set by attributes in the item.
                                 healthBuff += ct.getHealthBuff();
                                 defenseBuff += ct.getProtection();

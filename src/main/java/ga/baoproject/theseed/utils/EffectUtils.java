@@ -17,8 +17,8 @@
 package ga.baoproject.theseed.utils;
 
 import com.google.gson.Gson;
-import ga.baoproject.theseed.abc.SeedEffect;
 import ga.baoproject.theseed.abc.DebugLogger;
+import ga.baoproject.theseed.abc.SeedEffect;
 import ga.baoproject.theseed.effects.Paralyze;
 import ga.baoproject.theseed.effects.VanillaEffect;
 import org.jetbrains.annotations.Contract;

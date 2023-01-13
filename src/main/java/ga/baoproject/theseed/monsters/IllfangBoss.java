@@ -16,8 +16,8 @@
 
 package ga.baoproject.theseed.monsters;
 
-import ga.baoproject.theseed.abc.SeedBoss;
 import ga.baoproject.theseed.abc.DebugLogger;
+import ga.baoproject.theseed.abc.SeedBoss;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.EntityType;
@@ -32,6 +32,7 @@ public class IllfangBoss extends SeedBoss {
         setLevel(30);
         setID("sao:illfang_boss");
         setName("Illfang the Kobold Lord");
+        setBaseHealth(1000);
         setMaxHealth(1000);
         setHealth(1000);
         setLastHealth(1000);
@@ -41,7 +42,7 @@ public class IllfangBoss extends SeedBoss {
         DebugLogger.debug("Got death event");
         e.setDeathSound(Sound.ENTITY_ENDER_DRAGON_DEATH);
         e.getEntity().getWorld().dropItem(e.getEntity().getLocation(), new ItemStack(Material.DIRT));
-        getBossBar().removeAll();
+        removeBossBar(e.getEntity());
     }
 
 }

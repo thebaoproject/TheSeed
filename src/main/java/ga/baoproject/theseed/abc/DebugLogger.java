@@ -17,7 +17,6 @@
 package ga.baoproject.theseed.abc;
 
 import ga.baoproject.theseed.TheSeed;
-import org.slf4j.Logger;
 
 /**
  * Reinventing the wheel.
@@ -29,8 +28,11 @@ public class DebugLogger {
 
 
     public static void debug(String message) {
-        pl.getSLF4JLogger().info("[DEBUG] " + message);
+        if (!enabled) {
+            pl.getSLF4JLogger().info("[DEBUG] " + message);
+        }
     }
+
     /**
      * Toggles the debug logger.
      *

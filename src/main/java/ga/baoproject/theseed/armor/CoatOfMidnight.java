@@ -16,8 +16,8 @@
 
 package ga.baoproject.theseed.armor;
 
-import ga.baoproject.theseed.abc.SeedArmor;
 import ga.baoproject.theseed.abc.Rarity;
+import ga.baoproject.theseed.abc.SeedArmor;
 import org.bukkit.Material;
 import org.bukkit.inventory.EquipmentSlot;
 

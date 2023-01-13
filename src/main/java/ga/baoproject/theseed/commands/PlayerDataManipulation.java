@@ -16,10 +16,10 @@
 
 package ga.baoproject.theseed.commands;
 
+import ga.baoproject.theseed.abc.DebugLogger;
 import ga.baoproject.theseed.abc.SeedEffect;
 import ga.baoproject.theseed.abc.SeedEntity;
 import ga.baoproject.theseed.abc.SeedPlayer;
-import ga.baoproject.theseed.abc.DebugLogger;
 import ga.baoproject.theseed.exceptions.InvalidEntityData;
 import ga.baoproject.theseed.i18n.Localized;
 import ga.baoproject.theseed.utils.EffectUtils;

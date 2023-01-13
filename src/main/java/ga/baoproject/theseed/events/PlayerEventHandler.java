@@ -17,11 +17,9 @@
 package ga.baoproject.theseed.events;
 
 import ga.baoproject.theseed.TheSeed;
-import ga.baoproject.theseed.abc.SeedItem;
-import ga.baoproject.theseed.abc.SeedPlayer;
 import ga.baoproject.theseed.abc.DebugLogger;
+import ga.baoproject.theseed.abc.SeedPlayer;
 import ga.baoproject.theseed.exceptions.InvalidEntityData;
-import ga.baoproject.theseed.utils.ItemUtils;
 import ga.baoproject.theseed.utils.PlayerUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -95,15 +93,8 @@ public class PlayerEventHandler {
 
         ItemStack pickedUp = event.getItem().getItemStack();
         Player p = (Player) event.getEntity();
-        SeedItem spu = ItemUtils.get(pickedUp);
         ItemStack[] inventory = p.getInventory().getContents();
-        SeedPlayer cp;
-        try {
-            cp = SeedPlayer.fromPlayer(p);
-        } catch (InvalidEntityData e) {
-            return;
-        }
-        for (int slot = 0; slot < inventory.length; slot ++) {
+        for (int slot = 0; slot < inventory.length; slot++) {
             ItemStack playerItem = inventory[slot];
             if (playerItem == null) {
                 continue;

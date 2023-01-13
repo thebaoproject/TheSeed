@@ -16,8 +16,8 @@
 
 package ga.baoproject.theseed.utils;
 
-import ga.baoproject.theseed.abc.SeedPlayer;
 import ga.baoproject.theseed.abc.DebugLogger;
+import ga.baoproject.theseed.abc.SeedPlayer;
 import ga.baoproject.theseed.exceptions.InvalidEntityData;
 import ga.baoproject.theseed.i18n.Localized;
 import net.kyori.adventure.text.Component;

@@ -16,6 +16,7 @@
 
 package ga.baoproject.theseed.events;
 
+import ga.baoproject.theseed.abc.DebugLogger;
 import ga.baoproject.theseed.abc.SeedBoss;
 import ga.baoproject.theseed.abc.SeedEntity;
 import ga.baoproject.theseed.exceptions.InvalidEntityData;
@@ -37,6 +38,7 @@ public class EntityEventHandler {
                 e.setCancelled(false);
             }
         } catch (InvalidEntityData | InvalidEntityID ignored) {
+            ignored.printStackTrace();
         }
     }
 

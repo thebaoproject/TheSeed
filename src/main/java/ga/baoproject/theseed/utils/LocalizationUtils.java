@@ -33,9 +33,9 @@ public class LocalizationUtils {
      * @param pl the plugin instance.
      */
     public static void ensureLocales(@NotNull TheSeed pl) {
-        boolean t = pl.getDataFolder().mkdir();
+        pl.getDataFolder().mkdir();
         File localesDirectory = new File(pl.getDataFolder(), "locales");
-        t = localesDirectory.mkdir();
+        localesDirectory.mkdir();
         pl.saveResource("locales/en_US.yml", true);
         pl.saveResource("locales/vi_VN.yml", true);
     }
@@ -49,7 +49,7 @@ public class LocalizationUtils {
     @NotNull
     public static YamlConfiguration getLocale(@NotNull Locale lang) {
         TheSeed pl = TheSeed.getInstance();
-        boolean t = pl.getDataFolder().mkdir();
+        pl.getDataFolder().mkdir();
         File localesDirectory = new File(pl.getDataFolder(), "locales");
         return YamlConfiguration.loadConfiguration(new File(localesDirectory, lang.toCode() + ".yml"));
     }

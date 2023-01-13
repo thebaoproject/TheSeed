@@ -16,9 +16,9 @@
 
 package ga.baoproject.theseed.events;
 
+import ga.baoproject.theseed.abc.DebugLogger;
 import ga.baoproject.theseed.abc.SeedItem;
 import ga.baoproject.theseed.abc.SeedWeapon;
-import ga.baoproject.theseed.abc.DebugLogger;
 import ga.baoproject.theseed.utils.ItemUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;

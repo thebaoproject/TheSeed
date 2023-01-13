@@ -17,10 +17,10 @@
 package ga.baoproject.theseed.items;
 
 import ga.baoproject.theseed.TheSeed;
-import ga.baoproject.theseed.abc.SeedEntity;
-import ga.baoproject.theseed.abc.SeedWeapon;
 import ga.baoproject.theseed.abc.DebugLogger;
 import ga.baoproject.theseed.abc.Rarity;
+import ga.baoproject.theseed.abc.SeedEntity;
+import ga.baoproject.theseed.abc.SeedWeapon;
 import ga.baoproject.theseed.exceptions.InvalidEntityData;
 import ga.baoproject.theseed.i18n.Locale;
 import ga.baoproject.theseed.i18n.Localized;
@@ -58,19 +58,37 @@ public class VanillaItem extends SeedWeapon {
         setDamage(damage * 5);
         setStrength(damage);
         boolean iw = ItemUtils.isWeapon(baseItem);
+        // Super complicated item rarity classifying algorithm
         if (name.contains("diamond")) {
             if (iw) {
                 setRarity(Rarity.UNCOMMON_WEAPON);
             } else {
                 setRarity(Rarity.UNCOMMON);
             }
+        } else if (name.contains("emerald")) {
+                if (iw) {
+                    setRarity(Rarity.UNCOMMON_WEAPON);
+                } else {
+                    setRarity(Rarity.UNCOMMON);
+                }
         } else if (name.contains("netherite")) {
             if (iw) {
                 setRarity(Rarity.RARE_WEAPON);
             } else {
                 setRarity(Rarity.RARE);
             }
+        } else if (name.contains("dragon")) {
+                setRarity(Rarity.RARE);
         } else {
+            switch (name) {
+                case "dragon egg":
+                    setRarity(Rarity.LEGENDARY);
+                    break;
+                case "elytra":
+                    setRarity(Rarity.RARE);
+                    break;
+                case "dragon head":
+            }
             if (iw) {
                 setRarity(Rarity.COMMON_WEAPON);
             } else {
