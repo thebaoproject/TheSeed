@@ -66,11 +66,11 @@ public class VanillaItem extends SeedWeapon {
                 setRarity(Rarity.UNCOMMON);
             }
         } else if (name.contains("emerald")) {
-                if (iw) {
-                    setRarity(Rarity.UNCOMMON_WEAPON);
-                } else {
-                    setRarity(Rarity.UNCOMMON);
-                }
+            if (iw) {
+                setRarity(Rarity.UNCOMMON_WEAPON);
+            } else {
+                setRarity(Rarity.UNCOMMON);
+            }
         } else if (name.contains("netherite")) {
             if (iw) {
                 setRarity(Rarity.RARE_WEAPON);
@@ -78,7 +78,7 @@ public class VanillaItem extends SeedWeapon {
                 setRarity(Rarity.RARE);
             }
         } else if (name.contains("dragon")) {
-                setRarity(Rarity.RARE);
+            setRarity(Rarity.RARE);
         } else {
             switch (name) {
                 case "dragon egg":

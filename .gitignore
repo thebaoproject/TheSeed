@@ -118,3 +118,5 @@ run/
 .idea
 /.settings/org.eclipse.buildship.core.prefs
 .settings
+/.classpath
+/.project

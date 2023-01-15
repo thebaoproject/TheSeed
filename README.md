@@ -3,12 +3,12 @@
 <p align="center">
     <br>
     <i>
-        The little seed I planted found purchase in
+        "The little seed I planted found purchase in
         distant networks, where it sprouts its own leaves and branches.
     </i>
 </p>
 <h6 align="right">
-    Kayaba Akihiko, <a href="https://en.wikipedia.org/wiki/Reki_Kawahara">Kawahara Reki</a> - <a href="https://en.wikipedia.org/wiki/Sword_Art_Online">Sword Art Online</a>.
+    Kayaba Akihiko, in <a href="https://en.wikipedia.org/wiki/Sword_Art_Online">Sword Art Online</a> by <a href="https://en.wikipedia.org/wiki/Reki_Kawahara">Kawahara Reki</a>.
 </h6>
 <br>
 <br>
@@ -21,16 +21,22 @@ hãy fork repo.
 
 ## 👀 Sử dụng
 
-### Cho phàm nhân 🙌
+### Cho mọi người 🙌
 
 Tải build mới nhất xuống từ tab Actions. Từ đó kéo xuống phần Artifacts rồi tải xuống file zip. Giải nén và đặt file jar
 vào trong folder `plugins` của server.
 
-### Cho dev (với 200🧠 IQ)
+### Cho dev (cần ít nhất 200🧠 IQ)
 
-Clone hoặc tải xuống 1 snapshot của repo. Mở dự án bằng IDE của bạn: Visual Studio (Code) (wtf), Intellij IDEA (ok),
-Eclipse, (n)vim (wtf), ...
-Compile nó bằng Gradle. Đút cái jar thu được trong `libs/` vào trong `plugins/` của server.
+* Clone hoặc tải xuống 1 snapshot của repo. Mở dự án bằng IDE của bạn: Visual Studio (Code) (wtf), Intellij IDEA (ok),
+  Eclipse, (n)vim (👌), ...
+* Compile bằng Gradle:
+
+```sh
+$ ./gradlew build
+```
+
+* Paste file `.jar` trong folder `libs/` vào trong folder `plugins/` của server.
 
 ## 💻 Cống hiến & Giúp đỡ
 
@@ -70,4 +76,4 @@ cùng với danh sách thay đổi của bạn.
 | ??                                                            | !!                                                                         |
 | `:middle_finger:`                                             | `:monkey: :dash:`                                                          |
 
-<br><br><p align="center">Made with ❤ by the Block Art Online contributors.</p>
+<br><br><p align="center">Made with ❤️ by SpikeBonjour.</p>

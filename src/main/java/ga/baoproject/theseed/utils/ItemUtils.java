@@ -85,8 +85,7 @@ public class ItemUtils {
                 UUID.randomUUID(),
                 "generic.attackDamage",
                 5,
-                AttributeModifier.Operation.MULTIPLY_SCALAR_1
-        );
+                AttributeModifier.Operation.MULTIPLY_SCALAR_1);
         meta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, fiveTimes);
         meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         item.setItemMeta(meta);
@@ -105,8 +104,7 @@ public class ItemUtils {
                 "sao:anneal_blade",
                 "sao:object_eraser",
                 "sao:coat_of_midnight",
-                "sao:healing_crystal"
-        );
+                "sao:healing_crystal");
     }
 
     /**
@@ -165,7 +163,8 @@ public class ItemUtils {
      */
     public static boolean isWeapon(Material item) {
         String name = item.name().toLowerCase(Locale.ROOT);
-        return name.contains("sword") || (name.contains("axe") && !name.contains("pickaxe")) || name.contains("shovel") || name.contains("hoe") || name.equals("trident");
+        return name.contains("sword") || (name.contains("axe") && !name.contains("pickaxe")) || name.contains("shovel")
+                || name.contains("hoe") || name.equals("trident");
     }
 
     /**

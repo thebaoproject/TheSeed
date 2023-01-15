@@ -19,8 +19,9 @@ package ga.baoproject.theseed.events;
 import ga.baoproject.theseed.abc.DebugLogger;
 import ga.baoproject.theseed.abc.SeedItem;
 import ga.baoproject.theseed.abc.SeedWeapon;
+import ga.baoproject.theseed.items.BareHand;
 import ga.baoproject.theseed.utils.ItemUtils;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -51,13 +52,15 @@ public class ItemEventHandler {
     }
 
     public static void onDamage(@NotNull EntityDamageByEntityEvent e) {
-        if (e.getDamager() instanceof Player) {
-            SeedItem item = ItemUtils.get(((Player) e.getDamager()).getInventory().getItemInMainHand());
+        if (e.getDamager() instanceof HumanEntity) {
+            SeedItem item = ItemUtils.get(((HumanEntity) e.getDamager()).getInventory().getItemInMainHand());
             if (item instanceof SeedWeapon) {
                 ((SeedWeapon) item).attackAction(e);
             } else {
                 DebugLogger.debug("EntityDamagedByEntity damage: " + e.getFinalDamage());
             }
+        } else {
+            new BareHand().attackAction(e);
         }
     }
 }

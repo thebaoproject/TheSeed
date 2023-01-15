@@ -44,7 +44,11 @@ public class EntityUtils {
      * @return the {@link SeedEntity} found.
      */
     @NotNull
-    public static SeedEntity get(String entityName) throws InvalidEntityID {
+    @SuppressWarnings("deprecation")
+    public static SeedEntity get(@NotNull String entityName) throws InvalidEntityID {
+        if (entityName.contains("minecraft:")) {
+            return new SeedEntity(EntityType.fromName(entityName));
+        }
         return switch (entityName) {
             case "sao:demonic_servant":
                 yield new DemonicServant();
@@ -63,7 +67,8 @@ public class EntityUtils {
     public static boolean impostor(@NotNull Damageable e) {
         // Well shit, but there is no other way to do this.
         if (e.isCustomNameVisible() && e.getName().contains("❤")) {
-            // Entities which haven't had its NBT set up yet (only when it has been spawned could its name be modified).
+            // Entities which haven't had its NBT set up yet (only when it has been spawned
+            // could its name be modified).
             return false;
         } else if (e.getType() == EntityType.PLAYER) {
             Integer data = readFrom(e, "health", PersistentDataType.INTEGER);
@@ -84,6 +89,7 @@ public class EntityUtils {
      * @return the ID.
      */
     @NotNull
+    @SuppressWarnings("unused")
     public static String getIDFrom(@NotNull Entity e) {
         Plugin pl = TheSeed.getInstance();
         PersistentDataContainer container = e.getPersistentDataContainer();
@@ -117,7 +123,8 @@ public class EntityUtils {
      * @param e            the entity to read.
      * @param path         the path of the tag.
      * @param expectedType the expected value type.
-     * @param <T>          the type this class should return. This is the same as {@code expectedType}
+     * @param <T>          the type this class should return. This is the same as
+     *                     {@code expectedType}
      * @return the value read from the tag.
      */
     @Nullable

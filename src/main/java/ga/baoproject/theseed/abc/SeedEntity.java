@@ -47,7 +47,10 @@ public class SeedEntity {
     private int health;
     private int baseHealth;
     private int lastHealth;
+    // TODO - implement speed for entities.
+    @SuppressWarnings("unused")
     private int baseSpeed;
+    @SuppressWarnings("unused")
     private int speed;
     private int level;
     private String id;
@@ -72,13 +75,21 @@ public class SeedEntity {
         SeedEntity temp = new SeedEntity(p.getType());
         temp.setBase(p);
         // Five times the health to add difficulty and fairness to vanilla entities.
-        temp.setBaseHealth(((int) Objects.requireNonNull(((LivingEntity) p).getAttribute(Attribute.GENERIC_MAX_HEALTH)).getBaseValue()));
-        temp.setMaxHealth(temp.getBaseHealth() * 3);
+        if (EntityUtils.impostor(p)) {
+            temp.setMaxHealth(
+                    (int) Objects.requireNonNull(p.getType().getDefaultAttributes().getAttribute(Attribute.GENERIC_MAX_HEALTH)).getBaseValue()
+                            * TheSeed.getConfiguration().getInt("gameplay.entity.vanilla-health-multiplier")
+            );
+        } else {
+            temp.setMaxHealth((int) Objects.requireNonNull(p.getType().getDefaultAttributes().getAttribute(Attribute.GENERIC_MAX_HEALTH)).getBaseValue());
+        }
+        temp.setBaseHealth(temp.getMaxHealth());
         temp.setHealth(temp.getMaxHealth());
         temp.setLastHealth(temp.getMaxHealth());
         temp.setName(Utils.beautifyName(p.getType().toString()));
         temp.setLevel(1);
-        temp.setID(p.getType().toString().toLowerCase(Locale.ROOT));
+        // For clarity purpose, used in the event listeners.
+        temp.setID("minecraft:" + p.getType().toString().toLowerCase(Locale.ROOT));
         temp.getBase().setCustomNameVisible(true);
         return temp;
     }
@@ -88,8 +99,10 @@ public class SeedEntity {
      *
      * @param p the entity to get.
      * @return the InternalPlayer object.
-     * @throws InvalidEntityData when the data stored in the entity {@link PersistentDataContainer}
-     *                           of the entity contains invalid values (null or negative)
+     * @throws InvalidEntityData when the data stored in the entity
+     *                           {@link PersistentDataContainer}
+     *                           of the entity contains invalid values (null or
+     *                           negative)
      */
     @NotNull
     public static SeedEntity fromEntity(@NotNull Damageable p) throws InvalidEntityData {
@@ -103,8 +116,11 @@ public class SeedEntity {
         Integer level = container.get(new NamespacedKey(pl, "level"), PersistentDataType.INTEGER);
         String id = container.get(new NamespacedKey(pl, "id"), PersistentDataType.STRING);
         // Health can be less than 0 because the entity can be dead.
-        if (maxHealth == null || health == null || lastHealth == null || name == null || level == null || id == null || baseHealth == null || maxHealth < 0 || lastHealth < 0 || baseHealth < 0) {
-//            Bukkit.broadcast(Component.text("mh" + maxHealth + " h" + health + " lh" + lastHealth + " n" + name + " lv" + level + " id'" + id + "' bh" + baseHealth));
+        if (maxHealth == null || health == null || lastHealth == null || name == null || level == null || id == null
+                || baseHealth == null || maxHealth < 0 || lastHealth < 0 || baseHealth < 0) {
+            Bukkit.broadcast(Component.text("mh" + maxHealth + " h" + health + " lh" +
+                    lastHealth + " n" + name + " lv" + level + " id'" + id + "' bh" +
+                    baseHealth));
             throw new InvalidEntityData();
         }
         SeedEntity output = new SeedEntity(p);
@@ -125,6 +141,7 @@ public class SeedEntity {
      * @return the {@link Damageable} spawned.
      */
     @NotNull
+    @SuppressWarnings("all")
     public Damageable spawnAt(@NotNull Location l) {
         setBase((Damageable) l.getWorld().spawnEntity(l, getBaseType()));
         // Have to write the NBT to each entity spawn.
@@ -137,12 +154,14 @@ public class SeedEntity {
         setHealth(getHealth());
         setLastHealth(getLastHealth());
         setBaseHealth(getBaseHealth());
-        Objects.requireNonNull(((LivingEntity) getEntity()).getAttribute(Attribute.GENERIC_MAX_HEALTH)).setBaseValue(getMaxHealth());
+        Objects.requireNonNull(((LivingEntity) getEntity()).getAttribute(Attribute.GENERIC_MAX_HEALTH))
+                .setBaseValue(getMaxHealth());
         return getBase();
     }
 
     public void setNameTag() {
-        getEntity().customName(Component.text(Utils.color("&7[Lv." + getLevel() + "] &c" + getName() + " " + "&a" + getHealth() + "&f/&a" + getMaxHealth() + "&c❤ HP")));
+        getEntity().customName(Component.text(Utils.color("&7[Lv." + getLevel() + "] &c" + getName() + " " + "&a"
+                + getHealth() + "&f/&a" + getMaxHealth() + "&c❤ HP")));
     }
 
     public Damageable getEntity() {
@@ -159,7 +178,8 @@ public class SeedEntity {
             EntityUtils.writeTo(getBase(), "maxHealth", h);
             // Players have their own health system.
             if (!(getBase() instanceof Player)) {
-                Objects.requireNonNull(((LivingEntity) getEntity()).getAttribute(Attribute.GENERIC_MAX_HEALTH)).setBaseValue(h);
+                Objects.requireNonNull(((LivingEntity) getEntity()).getAttribute(Attribute.GENERIC_MAX_HEALTH))
+                        .setBaseValue(h);
             }
         }
     }
@@ -191,7 +211,8 @@ public class SeedEntity {
                 try {
                     getBase().setHealth(health);
                 } catch (IllegalArgumentException e) {
-                    DebugLogger.debug("Entity " + getBase() + "have error when trying to set health. h:" + getHealth() + " mh" + getMaxHealth() + " bh:" + getBaseHealth() + ". Resetting stats...");
+                    DebugLogger.debug("Entity " + getBase() + "have error when trying to set health. h:" + getHealth()
+                            + " mh" + getMaxHealth() + " bh:" + getBaseHealth() + ". Resetting stats...");
                     initialize(getBase());
                 }
             }

@@ -21,22 +21,30 @@ import ga.baoproject.theseed.events.CentralEventListener;
 import ga.baoproject.theseed.i18n.Locale;
 import ga.baoproject.theseed.i18n.Localized;
 import ga.baoproject.theseed.utils.LocalizationUtils;
+import org.bukkit.Bukkit;
+import org.bukkit.GameRule;
+import org.bukkit.World;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.slf4j.Logger;
 
-import static org.bukkit.Bukkit.getPluginManager;
-
 public class TheSeed extends JavaPlugin {
 
+    private static FileConfiguration config;
     private static TheSeed instance;
 
     public TheSeed() {
         instance = this;
     }
 
+
     public static TheSeed getInstance() {
         return instance;
+    }
+
+    public static FileConfiguration getConfiguration() {
+        return config;
     }
 
     @Override
@@ -56,6 +64,11 @@ public class TheSeed extends JavaPlugin {
         l.info("Loading configuration options...");
         getConfig().options().copyDefaults();
         saveDefaultConfig();
+        config = getConfig();
+        boolean enableDeathMessages = config.getBoolean("gameplay.entity.death-messages.enabled");
+        for (World w : Bukkit.getWorlds()) {
+            w.setGameRule(GameRule.SHOW_DEATH_MESSAGES, enableDeathMessages);
+        }
         l.info("Loading locales...");
         LocalizationUtils.ensureLocales(this);
         l.info("Testing locale en_US " + new Localized("en_US -> FAILED", "plugin.localeCheck").render(Locale.EN_US));
@@ -66,7 +79,7 @@ public class TheSeed extends JavaPlugin {
         CommandManager.registerCommands(this);
         l.info("Starting tasks...");
         DaemonManager.registerTasks(this);
-        l.info("Plugin initialization complete." + "(" + (System.currentTimeMillis() - startTime) + "ms)");
+        l.info("Plugin initialization complete. " + "(took " + (System.currentTimeMillis() - startTime) + "ms)");
     }
 
     public void registerEvents() {
@@ -78,9 +91,5 @@ public class TheSeed extends JavaPlugin {
     public void onDisable() {
         getLogger().info("Plugin is shutting down...");
         getLogger().info("Plugin shut down successfully");
-    }
-
-    public void terminate() {
-        getPluginManager().disablePlugin(this);
     }
 }

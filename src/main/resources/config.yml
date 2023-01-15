@@ -1,3 +1,25 @@
-# Hey this is a useless config file. Nothing here.
-service-account-path:
-firebase-url:
+#################### The  Block Art Online Project - The Seed ######################
+##                                                                                ##
+##                        The Seed configuration file.                            ##
+##            Edit this file to change the plugin's configuration                 ##
+##      If you messed up, simply delete this file. It will be regenerated         ##
+##                with the default configuration in the next run.                 ##
+##                                                                                ##
+####################################################################################
+
+# Configuration entries related to the players' experience.
+gameplay:
+  entity:
+    # When converting from vanilla item to the internal item representation,
+    # the health needs to be increased in order to match that of the new weapons.
+    vanilla-health-multiplier: 3
+    # Whether to broadcast a death message when an entity dies.
+    # Disabled by default to ensure player's privacy.
+    death-messages:
+      enabled: false
+
+# Configuration entries related to the plugin's backend and internal workings. (API keys, database, ...)
+internal:
+  service-account-path: ""
+  firebase-url: ""
+  discord-api: ""

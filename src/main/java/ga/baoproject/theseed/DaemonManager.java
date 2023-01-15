@@ -102,19 +102,17 @@ public class DaemonManager {
                                 SeedEntity.initialize(i);
                             }
                             e = SeedEntity.fromEntity(i);
-                            try {
-                                EntityUtils.get(e.getID());
-                                if (EntityUtils.get(e.getID()) instanceof SeedBoss b) {
-                                    b.setBase(i);
-                                    b.renderHealth();
-                                    b.setNameTag();
+                            EntityUtils.get(e.getID());
+                            if (EntityUtils.get(e.getID()) instanceof SeedBoss b) {
+                                b.setBase(i);
+                                b.renderHealth();
+                                b.setNameTag();
 
-                                }
-                            } catch (InvalidEntityID ignored) {
+                            } else {
                                 e.renderHealth();
                                 e.setNameTag();
                             }
-                        } catch (InvalidEntityData ex) {
+                        } catch (InvalidEntityData | InvalidEntityID ex) {
                             if (i.getHealth() != 0) {
                                 // DebugLogger.debug("Entity with type of " + i.getType() + " have invalid
                                 // entity data (healthbar). Automatically initializing...");
