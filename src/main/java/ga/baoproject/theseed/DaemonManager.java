@@ -16,12 +16,15 @@
 
 package ga.baoproject.theseed;
 
+import com.google.gson.Gson;
 import ga.baoproject.theseed.api.SeedLogger;
 import ga.baoproject.theseed.api.types.*;
 import ga.baoproject.theseed.exceptions.InvalidEntityData;
 import ga.baoproject.theseed.exceptions.InvalidEntityID;
 import ga.baoproject.theseed.exceptions.UnknownItemID;
 import ga.baoproject.theseed.utils.*;
+import net.kyori.adventure.text.Component;
+import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Player;
@@ -185,15 +188,21 @@ public class DaemonManager {
                 try {
                     SeedPlayer p = SeedPlayer.fromPlayer(i);
                     List<SeedEffect> effectList = new ArrayList<>();
+                    // Every attempt to put the condition check inside the for loop
+                    // fails, so there is no other way.
+                    List<SeedEffect> finalList = new ArrayList<>();
                     for (SeedEffect e : p.getEffects()) {
-                        if (e.getDuration() == 0) {
-                            continue;
-                        }
+
                         EffectUtils.getChild(e).applyEffect(p);
                         e.setDuration(e.getDuration() - 1);
                         effectList.add(e);
                     }
-                    p.setEffects(effectList);
+                    for (SeedEffect e : effectList) {
+                        if (e.getDuration() > 0) {
+                            finalList.add(e);
+                        }
+                    }
+                    p.setEffects(finalList);
                 } catch (InvalidEntityData ignored) {
                 }
             }
@@ -202,7 +211,7 @@ public class DaemonManager {
             plugin.getSLF4JLogger().error("Scheduling potion effect task failed.");
         }
 
-        int scoreboardUpdateTaskID = getScheduler().scheduleSyncRepeatingTask(plugin, PlayerUtils::updateScoreboard, 1, 5);
+        int scoreboardUpdateTaskID = getScheduler().scheduleSyncRepeatingTask(plugin, PlayerUtils::updateScoreboard, 1, 1);
         if (scoreboardUpdateTaskID == -1) {
             plugin.getSLF4JLogger().error("Scheduling scoreboard update task failed.");
         }

@@ -21,6 +21,7 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class SeedConsumable extends SeedItem {
@@ -29,8 +30,13 @@ public abstract class SeedConsumable extends SeedItem {
     }
 
     public final void rightClickAction(@NotNull PlayerInteractEvent e) {
-        Bukkit.broadcast(Component.text("Consuming..."));
-        e.getPlayer().getActiveItem().setAmount(0);
+        ItemStack newItem = e.getItem();
+        if (newItem == null) {
+            return;
+        }
+//        Bukkit.broadcast(Component.text("Setting amount to "  + newItem.getType() + " " + (newItem.getAmount() - 1)));
+        newItem.setAmount(newItem.getAmount() -1);
+        e.getPlayer().getInventory().setItem(e.getPlayer().getInventory().getHeldItemSlot(), newItem);
         try {
             onConsume(SeedPlayer.fromPlayer(e.getPlayer()));
         } catch (InvalidEntityData ignored) {

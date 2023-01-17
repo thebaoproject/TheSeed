@@ -107,11 +107,18 @@ public class Utils {
         float t = (float) w.getTime() / 1000F;
         long hours = (long) Math.floor(t);
         long minutes = (w.getTime() - hours * 1000) / 60;
-        String minutesStr = minutes > 12 ? String.valueOf(minutes) : "0" + minutes;
+        String minutesStr = String.valueOf(minutes);
+        if (minutes < 10) {
+            minutesStr = "0" + minutesStr;
+        }
         if (hours > 12) {
-            return (hours - 12) + ":" + minutesStr + "pm &b\uD83C\uDF19";
+            return (hours - 12) + ":" + minutesStr + "pm &b☽";
         } else {
             return hours + ":" + minutesStr + Utils.color("am &e☀");
         }
+    }
+
+    public static @NotNull String nothing(int l) {
+        return " ".repeat(Math.max(0, l));
     }
 }

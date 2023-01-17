@@ -62,6 +62,7 @@ public class SeedEffect {
     /**
      * This method is called every second for an item.
      * Child class must implement this method.
+     * TODO - makes the API better with abstract class.
      *
      * @param p the player who have the effect on.
      */

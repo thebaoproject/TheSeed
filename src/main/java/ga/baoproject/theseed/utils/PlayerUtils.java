@@ -17,6 +17,8 @@
 package ga.baoproject.theseed.utils;
 
 import ga.baoproject.theseed.api.SeedLogger;
+import ga.baoproject.theseed.api.scoreboard.SeedScoreboard;
+import ga.baoproject.theseed.api.scoreboard.SeedScoreboards;
 import ga.baoproject.theseed.api.types.SeedEffect;
 import ga.baoproject.theseed.api.types.SeedPlayer;
 import ga.baoproject.theseed.exceptions.InvalidEntityData;
@@ -77,7 +79,7 @@ public class PlayerUtils {
                 List<String> boardDetails = new ArrayList<>(List.of(
                         Utils.color("&7" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yy"))),
                         Utils.color("  &7" + Utils.getTimeOf(i.getWorld())),
-                        "",
+                        "             ",
                         Utils.color("&d  Active Effects:")
                 ));
                 for (int effectNum = 0; effectNum <= 3; effectNum++) {
@@ -85,27 +87,16 @@ public class PlayerUtils {
                         SeedEffect e = p.getEffects().get(effectNum);
                         boardDetails.add(Utils.color("    &7- " + e.getName() + " (" + e.getDuration() + "s)"));
                     } catch (IndexOutOfBoundsException ignored) {
+                        boardDetails.add(Utils.nothing(effectNum));
                     }
                 }
-                Collections.reverse(boardDetails);
-
 
                 // Scoreboard
-                Scoreboard sb = i.getScoreboard();
-                Objective obj = sb.getObjective("sao");
-                if (obj != null) {
-                    obj.unregister();
+                SeedScoreboard ss = SeedScoreboards.get(i);
+                for (int line = 0; line < boardDetails.toArray().length; line++) {
+                    ss.setLine(line, boardDetails.get(line));
                 }
-                obj = sb.registerNewObjective("sao", Criteria.DUMMY, Component.text(Utils.color("&e&lSWORD ART ONLINE")));
-                obj.setDisplaySlot(DisplaySlot.SIDEBAR);
 
-                for (int line = boardDetails.toArray().length; line >= 0; line--) {
-                    try {
-                        Score l = obj.getScore(boardDetails.get(line));
-                        l.setScore(line);
-                    } catch (IndexOutOfBoundsException ignored) {
-                    }
-                }
             }
 
         } catch (InvalidEntityData ignored) {
