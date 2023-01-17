@@ -16,8 +16,8 @@
 
 package ga.baoproject.theseed.commands;
 
-import ga.baoproject.theseed.abc.SeedItem;
-import ga.baoproject.theseed.abc.SeedPlayer;
+import ga.baoproject.theseed.api.types.SeedItem;
+import ga.baoproject.theseed.api.types.SeedPlayer;
 import ga.baoproject.theseed.exceptions.InvalidEntityData;
 import ga.baoproject.theseed.exceptions.UnknownItemID;
 import ga.baoproject.theseed.utils.ItemUtils;

@@ -16,14 +16,12 @@
 
 package ga.baoproject.theseed;
 
-import ga.baoproject.theseed.abc.*;
+import ga.baoproject.theseed.api.SeedLogger;
+import ga.baoproject.theseed.api.types.*;
 import ga.baoproject.theseed.exceptions.InvalidEntityData;
 import ga.baoproject.theseed.exceptions.InvalidEntityID;
 import ga.baoproject.theseed.exceptions.UnknownItemID;
-import ga.baoproject.theseed.utils.EffectUtils;
-import ga.baoproject.theseed.utils.EntityUtils;
-import ga.baoproject.theseed.utils.ItemUtils;
-import ga.baoproject.theseed.utils.Utils;
+import ga.baoproject.theseed.utils.*;
 import org.bukkit.World;
 import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Player;
@@ -46,7 +44,7 @@ public class DaemonManager {
                 SeedPlayer p;
                 try {
                     if (EntityUtils.impostor(i)) {
-                        DebugLogger.debug("The player with name of " + i.getName()
+                        SeedLogger.debug("The player with name of " + i.getName()
                                 + "hasn't been set up yet. Automatically setting up...");
                         SeedPlayer.initialize(i);
                     }
@@ -56,7 +54,7 @@ public class DaemonManager {
                     p.ensureNoHunger();
                 } catch (InvalidEntityData e) {
                     if (i.getHealth() != 0) {
-                        DebugLogger.debug("The player with name of " + i.getName()
+                        SeedLogger.debug("The player with name of " + i.getName()
                                 + "have invalid player data (healthbar). Automatically resetting...");
                         SeedPlayer.initialize(i);
                     }
@@ -72,7 +70,7 @@ public class DaemonManager {
                 SeedPlayer p;
                 try {
                     if (EntityUtils.impostor(i)) {
-                        DebugLogger.debug("The player with name of " + i.getName()
+                        SeedLogger.debug("The player with name of " + i.getName()
                                 + "hasn't been set up yet. Automatically setting up...");
                         SeedPlayer.initialize(i);
                     }
@@ -80,7 +78,7 @@ public class DaemonManager {
                     p.applyRegen();
                 } catch (InvalidEntityData e) {
                     if (i.getHealth() != 0) {
-                        DebugLogger.debug("The player with name of " + i.getName()
+                        SeedLogger.debug("The player with name of " + i.getName()
                                 + "have invalid player data (regen). Silently ignoring...");
                     }
                 }
@@ -146,7 +144,7 @@ public class DaemonManager {
                         }
                     }
                 } catch (InvalidEntityData exc) {
-                    DebugLogger.debug("Received InvalidEntityData in item lore task.");
+                    SeedLogger.debug("Received InvalidEntityData in item lore task.");
                 }
             }
         }, 1, 10);
@@ -203,5 +201,11 @@ public class DaemonManager {
         if (potionEffectApplyTaskID == -1) {
             plugin.getSLF4JLogger().error("Scheduling potion effect task failed.");
         }
+
+        int scoreboardUpdateTaskID = getScheduler().scheduleSyncRepeatingTask(plugin, PlayerUtils::updateScoreboard, 1, 5);
+        if (scoreboardUpdateTaskID == -1) {
+            plugin.getSLF4JLogger().error("Scheduling scoreboard update task failed.");
+        }
+
     }
 }

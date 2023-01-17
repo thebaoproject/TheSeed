@@ -16,10 +16,10 @@
 
 package ga.baoproject.theseed.commands;
 
-import ga.baoproject.theseed.abc.DebugLogger;
-import ga.baoproject.theseed.abc.SeedEffect;
-import ga.baoproject.theseed.abc.SeedEntity;
-import ga.baoproject.theseed.abc.SeedPlayer;
+import ga.baoproject.theseed.api.SeedLogger;
+import ga.baoproject.theseed.api.types.SeedEffect;
+import ga.baoproject.theseed.api.types.SeedEntity;
+import ga.baoproject.theseed.api.types.SeedPlayer;
 import ga.baoproject.theseed.exceptions.InvalidEntityData;
 import ga.baoproject.theseed.i18n.Localized;
 import ga.baoproject.theseed.utils.EffectUtils;
@@ -91,10 +91,20 @@ public class PlayerDataManipulation implements CommandExecutor {
                     ip = SeedPlayer.fromPlayer((Player) sender);
                     int number = Integer.parseInt(args[2]);
                     switch (args[1].toLowerCase(Locale.ROOT)) {
-                        case "health" -> ip.setHealth(number);
-                        case "mana" -> ip.setMana(number);
-                        case "max_mana" -> ip.setMaxMana(number);
-                        case "max_health" -> ip.setMaxHealth(number);
+                        case "health" -> {
+                            ip.setHealth(number);
+                            if (number > ip.getMaxHealth()) {
+                                ip.setMaxHealth(number);
+                            }
+                            ip.setBaseHealth(number);
+                        }
+                        case "mana" -> {
+                            ip.setMana(number);
+                            if (number > ip.getMaxMana()) {
+                                ip.setMaxMana(number);
+                            }
+                            ip.setBaseMana(number);
+                        }
                         case "base_defense" -> ip.setBaseDefense(number);
                         default ->
                                 sender.sendMessage(ChatColor.RED + new Localized("Bạn đưa ra tham số không hợp lệ:", "plugin.error.invalidArg").render(ip.getLocale()) + " " + args[1]);
@@ -111,7 +121,7 @@ public class PlayerDataManipulation implements CommandExecutor {
                                 nEffect.setDuration(Integer.parseInt(args[3]));
                             }
                             ip.addEffect(nEffect);
-                            DebugLogger.debug("Current effect" + ip.getEffects());
+                            SeedLogger.debug("Current effect" + ip.getEffects());
                         } catch (NumberFormatException exc) {
                             if (args[3].equals("clear")) {
                                 ip.setEffects(List.of());

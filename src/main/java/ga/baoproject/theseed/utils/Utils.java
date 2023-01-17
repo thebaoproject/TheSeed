@@ -16,11 +16,12 @@
 
 package ga.baoproject.theseed.utils;
 
-import ga.baoproject.theseed.abc.SeedPlayer;
+import ga.baoproject.theseed.api.types.SeedPlayer;
 import ga.baoproject.theseed.i18n.Localized;
 import net.kyori.adventure.text.Component;
 import org.apache.logging.log4j.util.Strings;
 import org.bukkit.ChatColor;
+import org.bukkit.World;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -100,5 +101,17 @@ public class Utils {
             o.add(Component.text(color(i)));
         }
         return o;
+    }
+
+    public static @NotNull String getTimeOf(@NotNull World w) {
+        float t = (float) w.getTime() / 1000F;
+        long hours = (long) Math.floor(t);
+        long minutes = (w.getTime() - hours * 1000) / 60;
+        String minutesStr = minutes > 12 ? String.valueOf(minutes) : "0" + minutes;
+        if (hours > 12) {
+            return (hours - 12) + ":" + minutesStr + "pm &b\uD83C\uDF19";
+        } else {
+            return hours + ":" + minutesStr + Utils.color("am &e☀");
+        }
     }
 }

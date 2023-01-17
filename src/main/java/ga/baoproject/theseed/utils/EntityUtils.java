@@ -17,10 +17,10 @@
 package ga.baoproject.theseed.utils;
 
 import ga.baoproject.theseed.TheSeed;
-import ga.baoproject.theseed.abc.SeedEntity;
+import ga.baoproject.theseed.api.types.SeedEntity;
 import ga.baoproject.theseed.exceptions.InvalidEntityID;
-import ga.baoproject.theseed.monsters.DemonicServant;
-import ga.baoproject.theseed.monsters.IllfangBoss;
+import ga.baoproject.theseed.game.monsters.DemonicServant;
+import ga.baoproject.theseed.game.monsters.IllfangBoss;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Entity;

@@ -16,7 +16,7 @@
 
 package ga.baoproject.theseed.commands;
 
-import ga.baoproject.theseed.abc.SeedMonster;
+import ga.baoproject.theseed.api.types.SeedMonster;
 import ga.baoproject.theseed.exceptions.InvalidEntityID;
 import ga.baoproject.theseed.utils.EntityUtils;
 import net.kyori.adventure.text.Component;

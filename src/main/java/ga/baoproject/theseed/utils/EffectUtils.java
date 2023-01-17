@@ -17,10 +17,10 @@
 package ga.baoproject.theseed.utils;
 
 import com.google.gson.Gson;
-import ga.baoproject.theseed.abc.DebugLogger;
-import ga.baoproject.theseed.abc.SeedEffect;
-import ga.baoproject.theseed.effects.Paralyze;
-import ga.baoproject.theseed.effects.VanillaEffect;
+import ga.baoproject.theseed.api.SeedLogger;
+import ga.baoproject.theseed.api.types.SeedEffect;
+import ga.baoproject.theseed.game.effects.Paralyze;
+import ga.baoproject.theseed.game.effects.VanillaEffect;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
@@ -44,7 +44,7 @@ public class EffectUtils {
 
     @NotNull
     public static SeedEffect getChild(@NotNull SeedEffect e) {
-        DebugLogger.debug(new Gson().toJson(e));
+        SeedLogger.debug(new Gson().toJson(e));
         return switch (e.getId()) {
             case "sao:paralyze":
                 Paralyze ef = new Paralyze();

@@ -16,10 +16,10 @@
 
 package ga.baoproject.theseed;
 
-import ga.baoproject.theseed.abc.DebugLogger;
-import ga.baoproject.theseed.events.CentralEventListener;
+import ga.baoproject.theseed.api.SeedLogger;
 import ga.baoproject.theseed.i18n.Locale;
 import ga.baoproject.theseed.i18n.Localized;
+import ga.baoproject.theseed.listeners.CentralEventListener;
 import ga.baoproject.theseed.utils.LocalizationUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.GameRule;
@@ -27,12 +27,14 @@ import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scoreboard.Scoreboard;
 import org.slf4j.Logger;
 
 public class TheSeed extends JavaPlugin {
 
     private static FileConfiguration config;
     private static TheSeed instance;
+    private static Scoreboard board;
 
     public TheSeed() {
         instance = this;
@@ -47,18 +49,22 @@ public class TheSeed extends JavaPlugin {
         return config;
     }
 
+    public static Scoreboard getScoreboard() {
+        return board;
+    }
+
     @Override
     public void onEnable() {
         long startTime = System.currentTimeMillis();
         Logger l = getSLF4JLogger();
-        DebugLogger.setEnabled(true);
+        SeedLogger.setEnabled(true);
         l.info(" ----------- The Block Art Online Project | The Seed ----------- ");
         l.info("    Copyright (c) 2022 the Block Art Online Project contributors.  ");
         l.info("    This is free software, licensed under the WTFPL.               ");
         l.info("                                                                   ");
         l.info("     \"The little seed I planted found purchase in distant networks, ");
         l.info("   where it sprouts its own leaves and branches.\"                   ");
-        l.info("                             - Kayaba Akihiko // Sword Art Online  ");
+        l.info("                             - Kayaba Akihiko >> Sword Art Online  ");
         l.info("                                                                   ");
         l.info(" ----------------------------------------------------------------- ");
         l.info("Loading configuration options...");
@@ -79,6 +85,7 @@ public class TheSeed extends JavaPlugin {
         CommandManager.registerCommands(this);
         l.info("Starting tasks...");
         DaemonManager.registerTasks(this);
+
         l.info("Plugin initialization complete. " + "(took " + (System.currentTimeMillis() - startTime) + "ms)");
     }
 
@@ -86,6 +93,7 @@ public class TheSeed extends JavaPlugin {
         PluginManager pm = getServer().getPluginManager();
         pm.registerEvents(new CentralEventListener(), this);
     }
+
 
     @Override
     public void onDisable() {

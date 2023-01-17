@@ -17,10 +17,14 @@
 package ga.baoproject.theseed.utils;
 
 import ga.baoproject.theseed.TheSeed;
-import ga.baoproject.theseed.abc.SeedItem;
-import ga.baoproject.theseed.armor.CoatOfMidnight;
+import ga.baoproject.theseed.api.types.SeedItem;
 import ga.baoproject.theseed.exceptions.UnknownItemID;
-import ga.baoproject.theseed.items.*;
+import ga.baoproject.theseed.game.armor.CoatOfMidnight;
+import ga.baoproject.theseed.game.consumables.HealingCrystal;
+import ga.baoproject.theseed.game.items.BareHand;
+import ga.baoproject.theseed.game.items.VanillaItem;
+import ga.baoproject.theseed.game.weapons.AnnealBlade;
+import ga.baoproject.theseed.game.weapons.ObjectEraser;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
